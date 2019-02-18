@@ -1,0 +1,14 @@
+// Here you can add other styles
+
+.map-card {
+    .card-body {
+        padding: 0px;
+    }
+}
+
+.site-list-card {
+    .card-body {
+        height: 600px;
+        overflow-y: scroll;
+    }
+}

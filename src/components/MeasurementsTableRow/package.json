@@ -1,0 +1,6 @@
+{
+  "name": "MeasurementsTableRow",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./MeasurementsTableRow.js"
+}
