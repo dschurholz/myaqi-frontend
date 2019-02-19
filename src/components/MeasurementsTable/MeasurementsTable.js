@@ -17,7 +17,8 @@ function MeasurementsTable({ measurements }) {
     <Table responsive>
       <thead>
         <tr>
-          <th>Starting Date/Time</th>
+          <th>Starting Date</th>
+          <th>Starting Time</th>
           <th>SiteId</th>
           <th>Monitor</th>
           <th>Value</th>
