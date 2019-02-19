@@ -1,0 +1,7 @@
+{
+    "host": "user@host",
+    "remote_admin": "user",
+    "branch": "master",
+    "core_dir": "/path/to/project/root",
+    "git_deployment_key": "/path/to/ssh_key"
+}
