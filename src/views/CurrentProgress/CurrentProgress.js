@@ -243,6 +243,11 @@ class CurrentProgress extends Component {
         "Finished General Context Prediction Section in literature review",
         "Added 5 Deep Learning AQ Prediction Approaches to Taxonomy and Literature Review",
         "Added Fire API and Traffic API to simulator",
+      ],
+      futureTasks: [
+        "Finish dataset preparing for prediction algorithm input",
+        "Start prediction algorithm development",
+        "Add final selection of papers to literature review",
       ]
     };
     var c;
@@ -269,8 +274,8 @@ class CurrentProgress extends Component {
 
 
   render() {
-    console.log(this.state);
-    var { thesisDocument, extraProgress } = this.state;
+
+    var { thesisDocument, extraProgress, futureTasks } = this.state;
 
     return (
       <div className="animated fadeIn">
@@ -347,7 +352,23 @@ class CurrentProgress extends Component {
                   </ListGroup>
               </CardBody>
             </Card>
-          </Col>
+            <Card className="text-black map-card">
+                <CardHeader>
+                  <i className="fa fa-list"></i> Future Tasks
+                </CardHeader>
+                <CardBody className="pb-0">
+                    <ListGroup className="list-group-flush">
+                      {
+                        futureTasks.map((bullet, idx) => {
+                          return (
+                            <ListGroupItem key={idx} className="justify-content-between">{bullet}</ListGroupItem>
+                          );
+                        })
+                      }
+                    </ListGroup>
+                </CardBody>
+              </Card>
+            </Col>
         </Row>
       </div>
     );
