@@ -62,7 +62,7 @@ class SiteDetails extends Component {
     if(!this.props.selectedSite || !this.props.selectedSite.monitors) {
       return (
         <div>
-          Site not found
+          No site selected.
         </div>
       );
     }

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchMeasurementsByQuery } from '../../actions';
+import { getMeasurementsByQuery } from '../../actions';
 import SiteDetails from '../SiteDetails';
 
 const mapStateToProps = state => {
@@ -14,7 +14,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onUpdateTable: query => {
-      dispatch(fetchMeasurementsByQuery(query));
+      dispatch(getMeasurementsByQuery(query));
     }
   };
 };

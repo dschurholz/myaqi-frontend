@@ -11,7 +11,7 @@ export default {
     },
     {
       title: true,
-      name: 'AQI Monitoring',
+      name: 'AQI Monitoring & Forecast',
       wrapper: {            // optional wrapper object
         element: '',        // required valid HTML5 element tag
         attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
@@ -20,47 +20,30 @@ export default {
     },
     {
       name: 'Map',
-      url: '/theme/colors',
+      url: '/map',
       icon: 'fa fa-mixcloud',
     },
     {
-      name: 'Routes',
-      url: '/theme/typography',
-      icon: 'fa fa-location-arrow',
+      name: 'By Station',
+      url: '/stations',
+      icon: 'fa fa-crosshairs'
     },
     {
       title: true,
-      name: 'AQI Forecasts',
+      name: 'Pollution Sources',
       wrapper: {
         element: '',
         attributes: {},
       },
     },
     {
-      name: 'By Station',
-      url: '/base',
-      icon: 'fa fa-crosshairs',
-      children: [
-        {
-          name: 'Alphington',
-          url: '/base/breadcrumbs',
-          icon: 'icon-puzzle',
-        },
-        {
-          name: 'Box Hill',
-          url: '/base/cards',
-          icon: 'icon-puzzle',
-        }
-      ],
-    },
-    {
       name: 'Traffic',
-      url: '/buttons',
+      url: '/traffic',
       icon: 'fa fa-car',
       children: [
         {
           name: 'Levels',
-          url: '/buttons/buttons',
+          url: '/traffic',
           icon: 'icon-cursor',
         },
         // {
@@ -82,17 +65,13 @@ export default {
     },
     {
       name: 'Bushfires',
-      url: '/icons',
+      url: '/fires',
       icon: 'fa fa-fire',
       children: [
         {
-          name: 'Historical',
-          url: '/icons/coreui-icons',
-          icon: 'icon-star',
-          badge: {
-            variant: 'info',
-            text: 'NEW',
-          },
+          name: 'Live',
+          url: '/fires',
+          icon: 'icon-fire'
         }
       ],
     },

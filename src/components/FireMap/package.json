@@ -1,0 +1,6 @@
+{
+  "name": "FireMap",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./FireMap.js"
+}

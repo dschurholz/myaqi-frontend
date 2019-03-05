@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
+import { Map, GoogleApiWrapper, Marker, Polyline, Polygon, InfoWindow } from 'google-maps-react';
+
+import { utils } from '../../utils';
 
 const mapStyles = {
   width: '100%',
@@ -7,6 +9,8 @@ const mapStyles = {
 };
 
 export class GoogleMap extends Component {
+  loading = () => utils.loaders.MapLoader;
+
   state = {
     showingInfoWindow: false,
     activeMarker: {},
@@ -19,7 +23,10 @@ export class GoogleMap extends Component {
       activeMarker: marker,
       showingInfoWindow: true
     });
-    this.props.onMarkerSelected(marker.obj);
+    if (this.props.onMarkerSelected && typeof this.props.onMarkerSelected === "function") {
+      console.log(marker.obj);
+      this.props.onMarkerSelected(marker.obj);
+    }
   };
  
   onMapClicked = (props) => {
@@ -33,38 +40,93 @@ export class GoogleMap extends Component {
 
   render() {
     var styles = Object.assign(mapStyles, this.props.extraMapStyles || {});
-
+    const isEmpty = this.props.markers.length === 0 &&
+                    this.props.paths.length === 0  &&
+                    this.props.polygons.length === 0;
     return (
-      <Map
-        google={this.props.google}
-        style={styles}
-        initialCenter={{
-         lat: -37.828730,
-         lng: 145.132400
-        }}
-        zoom={7}
-        onClick={this.onMapClicked}>
-        {this.props.markers.map(marker => {
-          return (
-            <Marker onClick={this.onMarkerClick}
-                key={marker[this.props.keyField]}
-                name={marker.name}
-                obj={marker}
-                position={{
-                  lat: Number.parseFloat(marker.latitude),
-                  lng: Number.parseFloat(marker.longitude)
-                }}  />
-          );
-        })}
- 
-        <InfoWindow
-          marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}>
-            <div>
-              <h1>{this.state.selectedPlace.name}</h1>
-            </div>
-        </InfoWindow>
-      </Map>
+      <div style={{textAlign: 'center'}}>
+        {!isEmpty
+        ? <Map
+            google={this.props.google}
+            style={styles}
+            initialCenter={{
+             lat: -37.828730,
+             lng: 145.132400
+            }}
+            streetViewControl={false}
+            zoom={7}
+            onClick={this.onMapClicked}>
+            {this.props.markers.map(marker => {
+              return (
+                <Marker onClick={this.onMarkerClick}
+                    key={marker[this.props.keyField]}
+                    icon={{
+                      url: (marker.iconUrl) ? marker.iconUrl : null,
+                      scaledSize: new this.props.google.maps.Size(this.props.scaleMarkers[0], this.props.scaleMarkers[1])
+                    }}
+                    name={marker.name}
+                    obj={marker.obj || marker}
+                    position={{
+                      lat: Number.parseFloat(marker.latitude),
+                      lng: Number.parseFloat(marker.longitude)
+                    }}  />
+              );
+            })}
+            {this.props.paths.map(path => {
+              return (
+                <Polyline
+                  key={path[this.props.keyField]}
+                  path={path.coordinates} 
+                  options={{ 
+                    strokeColor: path.pathColor,
+                    strokeOpacity: 1,
+                    strokeWeight: 4,
+                    icons: [{ 
+                      icon: "hello",
+                      offset: '0',
+                      repeat: '10px'
+                    }],
+                  }}
+                />
+              );
+            })}
+            {this.props.polygons.map(polygon => {
+              return (
+                <Polygon
+                  key={polygon[this.props.keyField]}
+                  paths={polygon.coordinates} 
+                  options={{ 
+                    strokeColor: polygon.lineColor,
+                    strokeOpacity: 1,
+                    strokeWeight: 2,
+                    icons: [{ 
+                      icon: "hello",
+                      offset: '0',
+                      repeat: '10px'
+                    }],
+                  }}
+                />
+              );
+            })}
+
+            {
+              this.props.markers.length > 0
+              ?
+                <InfoWindow
+                  marker={this.state.activeMarker}
+                  visible={this.state.showingInfoWindow}>
+                    <div>
+                      <h1>{this.state.selectedPlace.name}</h1>
+                    </div>
+                </InfoWindow>
+              :
+                ''
+            }
+          </Map>
+        : (this.props.isFetchingData ?
+           utils.loaders.MapLoader({style: { height: this.props.loaderHeight, margin: this.props.loaderMargin }}) :
+           <h2>No data available.</h2>)}
+      </div>
     );
   }
 }

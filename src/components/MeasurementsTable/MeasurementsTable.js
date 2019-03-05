@@ -3,16 +3,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Table } from 'reactstrap';
+
+import { utils } from "../../utils";
 import MeasurementsTableRow from '../MeasurementsTableRow';
 
-function MeasurementsTable({ measurements }) {
-  if(!measurements.length) {
-    return (
-      <div>
-        No measurements available
-      </div>
-    )
-  }
+function MeasurementsTable({ measurements, isFetchingMeasurements }) {
+  const isEmpty = measurements.length === 0;
   return (
     <Table responsive>
       <thead>
@@ -27,19 +23,30 @@ function MeasurementsTable({ measurements }) {
         </tr>
       </thead>
       <tbody>
-        {measurements.map(measurement => {
+      {!isEmpty
+        ?
+        measurements.map(measurement => {
           return (
             <MeasurementsTableRow measurement={ measurement } key={ measurement.DateTimeStart } />
           );
-        })}
+        })
+        :
+        <tr>
+          <td colSpan="7" style={{textAlign: "center", maxHeight: '100px'}}>
+            {isFetchingMeasurements ? utils.loaders.TableLoader({style: { height: '100px' }}) : <h5>No measurements available.</h5>}
+          </td>
+        </tr>
+      }
       </tbody>
     </Table>
   );
 }
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
-    measurements: state.measurements
+    measurements: state.measurements.measurements,
+    isFetchingMeasurements: state.measurements.isFetchingMeasurements
   };
 };
 

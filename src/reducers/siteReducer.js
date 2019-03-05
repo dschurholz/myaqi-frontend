@@ -1,13 +1,20 @@
 // siteReducer.js
 
-import { FETCH_SITES, SITE_SELECTED } from '../actions/types';
+import { FETCH_SITES, RECEIVED_SITES, SITE_SELECTED } from '../actions/types';
 
-export default function siteReducer(state = [], action) {
+export default function siteReducer(state = { isFetchingSites: true, sites: [] }, action) {
   switch (action.type) {
-    // case ADD_POST:
-    //   return [...state, action.payload];
     case FETCH_SITES:
-      return action.sites;
+      return {
+          ...state,
+          isFetchingSites: true
+      };
+    case RECEIVED_SITES:
+      return {
+          ...state,
+          isFetchingSites: false,
+          sites: action.sites
+      };
     default:
       return state;
   }

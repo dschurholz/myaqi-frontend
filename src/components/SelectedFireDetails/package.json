@@ -1,0 +1,6 @@
+{
+  "name": "SelectedFireDetails",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./SelectedFireDetails.js"
+}

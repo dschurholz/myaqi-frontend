@@ -1,13 +1,21 @@
 // measurementReducer.js
 
-import { FETCH_MEASUREMENTS } from '../actions/types';
+import { FETCH_MEASUREMENTS, RECEIVED_MEASUREMENTS } from '../actions/types';
 
-export default function measurementReducer(state = [], action) {
+export default function measurementReducer(state = { isFetchingMeasurements: false, measurements: [] }, action) {
   switch (action.type) {
-    // case ADD_POST:
-    //   return [...state, action.payload];
     case FETCH_MEASUREMENTS:
-      return action.measurements;
+      return {
+          ...state,
+          isFetchingMeasurements: true,
+          measurements: []
+      };
+    case RECEIVED_MEASUREMENTS:
+      return {
+          ...state,
+          isFetchingMeasurements: false,
+          measurements: action.measurements
+      };
     default:
       return state;
   }

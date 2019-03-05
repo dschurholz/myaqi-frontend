@@ -6,9 +6,24 @@
     }
 }
 
+.fire-list-card,
 .site-list-card {
     .card-body {
         height: 600px;
         overflow-y: scroll;
+    }
+}
+
+.speed {
+    .metka {
+      stroke:#fff;
+      stroke-width:5;
+    }
+    .number {
+      fill:#fff;
+      font-weight:700;
+      font-size:16px;
+      opacity:0.8;
+      font-family: 'Open Sans', sans-serif;
     }
 }
