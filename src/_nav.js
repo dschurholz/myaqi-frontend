@@ -110,5 +110,18 @@ export default {
         },
       ],
     },
+    {
+      name: 'Tesis Progress',
+      url: '/tesis-progress',
+      icon: 'fa fa-edit',
+      disable: true,
+      children: [
+        {
+          name: 'Current Progress',
+          url: '/tesis-progress/current',
+          icon: 'fa fa-users',
+        }
+      ],
+    }
   ],
 };
