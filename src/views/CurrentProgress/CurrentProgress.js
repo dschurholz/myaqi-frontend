@@ -205,15 +205,15 @@ class CurrentProgress extends Component {
                 depth: 6
               }, {
                 title: "Experiments",
-                progress: 0,
+                progress: 20,
                 depth: 0
               }, {
                 title: "Datasets Descriptions",
-                progress: 10,
+                progress: 40,
                 depth: 1
               }, {
                 title: "Experiment Setup",
-                progress: 0,
+                progress: 10,
                 depth: 2
               }
             ]
@@ -237,17 +237,43 @@ class CurrentProgress extends Component {
             subchapters: []
           }
         ],
-        references: 42
+        references: 46
       },
       extraProgress: [
-        "Finished General Context Prediction Section in literature review",
-        "Added 5 Deep Learning AQ Prediction Approaches to Taxonomy and Literature Review",
-        "Added Fire API and Traffic API to simulator",
+        {
+          task: "Finished General Context Prediction Section in literature review",
+          color: "secondary"
+        },
+        {
+          task: "Added 3 Deep Learning AQ Prediction Approaches to Taxonomy and Literature Review",
+          color: "secondary"
+        },
+        {
+          task: "Added Traffic from Google Maps to simulator",
+          color: "secondary"
+        },
+        {
+          task: "Started adding Bing Maps incidents to simulator, will use this as traffic events.",
+          color: "success"
+        },
+        {
+          task: "Started working on context and situation prediction algorithm with TensorFlow and Keras libraries",
+          color: "success"
+        }
       ],
       futureTasks: [
-        "Finish dataset preparing for prediction algorithm input",
-        "Start prediction algorithm development",
-        "Add final selection of papers to literature review",
+        {
+          task: "Finish dataset preparing for prediction algorithm input",
+          color: "warning"
+        },
+        {
+          task: "Continue on prediction algorithm development",
+          color: "warning"
+        },
+        {
+          task: "Start outline and draft of paper",
+          color: "secondary"
+        }
       ]
     };
     var c;
@@ -345,7 +371,7 @@ class CurrentProgress extends Component {
                     {
                       extraProgress.map((bullet, idx) => {
                         return (
-                          <ListGroupItem key={idx} className="justify-content-between">{bullet}</ListGroupItem>
+                          <ListGroupItem key={idx} className="justify-content-between" color={bullet.color}>{bullet.task}</ListGroupItem>
                         );
                       })
                     }
@@ -361,7 +387,7 @@ class CurrentProgress extends Component {
                       {
                         futureTasks.map((bullet, idx) => {
                           return (
-                            <ListGroupItem key={idx} className="justify-content-between">{bullet}</ListGroupItem>
+                            <ListGroupItem key={idx} className="justify-content-between" color={bullet.color}>{bullet.task}</ListGroupItem>
                           );
                         })
                       }
