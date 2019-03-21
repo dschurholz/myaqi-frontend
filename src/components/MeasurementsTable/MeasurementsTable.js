@@ -43,7 +43,6 @@ function MeasurementsTable({ measurements, isFetchingMeasurements }) {
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     measurements: state.measurements.measurements,
     isFetchingMeasurements: state.measurements.isFetchingMeasurements

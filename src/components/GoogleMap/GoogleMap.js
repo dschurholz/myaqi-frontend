@@ -1,32 +1,83 @@
 import React, { Component } from 'react';
-import { Map, GoogleApiWrapper, Marker, Polyline, Polygon, InfoWindow } from 'google-maps-react';
+import GoogleMapReact from 'google-map-react';
 
 import { utils } from '../../utils';
 
 const mapStyles = {
   width: '100%',
-  height: '600px'
+  height: '600px',
+  textAlign: 'center'
 };
 
 export class GoogleMap extends Component {
+
   loading = () => utils.loaders.MapLoader;
 
-  state = {
-    showingInfoWindow: false,
-    activeMarker: {},
-    selectedPlace: {},
+  onMarkerClick = (marker, markerEl) => {
+    if (this.props.onMarkerSelected && typeof this.props.onMarkerSelected === "function") {
+      this.props.onMarkerSelected(marker.obj ? marker.obj : marker);
+    }
   };
 
-  onMarkerClick = (props, marker, e) => {
-    this.setState({
-      selectedPlace: props,
-      activeMarker: marker,
-      showingInfoWindow: true
+  onGoogleApiLoaded = (map, maps) => {
+    // Construct the markers.
+    this.props.markers.forEach((marker, idx) => {
+      var mar = new maps.Marker({
+        position: {
+          lat: Number.parseFloat(marker.latitude),
+          lng: Number.parseFloat(marker.longitude)
+        },
+        title: marker.name,
+        map: map,
+        icon: {
+          url: (marker.iconUrl) ? marker.iconUrl : null,
+          scaledSize: new maps.Size(this.props.scaleMarkers[0], this.props.scaleMarkers[1])
+        }
+      });
+
+      var infowindow = new maps.InfoWindow({
+        content: `<div><h1>` + marker.name + `</h1></div>`
+      });
+
+      mar.addListener('click', () => {
+        infowindow.open(map, mar);
+        this.onMarkerClick(marker, mar);
+      });
     });
-    if (this.props.onMarkerSelected && typeof this.props.onMarkerSelected === "function") {
-      console.log(marker.obj);
-      this.props.onMarkerSelected(marker.obj);
-    }
+
+    // Construct the paths.
+    this.props.paths.forEach((path, idx) => {
+      var line = new maps.Polyline({
+        path: path.coordinates,
+        strokeColor: path.pathColor,
+        strokeOpacity: 1,
+        strokeWeight: 4,
+        icons: [{ 
+          icon: "hello",
+          offset: '0',
+          repeat: '10px'
+        }],
+      });
+
+      line.setMap(map);
+    });
+
+    // Construct the polygons.
+    this.props.polygons.forEach((polygon, idx) => {
+      var poly = new maps.Polygon({
+        paths: polygon.coordinates,
+        strokeColor: polygon.lineColor,
+        strokeOpacity: 1,
+        strokeWeight: 2,
+        icons: [{ 
+          icon: "hello",
+          offset: '0',
+          repeat: '10px'
+        }]
+      });
+
+      poly.setMap(map);
+    });
   };
  
   onMapClicked = (props) => {
@@ -39,90 +90,24 @@ export class GoogleMap extends Component {
   };
 
   render() {
-    var styles = Object.assign(mapStyles, this.props.extraMapStyles || {});
+    var styles = Object.assign(this.props.extraMapStyles, mapStyles || {});
     const isEmpty = this.props.markers.length === 0 &&
                     this.props.paths.length === 0  &&
                     this.props.polygons.length === 0;
     return (
-      <div style={{textAlign: 'center'}}>
+      <div style={styles}>
         {!isEmpty
-        ? <Map
-            google={this.props.google}
-            style={styles}
-            initialCenter={{
+        ? <GoogleMapReact
+            bootstrapURLKeys={{ key: this.props.apiKey }}
+            defaultCenter={{
              lat: -37.828730,
              lng: 145.132400
             }}
-            streetViewControl={false}
-            zoom={7}
-            onClick={this.onMapClicked}>
-            {this.props.markers.map(marker => {
-              return (
-                <Marker onClick={this.onMarkerClick}
-                    key={marker[this.props.keyField]}
-                    icon={{
-                      url: (marker.iconUrl) ? marker.iconUrl : null,
-                      scaledSize: new this.props.google.maps.Size(this.props.scaleMarkers[0], this.props.scaleMarkers[1])
-                    }}
-                    name={marker.name}
-                    obj={marker.obj || marker}
-                    position={{
-                      lat: Number.parseFloat(marker.latitude),
-                      lng: Number.parseFloat(marker.longitude)
-                    }}  />
-              );
-            })}
-            {this.props.paths.map(path => {
-              return (
-                <Polyline
-                  key={path[this.props.keyField]}
-                  path={path.coordinates} 
-                  options={{ 
-                    strokeColor: path.pathColor,
-                    strokeOpacity: 1,
-                    strokeWeight: 4,
-                    icons: [{ 
-                      icon: "hello",
-                      offset: '0',
-                      repeat: '10px'
-                    }],
-                  }}
-                />
-              );
-            })}
-            {this.props.polygons.map(polygon => {
-              return (
-                <Polygon
-                  key={polygon[this.props.keyField]}
-                  paths={polygon.coordinates} 
-                  options={{ 
-                    strokeColor: polygon.lineColor,
-                    strokeOpacity: 1,
-                    strokeWeight: 2,
-                    icons: [{ 
-                      icon: "hello",
-                      offset: '0',
-                      repeat: '10px'
-                    }],
-                  }}
-                />
-              );
-            })}
-
-            {
-              this.props.markers.length > 0
-              ?
-                <InfoWindow
-                  marker={this.state.activeMarker}
-                  visible={this.state.showingInfoWindow}>
-                    <div>
-                      <h1>{this.state.selectedPlace.name}</h1>
-                    </div>
-                </InfoWindow>
-              :
-                ''
-            }
-          </Map>
+            defaultZoom={7}
+            yesIWantToUseGoogleMapApiInternals
+            layerTypes={this.props.layers || []}
+            onGoogleApiLoaded={({ map, maps }) => this.onGoogleApiLoaded(map, maps)}
+          />
         : (this.props.isFetchingData ?
            utils.loaders.MapLoader({style: { height: this.props.loaderHeight, margin: this.props.loaderMargin }}) :
            <h2>No data available.</h2>)}
@@ -131,11 +116,4 @@ export class GoogleMap extends Component {
   }
 }
 
-export default GoogleApiWrapper(
-  (props) => ({
-    apiKey: props.apiKey,
-    markers: props.markers,
-    keyField: props.keyField,
-    onMarkerSelected: props.onMarkerSelected
-  }
-))(GoogleMap)
+export default GoogleMap;

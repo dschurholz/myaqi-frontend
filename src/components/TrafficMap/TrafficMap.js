@@ -56,18 +56,18 @@ function _format_paths_vic_roads_data (features) {
 const mapStateToProps = state => {
   let markers = (state.traffic.traffic.features) ? _format_markers_vic_roads_data(state.traffic.traffic.features) : [],
       paths = (state.traffic.traffic.features) ? _format_paths_vic_roads_data(state.traffic.traffic.features) : [];
-  console.log(state);
   return {
     markers: [],
-    paths: paths.slice(0, Math.pow(10, 2)),
+    paths: paths.slice(0, Math.pow(10, 0)),
     polygons: [],
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     keyField: 'objectId',
     extraMapStyles: {
-        'borderBottomLeftRadius': '4px',
-        'borderBottomRightRadius': '4px'
+        borderBottomLeftRadius: '4px',
+        borderBottomRightRadius: '4px'
     },
-    isFetchingData: state.traffic.isFetchingTraffic
+    isFetchingData: state.traffic.isFetchingTraffic,
+    layers: ['TrafficLayer']
   };
 };
 

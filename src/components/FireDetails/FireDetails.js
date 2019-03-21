@@ -41,10 +41,10 @@ class FireDetails extends Component {
               <ListGroupItem className="justify-content-between">Feed Type <span className="float-right">{(selectedFire.properties.feedType === "warning")?<Badge color="warning" pill>{selectedFire.properties.feedType}</Badge>:<Badge color="danger" pill>{selectedFire.properties.feedType}</Badge> }</span></ListGroupItem>
               <ListGroupItem className="justify-content-between">Status <span className="float-right">{(selectedFire.properties.status === "Extreme")?<Badge color="danger" pill>{selectedFire.properties.status}</Badge>:<Badge color="warning" pill>{selectedFire.properties.status}</Badge> }</span></ListGroupItem>
               {selectedFire.properties.size || selectedFire.properties.sizeFmt ? 
-              <ListGroupItem className="justify-content-between">Size <span className="float-right"><i class="fa fa-area-chart" ariaHidden="true"></i>&nbsp;{selectedFire.properties.size || selectedFire.properties.sizeFmt}</span></ListGroupItem>
+              <ListGroupItem className="justify-content-between">Size <span className="float-right"><i className="fa fa-area-chart" aria-hidden="true"></i>&nbsp;{selectedFire.properties.size || selectedFire.properties.sizeFmt}</span></ListGroupItem>
               :''}
               {selectedFire.properties.resources ? 
-              <ListGroupItem className="justify-content-between">Resources <span className="float-right"><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;{selectedFire.properties.resources} vehicles responding.</span></ListGroupItem>
+              <ListGroupItem className="justify-content-between">Resources <span className="float-right"><i className="fa fa-bus" aria-hidden="true"></i>&nbsp;{selectedFire.properties.resources} vehicles responding.</span></ListGroupItem>
               :''}
               <ListGroupItem className="justify-content-between">Submitted on <span className="float-right"><i className="fa fa-clock-o" aria-hidden="true"></i>&nbsp;<Moment format="YYYY-MM-DD, HH:mm:SS">{ selectedFire.properties.created }</Moment></span></ListGroupItem>
               <ListGroupItem className="justify-content-between">Last Updated on <span className="float-right"><i className="fa fa-clock-o" aria-hidden="true">&nbsp;</i><Moment format="YYYY-MM-DD, HH:mm:SS">{ selectedFire.properties.updated }</Moment></span></ListGroupItem>
