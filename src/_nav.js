@@ -24,8 +24,8 @@ export default {
       icon: 'fa fa-mixcloud',
     },
     {
-      name: 'By Station',
-      url: '/stations',
+      name: 'Forecast',
+      url: '/aqiForecasts',
       icon: 'fa fa-crosshairs'
     },
     {

@@ -1,6 +1,6 @@
 {
-  "name": "AIQMap",
+  "name": "AQIMap",
   "version": "0.0.0",
   "private": true,
-  "main": "./AIQMap.js"
+  "main": "./AQIMap.js"
 }

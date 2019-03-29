@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ContentLoader, { BulletList } from "react-content-loader";
 
 const MapLoader = props => (

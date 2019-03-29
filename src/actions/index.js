@@ -2,10 +2,13 @@
 
 import { fetchSites, receivedSites, getSites, siteSelected } from './sites';
 import { fetchMeasurements, receivedMeasurements, getMeasurementsByQuery } from './measurements';
-import { fetchTraffic, receivedTraffic, getAllTraffic } from './traffic';
+import { fetchVicRoadsTraffic, receivedVicRoadsTraffic, getVicRoadsTraffic, getBingTraffic } from './traffic';
 import { fetchFires, receivedFires, getAllFires, fireSelected } from './fires';
+import { fetchAqiForecasts, getAqiForecasts, receivedAqiForecasts } from './forecasts';
+import * as userActions from './user';
 
 export {
+  userActions,
   fetchSites,
   getSites,
   receivedSites,
@@ -13,11 +16,15 @@ export {
   fetchMeasurements,
   receivedMeasurements,
   getMeasurementsByQuery,
-  getAllTraffic,
-  receivedTraffic,
-  fetchTraffic,
+  getVicRoadsTraffic,
+  receivedVicRoadsTraffic,
+  fetchVicRoadsTraffic,
   fetchFires,
   receivedFires,
   getAllFires,
-  fireSelected
+  fireSelected,
+  fetchAqiForecasts,
+  getAqiForecasts,
+  receivedAqiForecasts,
+  getBingTraffic,
 };

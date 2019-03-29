@@ -27,3 +27,16 @@
       font-family: 'Open Sans', sans-serif;
     }
 }
+
+.header-with-switches {
+  .header-title {
+    margin-top: 7px;
+    display: inline-block;
+  }
+  .switch-img-group {
+    margin-top: 5px;
+    img {
+      margin-top: -16px;
+    }
+  }
+}

@@ -1,22 +1,14 @@
 // FireDetails.js
 
 import React, { Component, Suspense } from 'react';
-import { connect } from 'react-redux';
 import {
   Badge,
-  Button,
   Col,
-  FormGroup,
-  Input,
-  Label,
   ListGroup,
   ListGroupItem,
   Row
 } from 'reactstrap';
 import Moment from 'react-moment';
-
-import { updateQuery } from '../../actions';
-
 
 class FireDetails extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>

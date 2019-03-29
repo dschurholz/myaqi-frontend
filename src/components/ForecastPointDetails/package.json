@@ -1,0 +1,6 @@
+{
+  "name": "ForecastPointDetails",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ForecastPointDetails.js"
+}

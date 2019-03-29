@@ -1,7 +1,7 @@
 // SiteDetails.js
 
+// eslint-disable-next-line
 import React, { Component, Suspense } from 'react';
-import { connect } from 'react-redux';
 import {
   Badge,
   Button,
@@ -13,7 +13,7 @@ import {
   ListGroupItem,
   Row
 } from 'reactstrap';
-import { updateQuery } from '../../actions';
+import * as moment from 'moment';
 
 class SiteDetails extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
@@ -34,7 +34,7 @@ class SiteDetails extends Component {
     });
 
     if (e.target.name === 'monitor' && e.target.value !== '') {
-      let idx = this.props.selectedSite.monitors.findIndex(obj => {return obj.monitor_id == e.target.value });
+      let idx = this.props.selectedSite.monitors.findIndex(obj => {return obj.monitor_id === e.target.value });
       this.setState({
         monitorTimeBasis: this.props.selectedSite.monitors[idx].monitor_time_basis
       });
@@ -58,6 +58,18 @@ class SiteDetails extends Component {
     }
   };
 
+  fillDates = e => {
+    e.preventDefault();
+
+    let now = moment(), fiveDaysAgo = moment().subtract(5, 'days');
+    this.setState({
+      endDate: now.format('YYYY-MM-DD'),
+      endTime: now.format('HH:mm'),
+      startDate: fiveDaysAgo.format('YYYY-MM-DD'),
+      startTime: fiveDaysAgo.format('HH:mm')
+    });
+  };
+
   render () {
     if(!this.props.selectedSite || !this.props.selectedSite.monitors) {
       return (
@@ -77,7 +89,11 @@ class SiteDetails extends Component {
                 <ListGroupItem className="justify-content-between">Id <span className="float-right">{this.props.selectedSite.site_id}</span></ListGroupItem>
                 <ListGroupItem className="justify-content-between">Status <span className="float-right">{(this.props.selectedSite.is_station_offline)?<Badge color="danger" pill>Offline</Badge>:<Badge color="success" pill>Online</Badge> }</span></ListGroupItem>
                 <ListGroupItem className="justify-content-between">Region <span className="float-right">{(this.props.selectedSite.site_list && this.props.selectedSite.site_list.length > 0)?this.props.selectedSite.site_list[0].name:'-'}</span></ListGroupItem>
-                <ListGroupItem className="justify-content-between">Fire hazard category <span className="float-right">{this.props.selectedSite.fire_hazard_category}</span></ListGroupItem>
+                { 
+                  this.props.selectedSite.fire_hazard_category ?
+                  <ListGroupItem className="justify-content-between">Fire hazard category <span className="float-right">{this.props.selectedSite.fire_hazard_category}</span></ListGroupItem> :
+                  <></>
+                }
                 <ListGroupItem className="justify-content-between">Has Incident <span className="float-right">{ (this.props.selectedSite.has_incident)?<Badge color="danger" pill>Yes</Badge>:<Badge color="success" pill>No</Badge> }</span></ListGroupItem>
               </ListGroup>
             </Col>
@@ -120,10 +136,10 @@ class SiteDetails extends Component {
                   <Label htmlFor="startDate">Start Date and Time</Label>
                 </Col>
                 <Col xs="5" md="4">
-                  <Input type="date" id="startDate" name="startDate" placeholder="date" onChange={ this.handleInputChange } />
+                  <Input type="date" id="startDate" name="startDate" placeholder="date" onChange={ this.handleInputChange } value={this.state.startDate}/>
                 </Col>
                 <Col xs="6" md="4">
-                  <Input type="time" id="startTime" name="startTime" placeholder="date" step="3600" onChange={ this.handleInputChange } />
+                  <Input type="time" id="startTime" name="startTime" placeholder="date" step="3600" onChange={ this.handleInputChange } value={this.state.startTime}/>
                 </Col>
               </FormGroup>
               <FormGroup row>
@@ -131,14 +147,17 @@ class SiteDetails extends Component {
                   <Label htmlFor="endDate">End Date and Time</Label>
                 </Col>
                 <Col xs="6" md="4">
-                  <Input type="date" id="endDate" name="endDate" placeholder="date" onChange={ this.handleInputChange } />
+                  <Input type="date" id="endDate" name="endDate" placeholder="date" onChange={ this.handleInputChange } value={this.state.endDate}/>
                 </Col>
                 <Col xs="6" md="4">
-                  <Input type="time" id="endTime" name="endTime" placeholder="date" step="3600" onChange={ this.handleInputChange } />
+                  <Input type="time" id="endTime" name="endTime" placeholder="date" step="3600" onChange={ this.handleInputChange } value={this.state.endTime}/>
                 </Col>
               </FormGroup>
-              <FormGroup className="form-actions">
-                <Button type="submit" size="sm" color="primary" size="lg" onClick={ this.handleSubmit }>Update Measurements Table</Button>
+              <div style={{textAlign: 'right'}}>
+                <a href="#" onClick={ this.fillDates }>Past 5 Days</a>
+              </div>
+              <FormGroup className="form-actions" style={{textAlign: 'center'}}>
+                <Button type="submit" color="primary" size="lg" onClick={ this.handleSubmit }>Update Measurements Table</Button>
               </FormGroup>
             </Col>
           </Row>

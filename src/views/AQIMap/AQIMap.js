@@ -1,25 +1,47 @@
 import React, { Component } from 'react';
-import ContentLoader from "react-content-loader";
 import {
   Card,
   CardBody,
   CardHeader,
   Col,
-  Row
+  Nav,
+  NavItem,
+  NavLink,
+  Row,
+  TabContent,
+  TabPane
 } from 'reactstrap';
-import { SiteMap, QuerySiteDetails, MeasurementsTable } from '../../components';
+import { SiteMap, QuerySiteDetails, MeasurementsTable, MeasurementsCharts } from '../../components';
 import { store } from '../../stores'
 
 import { utils } from '../../utils';
 import { getSites } from '../../actions'
 
+const CHARTS = 'CHARTS';
+const TABLE = 'TABLE';
 
-class AIQMap extends Component {
 
+class AQIMap extends Component {
+  
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>;
 
+  constructor(props) {
+    super(props);
+
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      activeTab: CHARTS
+    };
+  }
+  
   componentDidMount() {
     store.dispatch(getSites());    
+  }
+
+  toggle(tab) {
+    this.setState({
+      activeTab: tab
+    });
   }
 
   render() {
@@ -50,14 +72,32 @@ class AIQMap extends Component {
          </Row>
          <Row>
           <Col xs="12" sm="12" lg="12">
-            <Card className="text-black map-card">
-              <CardHeader>
-                <i className="fa fa-align-justify"></i> Measurements
-              </CardHeader>
-              <CardBody className="pb-0">
+            <Nav tabs>
+              <NavItem>
+                <NavLink
+                  active={this.state.activeTab === CHARTS}
+                  onClick={() => { this.toggle(CHARTS); }}
+                >
+                  Measurements Charts
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  active={this.state.activeTab === TABLE}
+                  onClick={() => { this.toggle(TABLE); }}
+                >
+                  Measurements Table
+                </NavLink>
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={this.state.activeTab}>
+              <TabPane tabId={CHARTS}>
+                <MeasurementsCharts />
+              </TabPane>
+              <TabPane tabId={TABLE}>
                 <MeasurementsTable />
-              </CardBody>
-            </Card>
+              </TabPane>
+            </TabContent>
           </Col>
          </Row>
       </div>
@@ -65,4 +105,4 @@ class AIQMap extends Component {
   }
 }
 
-export default AIQMap;
+export default AQIMap;

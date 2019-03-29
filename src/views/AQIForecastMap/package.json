@@ -1,0 +1,6 @@
+{
+  "name": "AQIForecastMap",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./AQIForecastMap.js"
+}

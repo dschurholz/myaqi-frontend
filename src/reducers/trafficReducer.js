@@ -1,19 +1,35 @@
 // trafficReducer.js
 
-import { FETCH_TRAFFIC, RECEIVED_TRAFFIC } from '../actions/types';
+import {
+  FETCH_VICROADS_TRAFFIC,
+  RECEIVED_VICROADS_TRAFFIC,
+  FETCH_BING_TRAFFIC,
+  RECEIVED_BING_TRAFFIC
+} from '../actions/types';
 
-export default function trafficReducer(state = { isFetchingTraffic: true, traffic: {} }, action) {
+export default function trafficReducer(state = { isFetchingTraffic: true, vicRoadsTraffic: {}, bingTraffic: {} }, action) {
   switch (action.type) {
-    case FETCH_TRAFFIC:
+    case FETCH_VICROADS_TRAFFIC:
       return {
         ...state,
         isFetchingTraffic: true
       };
-    case RECEIVED_TRAFFIC:
+    case RECEIVED_VICROADS_TRAFFIC:
       return {
         ...state,
         isFetchingTraffic: false,
-        traffic: action.traffic
+        vicRoadsTraffic: action.traffic
+      };
+    case FETCH_BING_TRAFFIC:
+      return {
+        ...state,
+        isFetchingTraffic: true
+      };
+    case RECEIVED_BING_TRAFFIC:
+      return {
+        ...state,
+        isFetchingTraffic: false,
+        bingTraffic: action.traffic
       };
     default:
       return state;

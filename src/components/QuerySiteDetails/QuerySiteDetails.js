@@ -1,6 +1,5 @@
 // QuerySiteDetails.js
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { getMeasurementsByQuery } from '../../actions';
 import SiteDetails from '../SiteDetails';

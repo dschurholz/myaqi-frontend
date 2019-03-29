@@ -7,8 +7,8 @@ import axios from 'axios';
 export const getAllFires = (query={}) => {
   return (dispatch) => {
     dispatch(fetchFires({}));
-    // return axios.get(process.env.REACT_APP_AU_VIC_EMERGENCY_URL, {params: query})
-    return axios.get('data/fire_test_data.json', {params: query})
+    return axios.get(process.env.REACT_APP_AU_VIC_EMERGENCY_URL, {params: query})
+    //return axios.get('data/fire_test_data.json', {params: query})
       .then(response => {
         dispatch(receivedFires(response.data))
       })
@@ -34,7 +34,6 @@ export const receivedFires = (fires) => {
 };
 
 export const fireSelected = (selectedFire) => {
-  console.log(selectedFire);
   return {
     type: FIRE_SELECTED,
     selectedFire

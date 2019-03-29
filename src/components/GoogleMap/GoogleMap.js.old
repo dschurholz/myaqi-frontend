@@ -24,7 +24,6 @@ export class GoogleMap extends Component {
       showingInfoWindow: true
     });
     if (this.props.onMarkerSelected && typeof this.props.onMarkerSelected === "function") {
-      console.log(marker.obj);
       this.props.onMarkerSelected(marker.obj);
     }
   };
