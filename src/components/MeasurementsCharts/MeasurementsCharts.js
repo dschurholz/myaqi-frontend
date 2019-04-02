@@ -21,7 +21,8 @@ class MeasurementsCharts extends Component {
   }
 
   render () {
-    const { measurements, isFetchingMeasurements } = this.props; 
+    const { measurements, isFetchingMeasurements } = this.props;
+
     if(isFetchingMeasurements) {
       return (
         <div>
@@ -45,7 +46,7 @@ class MeasurementsCharts extends Component {
               <Row key={measurement.pollutantName}>
                 <Col xs="12" sm="12" lg="12">
                   <h4>{measurement.pollutantName}</h4>
-                  <Line data={measurement.data} options={utils.charts.aqiDefaultOptions} />
+                  <Line data={measurement.data} options={measurement.aqiChartOptions} />
                 </Col>
               </Row>
             );
@@ -56,7 +57,7 @@ class MeasurementsCharts extends Component {
   }
 };
 
-function prepareMeasurementsForCharts (measurements) {
+function prepareMeasurementsForCharts (measurements, aqiScale) {
   const parseParamStart = 'MonitorId: ',
         parseParamEnd = 'TimeBasisId',
         parseParamStartLen = parseParamStart.length;
@@ -114,8 +115,18 @@ function prepareMeasurementsForCharts (measurements) {
     data.push(measurement['Value']);
   });
 
+  let aqiChartOptions = utils.tools.cloneObject(utils.charts.aqiDefaultOptions);
+  if (aqiScale) {
+    const extraCheck = utils.aqiScaleTools.extraChecks(aqiScale.abbreviation);
+    let aqiScaleThresholds = utils.charts.parseScale(aqiScale, pollutantName, extraCheck);
+    if (aqiScaleThresholds) {
+      aqiChartOptions.chartArea.backgroundColors = aqiScaleThresholds.backgroundColors;
+      aqiChartOptions.chartArea.upperLimits = aqiScaleThresholds.upperLimits;
+    };
+  }
   results.data.push({
     pollutantName: pollutantName,
+    aqiChartOptions: aqiChartOptions,
     data: {
       labels: labels,
       datasets: [
@@ -148,10 +159,23 @@ function prepareMeasurementsForCharts (measurements) {
 }
 
 const mapStateToProps = state => {
-  var measurements = (state.measurements.measurements.Measurements) ? prepareMeasurementsForCharts(state.measurements.measurements): {};
+  const { measurements, currentUser } = state,
+        { aqiScales, isFetchingAqiScales } = state.aqiScales,
+        user = currentUser.user || utils.auth.getUser();
+
+  var aqiScale = null;
+  if (aqiScales.length > 0) {
+    var aqiScale = aqiScales[aqiScales.findIndex(x => {
+        return x.abbreviation === user.profile.aqi_scale;
+      })];
+  }
+
+  const preparedMeasurements = (measurements.measurements.Measurements) ? prepareMeasurementsForCharts(measurements.measurements, aqiScale): {};
   return {
-    measurements: measurements,
-    isFetchingMeasurements: state.measurements.isFetchingMeasurements
+    measurements: preparedMeasurements,
+    isFetchingMeasurements: measurements.isFetchingMeasurements,
+    aqiScales: aqiScales,
+    isFetchingAqiScales: isFetchingAqiScales
   };
 };
 

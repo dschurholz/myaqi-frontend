@@ -30,7 +30,7 @@ class Fires extends Component {
                 <SvgIcon width="30" height="25" url="images/fire_map_icons.svg" icon="markers--incident--Fire_Active" /> Fires Map
               </CardHeader>
               <CardBody className="pb-0">
-                <FireMap scaleMarkers={[32, 32]} loaderHeight="300px" loaderMargin="150px" />
+                <FireMap scaleMarkers={[24, 24]} loaderHeight="300px" loaderMargin="150px" />
               </CardBody>
             </Card>
           </Col>

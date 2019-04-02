@@ -9,6 +9,7 @@ import FireMap from './FireMap';
 import SvgIcon from './SvgIcon';
 import ForecastPointDetails from './ForecastPointDetails';
 import ForecastMap from './ForecastMap';
+import PrivateRoute from './PrivateRoute';
 
 export {
     SiteMap,
@@ -21,5 +22,6 @@ export {
     SvgIcon,
     SelectedFireDetails,
     ForecastPointDetails,
-    ForecastMap
+    ForecastMap,
+    PrivateRoute
 };

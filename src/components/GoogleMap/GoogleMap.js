@@ -91,9 +91,11 @@ export class GoogleMap extends Component {
       bounds.extend(mar.getPosition());
     });
 
-    map.fitBounds(bounds);
+    if (this.markerEls.length > 0) {
+      map.fitBounds(bounds);
+    }
 
-    if (this.markerEls.length > 200) {
+    if (this.markerEls.length > 250) {
       this.markerCluster = new MarkerClusterer(map, this.markerEls, {
         maxZoom: 12,
         gridSize: 10,

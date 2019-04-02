@@ -18,19 +18,26 @@ import {
 import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
+import { utils } from '../../utils';
 
 // eslint-disable-next-line
 const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
 const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
+const PrivateRoute = React.lazy(() => import('../../components/PrivateRoute'));
 
 class DefaultLayout extends Component {
 
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   signOut(e) {
-    e.preventDefault()
-    this.props.history.push('/login')
+    e.preventDefault();
+    utils.history.push('/login');
+  }
+
+  onProfile(e) {
+    e.preventDefault();
+    utils.history.push('/profile');
   }
 
   render() {
@@ -38,7 +45,8 @@ class DefaultLayout extends Component {
       <div className="app">
         <AppHeader fixed>
           <Suspense  fallback={this.loading()}>
-            <DefaultHeader onLogout={e=>this.signOut(e)}/>
+            <DefaultHeader onLogout={e=>this.signOut(e)}
+                           onProfile={e=>this.onProfile(e)}/>
           </Suspense>
         </AppHeader>
         <div className="app-body">
@@ -58,14 +66,23 @@ class DefaultLayout extends Component {
                 <Switch>
                   {routes.map((route, idx) => {
                     return route.component ? (
-                      <Route
-                        key={idx}
-                        path={route.path}
-                        exact={route.exact}
-                        name={route.name}
-                        render={props => (
-                          <route.component {...props} />
-                        )} />
+                      route.routeType === 'private' ?
+                        (<PrivateRoute
+                            key={idx}
+                            path={route.path}
+                            exact={route.exact}
+                            name={route.name}
+                            component={props => (
+                              <route.component {...props} />
+                            )} />) :
+                        (<Route
+                            key={idx}
+                            path={route.path}
+                            exact={route.exact}
+                            name={route.name}
+                            render={props => (
+                              <route.component {...props} />
+                            )} />)
                     ) : (null);
                   })}
                 </Switch>

@@ -8,7 +8,8 @@ import measurements from './measurementReducer';
 import traffic from './trafficReducer';
 import fires from './fireReducer';
 import aqiForecasts from './aqiForecastsReducer';
-import { authentication, registration, users } from './userReducer';
+import aqiScales from './aqiScalesReducer';
+import { authentication, registration, currentUser } from './userReducer';
 
 export default combineReducers({
     sites: sites,
@@ -18,7 +19,8 @@ export default combineReducers({
     fires: fires,
     selectedFire: selectedFire,
     aqiForecasts: aqiForecasts,
+    aqiScales: aqiScales,
     authentication: authentication,
     registration: registration,
-    users: users
+    currentUser: currentUser
 });

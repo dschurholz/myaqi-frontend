@@ -8,7 +8,7 @@ export const getAllFires = (query={}) => {
   return (dispatch) => {
     dispatch(fetchFires({}));
     return axios.get(process.env.REACT_APP_AU_VIC_EMERGENCY_URL, {params: query})
-    //return axios.get('data/fire_test_data.json', {params: query})
+    // return axios.get('data/fire_test_data.json', {params: query})
       .then(response => {
         dispatch(receivedFires(response.data))
       })

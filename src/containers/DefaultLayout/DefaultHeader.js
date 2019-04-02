@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 // eslint-disable-next-line
 import { AppAsideToggler, AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from '../../assets/img/brand/logo.png'
-import sygnet from '../../assets/img/brand/logo2.png'
-import avatar from '../../assets/img/avatars/logo.svg'
+import logoSmall from '../../assets/img/brand/logo-small.png'
+import avatar from '../../assets/img/avatars/user.png'
 
 const propTypes = {
   children: PropTypes.node,
@@ -25,8 +25,8 @@ class DefaultHeader extends Component {
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
         <AppNavbarBrand
-          full={{ src: logo, width: 60, height: 25, alt: 'MyAQI Logo' }}
-          minimized={{ src: sygnet, width: 30, height: 30, alt: 'MyAQI Logo' }}
+          full={{ src: logo, height: 30, alt: 'MyAQI Logo' }}
+          minimized={{ src: logoSmall, width: 30, height: 30, alt: 'MyAQI Logo' }}
         />
         <AppSidebarToggler className="d-md-down-none" display="lg" />
 
@@ -43,14 +43,14 @@ class DefaultHeader extends Component {
             <NavLink href="#"><i className="icon-location-pin"></i></NavLink>
           </NavItem>*/}
           <AppHeaderDropdown direction="down">
-            <DropdownToggle nav>
+            <DropdownToggle nav className="nav-avatar">
               <img src={avatar} className="img-avatar" alt="admin@myaqi.com" />
             </DropdownToggle>
             <DropdownMenu right style={{ right: 'auto' }}>
               <DropdownItem header tag="div" className="text-center"><strong>Notifications</strong></DropdownItem>
               <DropdownItem><i className="fa fa-comments"></i> Warnings<Badge color="warning">42</Badge></DropdownItem>
               <DropdownItem header tag="div" className="text-center"><strong>Settings</strong></DropdownItem>
-              <DropdownItem><i className="fa fa-user"></i> Profile</DropdownItem>
+              <DropdownItem onClick={e => this.props.onProfile(e)}><i className="fa fa-user"></i> Profile</DropdownItem>
               <DropdownItem><i className="fa fa-wrench"></i> Settings</DropdownItem>
               <DropdownItem divider />
               <DropdownItem onClick={e => this.props.onLogout(e)}><i className="fa fa-lock"></i> Logout</DropdownItem>

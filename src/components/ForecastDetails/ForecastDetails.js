@@ -18,7 +18,8 @@ class ForecastDetails extends Component {
   }
 
   render () {
-    const { forecasts, isFetchingAqiForecasts } = this.props; 
+    const { forecasts, isFetchingAqiForecasts } = this.props;
+
     if(isFetchingAqiForecasts) {
       return (
         <div>
@@ -43,7 +44,7 @@ class ForecastDetails extends Component {
               <Row key={forecast.pollutantName}>
                 <Col xs="12" sm="12" lg="12">
                   <h4>{forecast.pollutantName}</h4>
-                  <Line data={forecast.data} options={utils.charts.aqiDefaultOptions} />
+                  <Line data={forecast.data} options={forecast.aqiChartOptions} />
                 </Col>
               </Row>
             );

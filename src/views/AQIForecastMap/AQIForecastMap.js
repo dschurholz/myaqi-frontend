@@ -7,13 +7,19 @@ import {
   Row
 } from 'reactstrap';
 import { ForecastMap, ForecastPointDetails } from '../../components';
+import { store } from '../../stores';
 
 import { utils } from '../../utils';
+import { getAQIScales } from '../../actions'
 
 
 class AQIForecastMap extends Component {
 
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>;
+
+  componentDidMount() {
+    store.dispatch(getAQIScales());   
+  }
 
   render() {
 

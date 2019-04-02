@@ -1,1 +1,25 @@
 // Variable overrides
+
+// Import styles
+@import "~@coreui/coreui/scss/coreui.scss";
+
+
+// Theme 1
+$t1-primary-color: #03A9F4;
+$t1-primary-dark-color: #0288D1;
+$t1-primary-light-color: #B3E5FC;
+$t1-text-color: #FFFFFF;
+$t1-accent-color: #CDDC39;
+$t1-primary-text-color: #212121;
+$t1-secondary-text-color: #757575;
+$t1-divider-color: #BDBDBD;
+
+// Sidebar
+$sidebar-bg: $t1-primary-dark-color;
+$sidebar-nav-link-color: $t1-text-color;
+$sidebar-nav-link-hover-bg: $t1-primary-color;
+$sidebar-nav-link-icon-color: $t1-text-color;
+$sidebar-nav-title-color: $t1-primary-text-color;
+$sidebar-nav-link-active-icon-color: $t1-primary-color;
+$sidebar-nav-dropdown-indicator-color: $t1-primary-text-color;
+$sidebar-minimizer-indicator-color: $t1-text-color;

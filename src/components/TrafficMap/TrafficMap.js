@@ -234,7 +234,7 @@ const mapStateToProps = (state, ownProps) => {
   if (state.traffic.vicRoadsTraffic.incidents && ownProps.apiSources.vicRoads) {
     markers = markers.concat(_format_markers_vic_roads_live_data(state.traffic.vicRoadsTraffic));
   }
-  if (state.traffic.bingTraffic.resourceSets  && ownProps.apiSources.bing) {
+  if (state.traffic.bingTraffic.resourceSets && ownProps.apiSources.bing) {
     markers = markers.concat(_format_markers_bing_data(state.traffic.bingTraffic));
   }
   return {

@@ -40,3 +40,16 @@
     }
   }
 }
+
+.nav-avatar {
+  &[aria-expanded='true'] {
+    .img-avatar {
+      transform: scale(1.1,1.1);
+    }
+  }
+  .img-avatar {
+    &:hover {
+      transform: scale(1.1,1.1);
+    }
+  }
+}

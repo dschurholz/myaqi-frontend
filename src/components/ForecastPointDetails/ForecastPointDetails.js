@@ -3,9 +3,10 @@
 import { connect } from 'react-redux';
 import ForecastDetails from '../ForecastDetails';
 import * as moment from 'moment';
+import { utils } from "../../utils";
 
-function parseWeatherbitForecasts (forecasts) {
-  var pollutants = {
+function parseWeatherbitForecasts (forecasts, aqiScale) {
+    var pollutants = {
         'aqi': {
           data: [],
           color: 'rgba(75,192,192'
@@ -54,9 +55,19 @@ function parseWeatherbitForecasts (forecasts) {
     labels.push(moment(forecast['timestamp_local']).format("dd Do, HHA"));
   });
 
+
+  const extraCheck = utils.aqiScaleTools.extraChecks(aqiScale.abbreviation);
   Object.keys(pollutants).forEach(pollutant => {
+    let aqiChartOptions = utils.tools.cloneObject(utils.charts.aqiDefaultOptions);
+    let aqiScaleThresholds = utils.charts.parseScale(aqiScale, pollutant, extraCheck);
+    if (aqiScaleThresholds) {
+      aqiChartOptions.chartArea.backgroundColors = aqiScaleThresholds.backgroundColors;
+      aqiChartOptions.chartArea.upperLimits = aqiScaleThresholds.upperLimits;
+    };
+
     results.data.push({
       pollutantName: pollutant.toUpperCase(),
+      aqiChartOptions: aqiChartOptions,
       data: {
         labels: labels,
         datasets: [
@@ -90,10 +101,23 @@ function parseWeatherbitForecasts (forecasts) {
 }
 
 const mapStateToProps = state => {
-  var forecasts = (state.aqiForecasts.forecasts.data && state.aqiForecasts.forecasts.data.length > 0) ? parseWeatherbitForecasts(state.aqiForecasts.forecasts): [];
+  const { aqiForecasts, currentUser } = state,
+      { aqiScales, isFetchingAqiScales } = state.aqiScales,
+      user = currentUser.user || utils.auth.getUser();
+
+  var aqiScale = null;
+  if (aqiScales.length > 0) {
+    aqiScale = aqiScales[aqiScales.findIndex(x => {
+      return x.abbreviation === user.profile.aqi_scale;
+    })];
+  }
+      
+  const forecasts = (aqiForecasts.forecasts.data && aqiForecasts.forecasts.data.length > 0) ? parseWeatherbitForecasts(aqiForecasts.forecasts, aqiScale): [];
+
   return {
     forecasts: forecasts,
-    isFetchingAqiForecasts: state.aqiForecasts.isFetchingAqiForecasts
+    isFetchingAqiForecasts: aqiForecasts.isFetchingAqiForecasts,
+    isFetchingAqiScales: isFetchingAqiScales
   };
 };
 

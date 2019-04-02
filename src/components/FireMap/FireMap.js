@@ -35,8 +35,11 @@ function _format_markers_vic_emergency_data (features) {
         markerIcon = getFeatureStyles(feature).icon;
     if (feature.geometry && feature.geometry.geometries) {
       points =  feature.geometry.geometries.filter(figure => figure.type === "Point");
-    } else {
+    } else if (feature.geometry && feature.geometry.type === "Point") {
       points =  [feature.geometry];
+    } else {
+      // TODO: check if makes sense to take the center of Polygon
+      points = [];
     }
     points.forEach(point => {
       markers.push({

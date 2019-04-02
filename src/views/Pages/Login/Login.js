@@ -4,6 +4,12 @@ import { connect } from 'react-redux';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row, FormFeedback } from 'reactstrap';
 
 import { userActions } from '../../../actions';
+import logo from '../../../assets/img/brand/logo2.png'
+
+const LogoStyles = {
+  textAlign: 'center',
+  marginBottom: '16px'
+}
 
 class Login extends Component {
 
@@ -40,12 +46,17 @@ class Login extends Component {
     }
 
   render() {
-    const { loggingIn } = this.props;
+    const { loggingIn, error } = this.props;
     const { username, password, submitted } = this.state;
 
     return (
       <div className="app flex-row align-items-center">
         <Container>
+          <Row className="justify-content-center">
+            <Col style={LogoStyles} md="8">
+              <img src={logo} height={100} alt="Logo"/>
+            </Col>
+          </Row>
           <Row className="justify-content-center">
             <Col md="8">
               <CardGroup>
@@ -60,7 +71,7 @@ class Login extends Component {
                             <i className="icon-user"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="Username" autoComplete="username" name="username" value={username} invalid={submitted && !username} onChange={this.handleChange}/>
+                        <Input type="text" placeholder="Username" autoComplete="username" name="username" value={username} invalid={submitted && (!username || !!error)} onChange={this.handleChange}/>
                         {submitted && !username &&
                           <FormFeedback>Username is required...</FormFeedback>
                         }
@@ -71,14 +82,17 @@ class Login extends Component {
                             <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="password" placeholder="Password" name="password" autoComplete="current-password" value={password} invalid={submitted && !password} onChange={this.handleChange}/>
+                        <Input type="password" placeholder="Password" name="password" autoComplete="current-password" value={password} invalid={submitted && (!password || !!error)} onChange={this.handleChange}/>
                         {submitted && !password &&
                           <FormFeedback>Password is required...</FormFeedback>
+                        }
+                        {!!error &&
+                          <FormFeedback>{error}</FormFeedback>
                         }
                       </InputGroup>
                       <Row>
                         <Col xs="6">
-                          <Button color="primary" className="px-4" onClick={this.handleSubmit}>Login</Button>
+                          <Button color="primary" className="px-4" onClick={this.handleSubmit} type="submit">Login</Button>
                           {loggingIn &&
                             <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                           }
@@ -94,8 +108,7 @@ class Login extends Component {
                   <CardBody className="text-center">
                     <div>
                       <h2>Sign up</h2>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua.</p>
+                      <p>Get a free account on the MyAQI app and keep up to date with the Air Quality in your Region.</p>
                       <Link to="/register">
                         <Button color="primary" className="mt-3" active tabIndex={-1}>Register Now!</Button>
                       </Link>
@@ -112,9 +125,10 @@ class Login extends Component {
 }
 
 function mapStateToProps(state) {
-  const { loggingIn } = state.authentication;
+  const { loggingIn, error } = state.authentication;
   return {
-    loggingIn
+    loggingIn,
+    error
   };
 }
 

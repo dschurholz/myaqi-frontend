@@ -1,8 +1,9 @@
 // userReducer.js
 
 import * as types from '../actions/types';
+import { utils } from '../utils';
 
-let user = JSON.parse(localStorage.getItem('user'));
+let user = utils.auth.getUser();
 const initialState = user ? { loggedIn: true, user } : {};
 
 export function authentication(state = initialState, action) {
@@ -18,7 +19,9 @@ export function authentication(state = initialState, action) {
         user: action.user
       };
     case types.LOGIN_FAILURE:
-      return {};
+      return {
+        error: action.error
+      };
     case types.LOGOUT:
       return {};
     default:
@@ -39,49 +42,46 @@ export function registration(state = {}, action) {
   }
 }
 
-export function users(state = {}, action) {
+export function currentUser(state = {}, action) {
   switch (action.type) {
     case types.GETME_REQUEST:
       return {
+        ...state,
         loading: true
       };
     case types.GETME_SUCCESS:
       return {
-        items: action.users
+        user: action.user
+      };
+    case types.UPDATE_PROFILE_REQUEST:
+      return {
+        updating: true,
+        ...state
+      };
+    case types.UPDATE_PROFILE_SUCCESS:
+      return {
+        user: action.user
       };
     case types.GETME_FAILURE:
+    case types.UPDATE_PROFILE_FAILURE:
       return {
+        ...state,
         error: action.error
       };
     case types.DELETE_REQUEST:
       // add 'deleting:true' property to user being deleted
       return {
-        ...state,
-        items: state.items.map(user =>
-          user.id === action.id
-            ? { ...user, deleting: true }
-            : user
-        )
+        deleting: true,
+        ...state
       };
     case types.DELETE_SUCCESS:
       // remove deleted user from state
-      return {
-        items: state.items.filter(user => user.id !== action.id)
-      };
+      return {};
     case types.DELETE_FAILURE:
       // remove 'deleting:true' property and add 'deleteError:[error]' property to user 
       return {
-        ...state,
-        items: state.items.map(user => {
-          if (user.id === action.id) {
-            // make copy of user without 'deleting:true' property
-            const { deleting, ...userCopy } = user;
-            // return copy of user with 'deleteError:[error]' property
-            return { ...userCopy, deleteError: action.error };
-          }
-
-          return user;
-        })
+        error: action.error,
+        ...state
       };
     default:
       return state

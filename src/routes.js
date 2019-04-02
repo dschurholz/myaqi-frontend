@@ -7,16 +7,18 @@ const AQIForecastMap = React.lazy(() => import('./views/AQIForecastMap'));
 const Traffic = React.lazy(() => import('./views/Traffic'));
 const Fires = React.lazy(() => import('./views/Fires'));
 const CurrentProgress = React.lazy(() => import('./views/CurrentProgress'));
+const Profile = React.lazy(() => import('./views/Profile'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/', exact: true, name: 'Home', component: DefaultLayout },
-  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/map', name: 'AQIMap', component: AQIMap },
-  { path: '/aqiForecasts', name: 'AQIForecastMap', component: AQIForecastMap },
-  { path: '/traffic', name: 'Traffic', component: Traffic },
-  { path: '/fires', name: 'Fires', component: Fires },
-  { path: '/tesis-progress/current', name: 'CurrentProgress', component: CurrentProgress }
+  { path: '/', exact: true, name: 'Home', component: DefaultLayout, routeType: 'private'},
+  { path: '/dashboard', name: 'Dashboard', component: Dashboard, routeType: 'private' },
+  { path: '/map', name: 'AQIMap', component: AQIMap, routeType: 'private' },
+  { path: '/aqiForecasts', name: 'AQIForecastMap', component: AQIForecastMap, routeType: 'private' },
+  { path: '/traffic', name: 'Traffic', component: Traffic, routeType: 'private' },
+  { path: '/fires', name: 'Fires', component: Fires, routeType: 'private' },
+  { path: '/tesis-progress/current', name: 'CurrentProgress', component: CurrentProgress, routeType: 'private' },
+  { path: '/profile', exact: true, name: 'Profile', component: Profile, routeType: 'private' }
 ];
 
 export default routes;

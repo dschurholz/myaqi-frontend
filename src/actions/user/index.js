@@ -8,6 +8,7 @@ export const userActions = {
     logout,
     register,
     getMe,
+    updateProfile,
     delete: _delete
 };
 
@@ -91,7 +92,10 @@ function _delete() {
 
         UserService.userService.delete()
             .then(
-                user => dispatch(success()),
+                user => {
+                    dispatch(success())
+                    utils.history.push('/login');
+                },
                 error => dispatch(failure(error.toString()))
             );
     };
@@ -99,4 +103,24 @@ function _delete() {
     function request() { return { type: types.DELETE_REQUEST,  } }
     function success() { return { type: types.DELETE_SUCCESS,  } }
     function failure(error) { return { type: types.DELETE_FAILURE, error } }
+}
+
+function updateProfile(user) {
+    return dispatch => {
+        dispatch(request({ user }));
+
+        UserService.userService.update(user)
+            .then(
+                updatedUser => { 
+                    dispatch(success(updatedUser));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                }
+            );
+    };
+
+    function request(user) { return { type: types.UPDATE_PROFILE_REQUEST, user } }
+    function success(user) { return { type: types.UPDATE_PROFILE_SUCCESS, user } }
+    function failure(error) { return { type: types.UPDATE_PROFILE_FAILURE, error } }
 }

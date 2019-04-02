@@ -82,34 +82,34 @@ export default {
       title: true,
       name: 'Extras',
     },
-    {
-      name: 'Pages',
-      url: '/pages',
-      icon: 'fa fa-desktop',
-      disable: true,
-      children: [
-        {
-          name: 'Login',
-          url: '/login',
-          icon: 'fa fa-desktop',
-        },
-        {
-          name: 'Register',
-          url: '/register',
-          icon: 'fa fa-desktop',
-        },
-        {
-          name: 'Error 404',
-          url: '/404',
-          icon: 'fa fa-desktop',
-        },
-        {
-          name: 'Error 500',
-          url: '/500',
-          icon: 'fa fa-desktop',
-        },
-      ],
-    },
+    // {
+    //   name: 'Pages',
+    //   url: '/pages',
+    //   icon: 'fa fa-desktop',
+    //   disable: true,
+    //   children: [
+    //     {
+    //       name: 'Login',
+    //       url: '/login',
+    //       icon: 'fa fa-desktop',
+    //     },
+    //     {
+    //       name: 'Register',
+    //       url: '/register',
+    //       icon: 'fa fa-desktop',
+    //     },
+    //     {
+    //       name: 'Error 404',
+    //       url: '/404',
+    //       icon: 'fa fa-desktop',
+    //     },
+    //     {
+    //       name: 'Error 500',
+    //       url: '/500',
+    //       icon: 'fa fa-desktop',
+    //     },
+    //   ],
+    // },
     {
       name: 'Tesis Progress',
       url: '/tesis-progress',

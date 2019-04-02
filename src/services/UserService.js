@@ -17,20 +17,20 @@ function login(username, password) {
     };
 
     return axios.post(`${process.env.REACT_APP_API_ROOT}auth/token/`, requestOptions.body, { headers: requestOptions.headers })
-        .then(handleResponse)
-        .then(token => {
+        .then(response => {
+            const token = handleResponse(response);
             // store user details and jwt token in local storage to keep user logged in between page refreshes
-            console.log("user-token:", token);
-            localStorage.setItem('user-token', JSON.stringify(token));
+            utils.auth.setAuthToken(token.token);
 
             return token;
-        });
+        })
+        .catch(handleError);
 }
 
 function logout() {
     // remove user from local storage to log user out
-    localStorage.removeItem('user-token');
-    localStorage.removeItem('user');
+    utils.auth.removeUser();
+    utils.auth.removeAuthToken();
 }
 
 function getMe() {
@@ -39,11 +39,11 @@ function getMe() {
     };
 
     return axios.get(`${process.env.REACT_APP_API_ROOT}me`, requestOptions)
-        .then(handleResponse)
-        .then((user) => {
-            console.log("user:", user);
-            localStorage.setItem('user', JSON.stringify(user));
-        });
+        .then(response => {
+            const user = handleResponse(response);
+            utils.auth.setUser(user);
+        })
+        .catch(handleError);
 }
 
 function register(user) {
@@ -51,16 +51,23 @@ function register(user) {
         headers: { 'Content-Type': 'application/json' }
     };
 
-    return axios.post(`${process.env.REACT_APP_API_ROOT}accounts/`, JSON.stringify(user), requestOptions).then(handleResponse);
+    return axios.post(`${process.env.REACT_APP_API_ROOT}accounts/`, user, requestOptions)
+        .then(handleResponse)
+        .catch(handleError);
 }
 
 function update(user) {
     const requestOptions = {
-        headers: { ...utils.auth.authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
+        headers: { ...utils.auth.authHeader(), 'Content-Type': 'application/json' }
     };
 
-    return axios.put(`${process.env.REACT_APP_API_ROOT}me/`, requestOptions).then(handleResponse);
+    return axios.put(`${process.env.REACT_APP_API_ROOT}me/`, user, requestOptions)
+        .then(response => {
+            const updatedUser = handleResponse(response);
+            utils.auth.setUser(updatedUser);
+            return updatedUser;
+        })
+        .catch(handleError);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -69,20 +76,26 @@ function _delete() {
         headers: utils.auth.authHeader()
     };
 
-    return axios.delete(`${process.env.REACT_APP_API_ROOT}me/`, requestOptions).then(handleResponse);
+    return axios.delete(`${process.env.REACT_APP_API_ROOT}me/`, requestOptions)
+        .then(handleResponse)
+        .catch(handleError);
 }
 
 function handleResponse(response) {
-    if (response.status >= 400) {
-        if (response.status === 401) {
-            // auto logout if 401 response returned from api
-            logout();
-            window.location.reload(true);
-        }
-
-        const error = (response.data && response.data.message) || response.statusText;
-        return Promise.reject(error);
-    }
-
     return response.data;
+}
+
+function handleError(error) {
+    if (error.response.status === 401) {
+        // auto logout if 401 response returned from api
+        logout();
+        window.location.reload(true);
+    } 
+    var errorText;
+    if (error.response.status === 400 && error.response.data && error.response.data['non_field_errors']) {
+        errorText = error.response.data['non_field_errors'][0];
+    } else {
+        errorText = error.response.data || error.response.statusText;
+    }
+    return Promise.reject(errorText);
 }

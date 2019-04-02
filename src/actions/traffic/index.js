@@ -9,7 +9,7 @@ import {
 import axios from 'axios';
 
 // Melbourne Metropolitan Area
-const DEFAULT_MAP_AREA = '-37.947051,144.619003,-37.642215,145.212961';
+const DEFAULT_MAP_AREA = '-38.694680,141.010624,-36.008093,147.832930';
 
 export const fetchVicRoadsTraffic = (traffic) => {
   return {

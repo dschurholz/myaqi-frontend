@@ -12,10 +12,10 @@ import {
   TabPane
 } from 'reactstrap';
 import { SiteMap, QuerySiteDetails, MeasurementsTable, MeasurementsCharts } from '../../components';
-import { store } from '../../stores'
+import { store } from '../../stores';
 
 import { utils } from '../../utils';
-import { getSites } from '../../actions'
+import { getSites, getAQIScales } from '../../actions'
 
 const CHARTS = 'CHARTS';
 const TABLE = 'TABLE';
@@ -35,7 +35,8 @@ class AQIMap extends Component {
   }
   
   componentDidMount() {
-    store.dispatch(getSites());    
+    store.dispatch(getSites()); 
+    store.dispatch(getAQIScales());   
   }
 
   toggle(tab) {
