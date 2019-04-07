@@ -9,7 +9,8 @@ export const userActions = {
     register,
     getMe,
     updateProfile,
-    delete: _delete
+    delete: _delete,
+    getQuestionnaire
 };
 
 function login(username, password) {
@@ -123,4 +124,24 @@ function updateProfile(user) {
     function request(user) { return { type: types.UPDATE_PROFILE_REQUEST, user } }
     function success(user) { return { type: types.UPDATE_PROFILE_SUCCESS, user } }
     function failure(error) { return { type: types.UPDATE_PROFILE_FAILURE, error } }
+}
+
+function getQuestionnaire() {
+    return dispatch => {
+        dispatch(request());
+
+        UserService.userService.getQuestionnaire()
+            .then(
+                updatedUser => { 
+                    dispatch(success(updatedUser));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                }
+            );
+    };
+
+    function request() { return { type: types.GET_QUESTIONNAIRE_REQUEST } }
+    function success(questionnaire) { return { type: types.GET_QUESTIONNAIRE_SUCCESS, questionnaire } }
+    function failure(error) { return { type: types.GET_QUESTIONNAIRE_FAILURE, error } }
 }

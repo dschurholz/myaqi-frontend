@@ -87,3 +87,22 @@ export function currentUser(state = {}, action) {
       return state
   }
 }
+
+export function questionnaire (state = {isFetchingQuestionnaire: false}, action) {
+  switch (action.type) {
+    case types.GET_QUESTIONNAIRE_REQUEST:
+      return { isFetchingQuestionnaire: true };
+    case types.GET_QUESTIONNAIRE_SUCCESS:
+      return {
+        isFetchingQuestionnaire: false,
+        questionnaire: action.questionnaire
+      };
+    case types.GET_QUESTIONNAIRE_FAILURE:
+      return {
+        isFetchingQuestionnaire: false,
+        error: action.error
+      };
+    default:
+      return state
+  }
+}

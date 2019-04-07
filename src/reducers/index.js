@@ -9,7 +9,7 @@ import traffic from './trafficReducer';
 import fires from './fireReducer';
 import aqiForecasts from './aqiForecastsReducer';
 import aqiScales from './aqiScalesReducer';
-import { authentication, registration, currentUser } from './userReducer';
+import { authentication, registration, currentUser, questionnaire } from './userReducer';
 
 export default combineReducers({
     sites: sites,
@@ -22,5 +22,6 @@ export default combineReducers({
     aqiScales: aqiScales,
     authentication: authentication,
     registration: registration,
-    currentUser: currentUser
+    currentUser: currentUser,
+    questionnaire: questionnaire
 });

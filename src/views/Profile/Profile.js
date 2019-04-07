@@ -1,21 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Card, CardHeader, CardBody, CardFooter, Col, Container, Form, FormText, FormGroup, Label, Input, InputGroup, InputGroupAddon, InputGroupText, Row, FormFeedback } from 'reactstrap';
+import { Badge, Button, Card, CardHeader, CardBody, CardFooter, Col, Container, Form, FormText, FormGroup, Label, Input, InputGroup, InputGroupAddon, InputGroupText, Row, FormFeedback, Collapse, ListGroup, ListGroupItem } from 'reactstrap';
 import Moment from 'react-moment';
+import { AppSwitch } from '@coreui/react'
 
+import { store } from '../../stores';
 import { userActions } from '../../actions';
 import { utils } from '../../utils';
+import { Questionnaire, PreviewMap } from '../../components';
+import { getAQIScales } from '../../actions';
 
 const YES = 'Yes';
 const NO = 'No';
 const AU_EPA_AQI = 'AUEPA';
-const EU_EEA_AQI = 'EUEEA';
-const USA_EPA_AQI = 'USEPA';
-const AQI_SCALES = [
-    {key: AU_EPA_AQI, text: 'Australian EPA AQI'},
-    {key: EU_EEA_AQI, text: 'EU EEA AQI'},
-    {key: USA_EPA_AQI, text: 'USA EPA AQI'}
-];
 
 
 class Profile extends Component {
@@ -33,15 +30,34 @@ class Profile extends Component {
       profile: {
         colourBlindness: user.profile && !!user.profile.colour_blindness?YES:NO,
         age: (user.profile && user.profile.age) || 18,
-        aqiScale: (user.profile && user.profile.aqi_scale) || AU_EPA_AQI
+        aqiScale: (user.profile && user.profile.aqi_scale) || AU_EPA_AQI,
+        questionnaireAnswers: []
       },
-      submitted: false
+      submitted: false,
+      collapse: {
+        questionnaire: false,
+        pollutantSensitivity: false,
+        mapsAndIcons: true,
+        AQIScales: false
+      },
+      visualization: {
+        heatmap: false,
+        pinsText: true,
+        pins: false,
+        hotspots: false
+      }
     };
 
     this.handleProfileChange = this.handleProfileChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.openCollapse = this.openCollapse.bind(this);
+    this.handleQuestionnaireChange = this.handleQuestionnaireChange.bind(this);
+  }
+
+  componentDidMount() {
+    store.dispatch(getAQIScales());   
   }
 
   handleChange(event) {
@@ -68,6 +84,19 @@ class Profile extends Component {
     });
   }
 
+  handleQuestionnaireChange(event, updatedAnswers) {
+    event.preventDefault();
+
+    const { profile } = this.state;
+
+    this.setState({
+      profile: {
+        ...profile,
+        questionnaireAnswers: updatedAnswers,
+      }
+    });
+  }
+
   handleDelete(event) {
     event.preventDefault();
 
@@ -89,25 +118,68 @@ class Profile extends Component {
       cleanUser.profile = {};
       Object.assign(cleanUser.profile, profile);
       cleanUser.profile.colourBlindness = profile.colourBlindness === YES;
+      cleanUser.profile.questionnaireAnswers = [];
+      for (let a in profile.questionnaireAnswers) {
+        cleanUser.profile.questionnaireAnswers.push({
+          question_id: parseInt(a),
+          answer_id: profile.questionnaireAnswers[a]
+        });
+      }
       dispatch(userActions.userActions.updateProfile(
         utils.tools.camelCameToUnderscore(cleanUser)));
     }
   }
 
-  onCancel(event) {
+  openCollapse(event) {
     event.preventDefault();
 
-    utils.history.push('/login');
+    const { target } = event.target;
+    const { collapse } = this.state;
+    this.setState({
+      collapse: {
+        ...collapse,
+        [target]: !collapse[target]
+      }
+    });
+  }
+
+  formatPollutant(pollutantName) {
+    const regexStr = pollutantName.match(/[a-z]+|[^a-z]+/g);
+    return (
+      <>
+        {regexStr[0].toUpperCase()}
+        {(regexStr.length > 0)? <sub>{regexStr[1]}</sub>: ''}
+      </>
+    );
+  }
+
+  handleSwitchChange = e => {
+    const { name } = e.target;
+    const visualization = this.state.visualization;
+    var newVis = {};
+
+    for (var v in visualization) {
+      newVis[v] = false;
+    }
+    newVis[name] = true;
+
+    this.setState({
+      visualization: newVis
+    });
+  };
+
+  loader () {
+    return (<img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />)
   }
 
   render() {
-    const { updating } = this.props;
-    const {user, profile, submitted } = this.state;
+    const { questionnaire, updating, aqiScales, isFetchingAqiScales } = this.props;
+    const { user, profile, submitted, collapse, visualization } = this.state;
     const modified = (this.props.user.profile && this.props.user.profile.modified) || 'new';
 
     return (
-      <Row className="justify-content-center">
-        <Col md="9" lg="7" xl="6">
+      <Row>
+        <Col sm="12" md="6" lg="6" xl="6">
           <Card className="mx-4">
             <CardHeader>
               <strong>Profile</strong>
@@ -136,7 +208,7 @@ class Profile extends Component {
                 </FormGroup>
                 <FormGroup row>
                   <Col md="3">
-                    <Label>Colour Blindess</Label>
+                    <Label>Colour Blindness</Label>
                   </Col>
                   <Col md="9">
                     <FormGroup inline check className="radio">
@@ -155,9 +227,9 @@ class Profile extends Component {
                   </Col>
                   <Col xs="12" md="9" size="lg">
                     <Input type="select" name="aqiScale" id="aqiScaleSelect" value={profile.aqiScale} onChange={ this.handleProfileChange }>
-                      {AQI_SCALES.map(scale => {
+                      {aqiScales.map(scale => {
                         return (
-                          <option key={scale.key} value={scale.key}>{scale.text}</option>
+                          <option key={scale.abbreviation} value={scale.abbreviation}>{scale.name}</option>
                         );
                       })}
                     </Input>
@@ -175,6 +247,28 @@ class Profile extends Component {
                     </>
                   }
                 </FormText>
+                <hr />
+                <p className="text-muted">AQI Sensitivity Questionnaire</p>
+                {
+                  !!this.props.user ?
+                    <>
+                      <FormText className={!collapse.questionnaire ? 'mb-0' : 'mb-2'}>
+                        <a href="#" target="questionnaire" onClick={this.openCollapse}>
+                        {
+                          !collapse.questionnaire ?
+                          `Take this questionnaire to assess your sensitivity towards certain pollutants.`
+                        :
+                          `Close questionnaire.`
+                        }
+                        </a>
+                      </FormText>
+                      <Collapse isOpen={collapse.questionnaire} style={{maxHeight: '300px', overflowY: 'scroll', overflowX: 'hidden'}}>
+                          <Questionnaire onChange={this.handleQuestionnaireChange} answers={(this.props.user.profile && this.props.user.profile.questionnaire_answers) || []}/>
+                      </Collapse>
+                    </>
+                  :
+                  this.loader()
+                }
                 <hr />
                 <p className="text-muted">User Data</p>
                 <FormGroup row>
@@ -202,26 +296,6 @@ class Profile extends Component {
                     </InputGroup>
                   </Col>
                 </FormGroup>
-                {/*<InputGroup className="mb-3">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="icon-lock"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input type="password" placeholder="Password" autoComplete="new-password" name="password" value={user.password} invalid={submitted && !user.password} onChange={this.handleChange}/>
-                  {
-                    submitted && !user.password &&
-                      <FormFeedback>Password is required...</FormFeedback>
-                  }
-                </InputGroup>
-                <InputGroup className="mb-3">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="icon-lock"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input type="password" placeholder="Repeat password" autoComplete="new-password" name="passwordCheck" value={passwordCheck} invalid={!!passwordCheck && !passwordValid} valid={!!passwordCheck && passwordValid} onChange={this.handlePasswordChange}/>
-                </InputGroup>*/}
                 <FormGroup row>
                   <Col md="3">
                     <Label htmlFor="text-input">First Name</Label>
@@ -255,7 +329,7 @@ class Profile extends Component {
                 <Button color="primary" onClick={this.handleSubmit} block>Update Profile</Button>
                 {
                   updating && 
-                  <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                  this.loader()
                 }
                 <hr />
                 <Button color="danger" onClick={this.handleDelete} block>Delete Account</Button>
@@ -263,16 +337,99 @@ class Profile extends Component {
             </CardBody>
           </Card>
         </Col>
+        <Col sm="12" md="6" lg="6" xl="6">
+          <Card className="mx-4">
+            <CardHeader>
+              <strong>Pollutant Sensitivity</strong>&nbsp;<i>Preview</i>
+            </CardHeader>
+            <Collapse isOpen={collapse.pollutantSensitivity}>
+              <CardBody className="p-4">
+                {
+                  this.props.user.profile && this.props.user.profile.sensitivity_levels ?
+                  <ListGroup>
+                    {
+                      this.props.user.profile.sensitivity_levels.map(level => {
+                        return (
+                          <ListGroupItem key={level.pollutant_id} className="justify-content-between">{this.formatPollutant(level.pollutant_id)} <span className="float-right"><Badge color={level.level === 0?'success':(level.level === 1?'info':(level.level === 2?'warning':(level.level === 3?'danger':'dark')))} pill>{level.level_display}</Badge></span></ListGroupItem>
+                        );
+                      })
+                    }
+                  </ListGroup>
+                  : 
+                  <div>Fill in the questionnaire to see your pollutant sensitivity levels.</div>
+                }
+              </CardBody>
+            </Collapse>
+            <CardFooter>
+              <a href="#" onClick={this.openCollapse} className={'btn btn-primary mb-1'} id="pollutantSensitivityToggle" target="pollutantSensitivity">{!collapse.pollutantSensitivity?'Show':'Hide'}</a>
+            </CardFooter>
+          </Card>
+          <Card className="mx-4">
+            <CardHeader className="header-with-switches">
+              <strong>Maps & Icons</strong>&nbsp;<i>Preview</i>
+              <div className="float-right header-switch">
+                <span className="header-switch-label">Hotspots</span>
+                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.hotspots} onChange={ this.handleSwitchChange } name="hotspots" value="hotspots"/>
+              </div>
+              <div className="float-right header-switch">
+                <span className="header-switch-label">Heatmap</span>
+                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.heatmap} onChange={ this.handleSwitchChange } name="heatmap" value="heatmap"/>
+              </div>
+              <div className="float-right header-switch mr-1">
+                <span className="header-switch-label">Pins</span>
+                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.pins} onChange={ this.handleSwitchChange } name="pins" value="pins"/>
+              </div>
+              <div className="float-right header-switch mr-1">
+                <span className="header-switch-label">Pins + text</span>
+                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.pinsText} onChange={ this.handleSwitchChange } name="pinsText" value="pinsText"/>
+              </div>
+            </CardHeader>
+            <Collapse isOpen={collapse.mapsAndIcons}>
+              <CardBody className="p-0">
+                <PreviewMap visualization={visualization} loaderHeight="300px" loaderMargin="150px" emptyText="AQI scale info couldn't be retrieved."/>
+              </CardBody>
+            </Collapse>
+            <CardFooter>
+              <a href="#" onClick={this.openCollapse} className={'btn btn-primary mb-1'} id="pollutantSensitivityToggle" target="mapsAndIcons">{!collapse.mapsAndIcons?'Show':'Hide'}</a>
+            </CardFooter>
+          </Card>
+          <Card className="mx-4">
+            <CardHeader>
+              <strong>AQI Scale</strong>&nbsp;<i>Preview</i>
+            </CardHeader>
+            <Collapse isOpen={collapse.AQIScales}>
+              <CardBody className="p-4">
+                AQI Scales
+              </CardBody>
+            </Collapse>
+            <CardFooter>
+              <a href="#" onClick={this.openCollapse} className={'btn btn-primary mb-1'} id="pollutantSensitivityToggle" target="AQIScales">{!collapse.AQIScales?'Show':'Hide'}</a>
+            </CardFooter>
+          </Card>
+        </Col>
       </Row>
     );
   }
 }
+
 function mapStateToProps(state) {
-    const { updating, user, deleting } = state.currentUser;
+    const { currentUser } = state,
+          { updating, deleting } = currentUser,
+          { aqiScales, isFetchingAqiScales } = state.aqiScales,
+          user = currentUser.user || utils.auth.getUser();
+
+    var aqiScale = null;
+    if (aqiScales.length > 0) {
+      aqiScale = aqiScales[aqiScales.findIndex(x => {
+        return x.abbreviation === user.profile.aqi_scale;
+      })];
+    }
     return {
         updating,
         deleting,
-        user: user || utils.auth.getUser()
+        isFetchingAqiScales,
+        aqiScales,
+        user
     };
 }
 

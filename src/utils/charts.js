@@ -91,12 +91,18 @@ export const aqiBeforeDrawPlugin = {
 };
 
 // Returns an object with upperLimits and backgroundColors as properties
-export const parseScale = function (aqiScale, pollutant='aqi', extraCheck=null) {
+export const parseScale = function (aqiScale, pollutant='aqi', extraCheck=null, extended=false) {
   var { aqi_category_thresholds } = aqiScale;
   var result = {
     backgroundColors: [],
     upperLimits: []
   };
+
+  if (extended) {
+    result.foregroundColors = [];
+    result.abbreviations = [];
+    result.descriptions = [];
+  }
 
   aqi_category_thresholds.sort((thresh1, thresh2) => {
     if(thresh1.upper_threshold_value < thresh2.upper_threshold_value) return -1;
@@ -109,6 +115,11 @@ export const parseScale = function (aqiScale, pollutant='aqi', extraCheck=null) 
       }
       result.backgroundColors.push(thresh.background_colour);
       result.upperLimits.push(thresh.upper_threshold_value);
+      if (extended) {
+        result.foregroundColors.push(thresh.foreground_colour || '#000000');
+        result.abbreviations.push(thresh.abbreviation);
+        result.descriptions.push(thresh.description);
+      }
     }
   });
 

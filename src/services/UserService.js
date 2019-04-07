@@ -7,7 +7,8 @@ export const userService = {
     register,
     getMe,
     update,
-    delete: _delete
+    delete: _delete,
+    getQuestionnaire
 };
 
 function login(username, password) {
@@ -78,6 +79,15 @@ function _delete() {
 
     return axios.delete(`${process.env.REACT_APP_API_ROOT}me/`, requestOptions)
         .then(handleResponse)
+        .catch(handleError);
+}
+
+function getQuestionnaire() {
+    return axios.get(`${process.env.REACT_APP_API_ROOT}questionnaire/`)
+        .then(response => {
+            // returning questionnaire
+            return handleResponse(response);
+        })
         .catch(handleError);
 }
 

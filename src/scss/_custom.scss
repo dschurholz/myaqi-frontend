@@ -39,6 +39,18 @@
       margin-top: -16px;
     }
   }
+  .header-switch {
+    display: table;
+    span.header-switch-label {
+      padding-right: 3px;
+      display: table-cell;
+      vertical-align: middle;
+    }
+    .header-switch {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
 }
 
 .nav-avatar {
@@ -52,4 +64,8 @@
       transform: scale(1.1,1.1);
     }
   }
+}
+
+.pinpoint-location {
+  font-style: italic;
 }

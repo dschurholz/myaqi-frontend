@@ -6,7 +6,9 @@ const isObject = function(a) {
 
 export default {
     camelCameToUnderscore: camelCameToUnderscore,
-    cloneObject: cloneObject
+    cloneObject: cloneObject,
+    hexToRgb: hexToRgb,
+    hexToRgba: hexToRgba
 };
 
 function camelCameToUnderscore(obj) {
@@ -31,4 +33,35 @@ function cloneObject(src) {
         }
     }
     return target;
+};
+
+function _hexToRgb (hex) { 
+    return parseInt(hex, 16);
+};
+
+function hexToRgb (hex) {
+    var rgb = hex;
+    if (rgb[0] === '#') {
+        rgb = rgb.split('#')[0];
+    }
+    if (rgb.length === 3) {
+        rgb = `rgb(${_hexToRgb(rgb[0])},${_hexToRgb(rgb[1])},${_hexToRgb(rgb[2])})`;
+    } else if (rgb.length === 6) {
+        rgb = `rgb(${_hexToRgb(rgb.substr(0, 2))},${_hexToRgb(rgb.substr(2, 4))},${_hexToRgb(rgb.substr(4, 6))})`;
+    }
+    return rgb;
+};
+
+function hexToRgba (hex, alpha) {
+    var rgba = hex;
+    if (rgba[0] === '#') {
+        rgba = rgba.split('#')[1];
+    }
+    if (rgba.length === 3) {
+        rgba = `rgba(${_hexToRgb(rgba[0])},${_hexToRgb(rgba[1])},${_hexToRgb(rgba[2])},${alpha})`;
+    } else if (rgba.length === 6) {
+        rgba = `rgba(${_hexToRgb(rgba.substr(0, 2))},${_hexToRgb(rgba.substr(2, 4))},${_hexToRgb(rgba.substr(4, 6))},${alpha})`;
+    }
+
+    return rgba;
 };

@@ -59,13 +59,11 @@ class Traffic extends Component {
 
     if (apis.bing.isActive && !apis.bing.collected) {
       store.dispatch(getBingTraffic());
-      var apis = this.state.apis;
       apis.bing.collected = true;
 
     }
     if (apis.vicRoads.isActive && !apis.vicRoads.collected) {
       store.dispatch(getVicRoadsTraffic());
-      var apis = this.state.apis;
       apis.vicRoads.collected = true;
     }
     this.setState({

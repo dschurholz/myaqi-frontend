@@ -14,10 +14,11 @@ export class GoogleMap extends Component {
 
   loading = () => utils.loaders.MapLoader;
 
-  openInfoWindow = null;
+  infoWindow = null;
   currentInteractiveMarker = null;
   markerEls = [];
   markerCluster = null;
+  heatmapLayers = [];
 
   onMarkerClick = (marker, markerEl) => {
     if (this.props.onMarkerSelected && typeof this.props.onMarkerSelected === "function") {
@@ -26,8 +27,17 @@ export class GoogleMap extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (prevProps.markers.length > 0 && this.props.markers.length !== prevProps.markers.length) {
+    const { markers, updating } = this.props;
+    let refresh = false;
+    if (this.heatmapLayers.length > 0) {
+      this.cleanLayers();
+      refresh = true;
+    }
+    if (prevProps.markers.length > 0 || markers.length !== prevProps.markers.length || updating) {
       this.cleanMarkers();
+      refresh = true;
+    }
+    if (refresh && this.map && this.maps) {
       this.loadMap(this.map, this.maps);
     }
   }
@@ -60,29 +70,41 @@ export class GoogleMap extends Component {
     }
   }
 
+  cleanLayers = () => {
+    this.heatmapLayers.forEach(heatmapLayer => {
+      heatmapLayer.setMap(null);
+    });
+    this.heatmapLayers = [];
+  }
+
   loadMap = (map, maps) => {
     var bounds = new maps.LatLngBounds();
+    this.infowindow = new maps.InfoWindow();
     this.props.markers.forEach((marker, idx) => {
-      var mar = new maps.Marker({
+      var mar = {
         position: {
           lat: Number.parseFloat(marker.latitude),
           lng: Number.parseFloat(marker.longitude)
         },
         title: marker.name,
-        map: map,
-        icon: {
-          url: (marker.iconUrl) ? marker.iconUrl : null,
-          scaledSize: new maps.Size(this.props.scaleMarkers[0], this.props.scaleMarkers[1])
-        }
-      });
+        map: map
+      };
 
-      var infowindow = new maps.InfoWindow({
-        content: `<div><h1>` + marker.name + `</h1></div>`
-      });
+      if (!!marker.iconUrl) {
+        mar.icon = {
+          url: marker.iconUrl,
+        }
+        if (this.props.scaleMarkers && this.props.scaleMarkers.length === 2) {
+          mar.icon.scaledSize = new maps.Size(this.props.scaleMarkers[0], this.props.scaleMarkers[1])
+        }
+      } else if (!!marker.icon) {
+        mar.icon = marker.icon;
+      }
+      mar = new maps.Marker(mar);
 
       mar.addListener('click', (e) => {
-        infowindow.open(map, mar);
-        this.openInfoWindow = infowindow;
+        this.infowindow.setContent(marker.name);
+        this.infowindow.open(map, mar);
         this.onMarkerClick(marker, mar);
         if (e && e.va) e.va.stopPropagation();
       });
@@ -161,6 +183,20 @@ export class GoogleMap extends Component {
 
       poly.setMap(map);
     });
+
+    this.props.heatmapLayers.forEach(heatmapLayer => {
+      this.heatmapLayers.push(new maps.visualization.HeatmapLayer(Object.assign(
+        heatmapLayer, {
+          map: map,
+          data: heatmapLayer.data.map(point => {
+            return {
+              location: new maps.LatLng(point.latitude, point.longitude),
+              weight: point.weight
+            }
+          })
+        })
+      ));
+    });
   }
 
   onGoogleApiLoaded = (map, maps) => {
@@ -172,9 +208,8 @@ export class GoogleMap extends Component {
   };
  
   onMapClicked = ({x, y, lat, lng, event}) => {
-    if (this.openInfoWindow !== null) {
-      this.openInfoWindow.close();
-      this.openInfoWindow = null;
+    if (this.infowindow !== null) {
+      this.infowindow.close();
       return;
     }
     if (this.props.onMapClicked && typeof this.props.onMapClicked === 'function') {
@@ -198,14 +233,13 @@ export class GoogleMap extends Component {
         }
       });
 
-      var infowindow = new this.maps.InfoWindow({
+      this.infowindow = new this.maps.InfoWindow({
         content: `<div><h1>Current Forecast</h1></div>`
       });
 
       this.currentInteractiveMarker.addListener('click', (e) => {
         e.va.stopPropagation();
-        infowindow.open(this.map, this.currentInteractiveMarker);
-        this.openInfoWindow = infowindow;
+        this.infowindow.open(this.map, this.currentInteractiveMarker);
       });
     }
   };
@@ -213,22 +247,26 @@ export class GoogleMap extends Component {
   render() {
     var styles = {};
     Object.assign(styles, mapStyles, this.props.extraMapStyles || {});
+    const { extraMapOptions, updating } = this.props;
     const isEmpty = this.props.markers.length === 0 &&
                     this.props.paths.length === 0  &&
-                    this.props.polygons.length === 0;
+                    this.props.polygons.length === 0 &&
+                    (!this.props.heatmapLayers || this.props.heatmapLayers.length === 0);
     return (
       <div style={styles}>
         {!isEmpty || this.props.isInteractive
         ? <GoogleMapReact
             bootstrapURLKeys={{ key: this.props.apiKey }}
-            defaultCenter={{
+            defaultCenter={(extraMapOptions && extraMapOptions.center) ? extraMapOptions.center : {
              lat: -37.828730,
              lng: 145.132400
             }}
-            defaultZoom={7}
+            defaultZoom={(extraMapOptions && extraMapOptions.zoom)? extraMapOptions.zoom : 7}
             yesIWantToUseGoogleMapApiInternals
             layerTypes={this.props.layers || []}
             onClick={this.onMapClicked}
+            options={(extraMapOptions && extraMapOptions.extra) || {}}          
+            heatmapLibrary={true}
             onGoogleApiLoaded={({ map, maps }) => this.onGoogleApiLoaded(map, maps)}
           />
         : (this.props.isFetchingData ?
