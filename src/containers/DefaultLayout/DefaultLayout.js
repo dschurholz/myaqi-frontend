@@ -40,13 +40,19 @@ class DefaultLayout extends Component {
     utils.history.push('/profile');
   }
 
+  onSettings(e) {
+    e.preventDefault();
+    utils.history.push('/settings');
+  }
+
   render() {
     return (
       <div className="app">
         <AppHeader fixed>
           <Suspense  fallback={this.loading()}>
             <DefaultHeader onLogout={e=>this.signOut(e)}
-                           onProfile={e=>this.onProfile(e)}/>
+                           onProfile={e=>this.onProfile(e)}
+                           onSettings={e=>this.onSettings(e)}/>
           </Suspense>
         </AppHeader>
         <div className="app-body">
