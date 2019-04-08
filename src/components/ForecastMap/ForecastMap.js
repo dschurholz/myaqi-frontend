@@ -8,7 +8,10 @@ import { utils } from '../../utils';
 
 
 const mapStateToProps = state => {
-  let icon = 'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--AQI--Gauge--light");
+  const { forecasts } = state.aqiForecasts;
+  let icon = (value) => {
+    return 'data:image/svg+xml;utf-8,' + utils.svgIcons.getGaugeIcon("light", value);
+  };
 
   return {
     markers: [],
@@ -22,7 +25,7 @@ const mapStateToProps = state => {
     },
     isFetchingData: false,
     isInteractive: true,
-    defaultIcon: icon
+    defaultIcon: (forecasts.data && forecasts.data.length > 0) ? icon(forecasts.data[0]['aqi']) : icon(0)
   };
 };
 

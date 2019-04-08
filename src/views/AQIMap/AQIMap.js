@@ -28,10 +28,13 @@ class AQIMap extends Component {
   constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
     this.state = {
-      activeTab: CHARTS
+      activeTab: CHARTS,
+      stationIcon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getGaugeIcon("light")
     };
+    
+    this.toggle = this.toggle.bind(this);
+    this.getStationIcon = this.getStationIcon.bind(this);
   }
   
   componentDidMount() {
@@ -42,6 +45,12 @@ class AQIMap extends Component {
   toggle(tab) {
     this.setState({
       activeTab: tab
+    });
+  }
+
+  getStationIcon(aqiValue) {
+    this.setState({
+      stationIcon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getGaugeIcon("light", aqiValue)
     });
   }
 
@@ -63,10 +72,10 @@ class AQIMap extends Component {
           <Col xs="12" sm="6" lg="6">
             <Card className="text-black site-list-card">
               <CardHeader>
-                <img src={'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--AQI--Gauge--light")} width="25" height="25" /> Site Details
+                <img src={this.state.stationIcon} width="25" height="25" /> Site Details
               </CardHeader>
               <CardBody>
-                <QuerySiteDetails />
+                <QuerySiteDetails onChange={this.getStationIcon} />
               </CardBody>
             </Card>
           </Col>

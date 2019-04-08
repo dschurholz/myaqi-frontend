@@ -45,6 +45,14 @@ class Questionnaire extends Component {
     });
   }
 
+  componentDidUpdate () {
+    const { questionnaire, onInit } = this.props;
+
+    if (onInit && typeof onInit === 'function') { 
+      onInit((questionnaire && questionnaire.length) || 0);
+    }
+  }
+
   handleAnswerInputChange = e => {
     const { name, value } = e.target;
     const { answers } = this.state;

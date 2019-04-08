@@ -21,7 +21,9 @@ export const receivedSites = (sites) => {
 export const getSites = () => {
   return (dispatch) => {
     dispatch(fetchSites([]));
-    return axios.get(process.env.REACT_APP_SITES_URL, {params: {extended: true}})
+    // return axios.get(process.env.REACT_APP_SITES_URL, {params: {extended: true}})
+    return axios.get(process.env.REACT_APP_LIVE_SITES_URL)
+    // return axios.get('data/sites_test_data.json')
       .then(response => {
         dispatch(receivedSites(response.data.results))
         if (response.data.count > 0) {

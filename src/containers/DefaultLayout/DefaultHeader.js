@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 // eslint-disable-next-line
 import { Link } from 'react-router-dom';
 import { Badge, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink } from 'reactstrap';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line
 import { AppAsideToggler, AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from '../../assets/img/brand/logo.png'
 import logoSmall from '../../assets/img/brand/logo-small.png'
 import avatar from '../../assets/img/avatars/user.png'
+import { utils } from '../../utils';
 
 const propTypes = {
   children: PropTypes.node,
@@ -20,6 +22,7 @@ class DefaultHeader extends Component {
 
     // eslint-disable-next-line
     const { children, ...attributes } = this.props;
+    const { user } = this.props;
 
     return (
       <React.Fragment>
@@ -34,6 +37,9 @@ class DefaultHeader extends Component {
           <NavItem className="px-3">
             <NavLink href="/">Dashboard</NavLink>
           </NavItem>
+          <NavItem className="px-3">
+            <NavLink href="/profile">Customize Profile</NavLink>
+          </NavItem>
         </Nav>
         <Nav className="ml-auto" navbar>
           {/*<NavItem className="d-md-down-none">
@@ -44,7 +50,8 @@ class DefaultHeader extends Component {
           </NavItem>*/}
           <AppHeaderDropdown direction="down">
             <DropdownToggle nav className="nav-avatar">
-              <img src={avatar} className="img-avatar" alt="admin@myaqi.com" />
+              <span>{user.username || ''}</span>
+              <img src={avatar} className="img-avatar" alt={user.email} />
             </DropdownToggle>
             <DropdownMenu right style={{ right: 'auto' }}>
               <DropdownItem header tag="div" className="text-center"><strong>Notifications</strong></DropdownItem>
@@ -67,4 +74,19 @@ class DefaultHeader extends Component {
 DefaultHeader.propTypes = propTypes;
 DefaultHeader.defaultProps = defaultProps;
 
-export default DefaultHeader;
+function mapStateToProps(state) {
+    const { currentUser } = state,
+          { updating, deleting } = currentUser,
+          user = currentUser.user || utils.auth.getUser();
+
+    return {
+        updating,
+        deleting,
+        user
+    };
+}
+
+export default connect(
+  mapStateToProps,
+  null
+)(DefaultHeader);

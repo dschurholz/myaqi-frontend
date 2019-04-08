@@ -45,6 +45,9 @@ class Profile extends Component {
         pinsText: true,
         pins: false,
         hotspots: false
+      },
+      questionnaire: {
+        numQuestions: 0
       }
     };
 
@@ -53,6 +56,7 @@ class Profile extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.openCollapse = this.openCollapse.bind(this);
+    this.handleQuestionnaireInit = this.handleQuestionnaireInit.bind(this);
     this.handleQuestionnaireChange = this.handleQuestionnaireChange.bind(this);
   }
 
@@ -168,14 +172,24 @@ class Profile extends Component {
     });
   };
 
+  handleQuestionnaireInit (numQuestions) {
+    this.setState({
+      questionnaire: {
+        numQuestions: numQuestions
+      }
+    });
+  }
+
   loader () {
     return (<img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />)
   }
 
   render() {
-    const { questionnaire, updating, aqiScales, isFetchingAqiScales } = this.props;
-    const { user, profile, submitted, collapse, visualization } = this.state;
+    const { updating, aqiScales, isFetchingAqiScales } = this.props;
+    const { user, profile, submitted, collapse, visualization, questionnaire } = this.state;
     const modified = (this.props.user.profile && this.props.user.profile.modified) || 'new';
+    const questionnaireAnswers = this.props.user.profile && this.props.user.profile.questionnaire_answers,
+      sensitivityLevels = this.props.user.profile && this.props.user.profile.sensitivity_levels;
 
     return (
       <Row>
@@ -256,14 +270,18 @@ class Profile extends Component {
                         <a href="#" target="questionnaire" onClick={this.openCollapse}>
                         {
                           !collapse.questionnaire ?
-                          `Take this questionnaire to assess your sensitivity towards certain pollutants.`
-                        :
-                          `Close questionnaire.`
+                            (sensitivityLevels.length === 0) ?
+                              `Take this questionnaire to assess your sensitivity towards certain pollutants.`
+                            : (questionnaireAnswers.length !== questionnaire.numQuestions)?
+                              `Complete your answers. (${questionnaireAnswers.length}/${questionnaire.numQuestions})` :
+                              `Review your answers.`
+                          :
+                            `Close questionnaire.`
                         }
                         </a>
                       </FormText>
                       <Collapse isOpen={collapse.questionnaire} style={{maxHeight: '300px', overflowY: 'scroll', overflowX: 'hidden'}}>
-                          <Questionnaire onChange={this.handleQuestionnaireChange} answers={(this.props.user.profile && this.props.user.profile.questionnaire_answers) || []}/>
+                          <Questionnaire onInit={this.handleQuestionnaireInit} onChange={this.handleQuestionnaireChange} answers={questionnaireAnswers || []}/>
                       </Collapse>
                     </>
                   :
@@ -345,10 +363,10 @@ class Profile extends Component {
             <Collapse isOpen={collapse.pollutantSensitivity}>
               <CardBody className="p-4">
                 {
-                  this.props.user.profile && this.props.user.profile.sensitivity_levels ?
+                  sensitivityLevels.length > 0 ?
                   <ListGroup>
                     {
-                      this.props.user.profile.sensitivity_levels.map(level => {
+                      sensitivityLevels.map(level => {
                         return (
                           <ListGroupItem key={level.pollutant_id} className="justify-content-between">{this.formatPollutant(level.pollutant_id)} <span className="float-right"><Badge color={level.level === 0?'success':(level.level === 1?'info':(level.level === 2?'warning':(level.level === 3?'danger':'dark')))} pill>{level.level_display}</Badge></span></ListGroupItem>
                         );
@@ -371,7 +389,7 @@ class Profile extends Component {
                 <span className="header-switch-label">Hotspots</span>
                 <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.hotspots} onChange={ this.handleSwitchChange } name="hotspots" value="hotspots"/>
               </div>
-              <div className="float-right header-switch">
+              <div className="float-right header-switch mr-1">
                 <span className="header-switch-label">Heatmap</span>
                 <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.heatmap} onChange={ this.handleSwitchChange } name="heatmap" value="heatmap"/>
               </div>

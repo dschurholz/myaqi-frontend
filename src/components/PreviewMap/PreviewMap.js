@@ -48,7 +48,7 @@ function _randomMarkers(aqiScale, visualization={pinsText:true}, center=VICTORIA
     markers.push({
       latitude: EXAMPLE_POINTS[thresh].lat,
       longitude: EXAMPLE_POINTS[thresh].lng,
-      name: `<h4>
+      infowindowText: `<h4>
                Air quality is ${aqiScaleThresholds.descriptions[thresh]}
              </h4>
              <div class="pinpoint-location">
@@ -135,6 +135,7 @@ const mapStateToProps = (state, ownProps) => {
     extraMapStyles: {
       height: '300px'
     },
+    forceRefresh: true,
     extraMapOptions: {
       zoom: 12,
       center: VICTORIA_CENTER,

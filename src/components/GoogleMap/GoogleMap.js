@@ -10,6 +10,11 @@ const mapStyles = {
   textAlign: 'center'
 };
 
+function isInfoWindowOpen(infoWindow){
+    var map = infoWindow.getMap();
+    return (map !== null && typeof map !== "undefined");
+}
+
 export class GoogleMap extends Component {
 
   loading = () => utils.loaders.MapLoader;
@@ -27,13 +32,13 @@ export class GoogleMap extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { markers, updating } = this.props;
+    const { markers, updating, forceRefresh } = this.props;
     let refresh = false;
     if (this.heatmapLayers.length > 0) {
       this.cleanLayers();
       refresh = true;
     }
-    if (prevProps.markers.length > 0 || markers.length !== prevProps.markers.length || updating) {
+    if (forceRefresh || markers.length !== prevProps.markers.length || updating) {
       this.cleanMarkers();
       refresh = true;
     }
@@ -103,7 +108,7 @@ export class GoogleMap extends Component {
       mar = new maps.Marker(mar);
 
       mar.addListener('click', (e) => {
-        this.infowindow.setContent(marker.name);
+        this.infowindow.setContent(marker.infowindowText || marker.name);
         this.infowindow.open(map, mar);
         this.onMarkerClick(marker, mar);
         if (e && e.va) e.va.stopPropagation();
@@ -184,19 +189,21 @@ export class GoogleMap extends Component {
       poly.setMap(map);
     });
 
-    this.props.heatmapLayers.forEach(heatmapLayer => {
-      this.heatmapLayers.push(new maps.visualization.HeatmapLayer(Object.assign(
-        heatmapLayer, {
-          map: map,
-          data: heatmapLayer.data.map(point => {
-            return {
-              location: new maps.LatLng(point.latitude, point.longitude),
-              weight: point.weight
-            }
+    if (!!this.props.heatmapLayers) {
+      this.props.heatmapLayers.forEach(heatmapLayer => {
+        this.heatmapLayers.push(new maps.visualization.HeatmapLayer(Object.assign(
+          heatmapLayer, {
+            map: map,
+            data: heatmapLayer.data.map(point => {
+              return {
+                location: new maps.LatLng(point.latitude, point.longitude),
+                weight: point.weight
+              }
+            })
           })
-        })
-      ));
-    });
+        ));
+      });
+    }
   }
 
   onGoogleApiLoaded = (map, maps) => {
@@ -208,7 +215,7 @@ export class GoogleMap extends Component {
   };
  
   onMapClicked = ({x, y, lat, lng, event}) => {
-    if (this.infowindow !== null) {
+    if (isInfoWindowOpen(this.infowindow)) {
       this.infowindow.close();
       return;
     }

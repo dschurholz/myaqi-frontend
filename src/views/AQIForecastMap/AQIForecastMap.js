@@ -39,7 +39,7 @@ class AQIForecastMap extends Component {
           <Col xs="12" sm="12" lg="12">
             <Card className="text-black">
               <CardHeader>
-                <img src={'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--AQI--Gauge--light")} width="25" height="25" alt=""/> Forecast Details
+                <img src={'data:image/svg+xml;utf-8,' + utils.svgIcons.getGaugeIcon("light")} width="25" height="25" alt=""/> Forecast Details
               </CardHeader>
               <CardBody>
                 <ForecastPointDetails />

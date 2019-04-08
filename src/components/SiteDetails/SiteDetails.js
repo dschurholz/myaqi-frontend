@@ -28,6 +28,16 @@ class SiteDetails extends Component {
     monitorTimeBasis: []
   };
 
+  componentDidUpdate = () => {
+    const { onChange, selectedSite } = this.props;
+    if (onChange && typeof onChange === 'function' && selectedSite && selectedSite.current_status && selectedSite.current_status.length > 0) {
+      let monitor = selectedSite.current_status.find(monitor => {
+          return monitor.name === 'Summary';
+        });
+      onChange(monitor.value);
+    }
+  }
+
   handleInputChange = e => {
     this.setState({
       [e.target.name]: e.target.value
@@ -71,7 +81,8 @@ class SiteDetails extends Component {
   };
 
   render () {
-    if(!this.props.selectedSite || !this.props.selectedSite.monitors) {
+    const { selectedSite } = this.props;
+    if(!selectedSite || !selectedSite.monitors) {
       return (
         <div>
           No site selected.
@@ -82,19 +93,19 @@ class SiteDetails extends Component {
     return (
       <div className="">
         <Suspense fallback={this.loading()}>
-          <h2>{this.props.selectedSite.name}</h2>
+          <h2>{selectedSite.name}</h2>
           <Row>
             <Col xs="12" sm="12" lg="12">
               <ListGroup>
-                <ListGroupItem className="justify-content-between">Id <span className="float-right">{this.props.selectedSite.site_id}</span></ListGroupItem>
-                <ListGroupItem className="justify-content-between">Status <span className="float-right">{(this.props.selectedSite.is_station_offline)?<Badge color="danger" pill>Offline</Badge>:<Badge color="success" pill>Online</Badge> }</span></ListGroupItem>
-                <ListGroupItem className="justify-content-between">Region <span className="float-right">{(this.props.selectedSite.site_list && this.props.selectedSite.site_list.length > 0)?this.props.selectedSite.site_list[0].name:'-'}</span></ListGroupItem>
+                <ListGroupItem className="justify-content-between">Id <span className="float-right">{selectedSite.site_id}</span></ListGroupItem>
+                <ListGroupItem className="justify-content-between">Status <span className="float-right">{(selectedSite.is_station_offline)?<Badge color="danger" pill>Offline</Badge>:<Badge color="success" pill>Online</Badge> }</span></ListGroupItem>
+                <ListGroupItem className="justify-content-between">Region <span className="float-right">{(selectedSite.site_list && selectedSite.site_list.length > 0)?selectedSite.site_list[0].name:'-'}</span></ListGroupItem>
                 { 
-                  this.props.selectedSite.fire_hazard_category ?
-                  <ListGroupItem className="justify-content-between">Fire hazard category <span className="float-right">{this.props.selectedSite.fire_hazard_category}</span></ListGroupItem> :
+                  selectedSite.fire_hazard_category ?
+                  <ListGroupItem className="justify-content-between">Fire hazard category <span className="float-right">{selectedSite.fire_hazard_category}</span></ListGroupItem> :
                   <></>
                 }
-                <ListGroupItem className="justify-content-between">Has Incident <span className="float-right">{ (this.props.selectedSite.has_incident)?<Badge color="danger" pill>Yes</Badge>:<Badge color="success" pill>No</Badge> }</span></ListGroupItem>
+                <ListGroupItem className="justify-content-between">Has Incident <span className="float-right">{ (selectedSite.has_incident)?<Badge color="danger" pill>Yes</Badge>:<Badge color="success" pill>No</Badge> }</span></ListGroupItem>
               </ListGroup>
             </Col>
           </Row>
@@ -108,7 +119,7 @@ class SiteDetails extends Component {
                 <Col xs="12" md="9" size="lg">
                   <Input type="select" name="monitor" id="monitorSelect" bsSize="lg" onChange={ this.handleInputChange }>
                     <option value="">Please select</option>
-                    {this.props.selectedSite.monitors.map(monitor => {
+                    {selectedSite.monitors.map(monitor => {
                       return (
                         <option key={monitor.monitor_id} value={monitor.monitor_id}>{monitor.common_name}</option>
                       );

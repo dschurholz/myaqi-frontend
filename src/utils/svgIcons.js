@@ -698,11 +698,30 @@ export const svgIcons = {
                     <path d="M24.8 20.1S14.1 21.5 13.9 17c-.1-3.5 2.3-4 3.1-4.3 2.5-.8 5.2.8 6.7 2 1.1 1-4.2-7.1-9.4-5.7-7.9 2.2-9.4 6.6-13.7 6l14.1 13.4 10.1-8.3z"/>
                 </svg>`;
             case "markers--weather--Wind_Direction":
+            default:
                 return `<svg width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" id="markers--weather--Wind_Direction" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="16" cy="16" fill="%23FFF" r="15"/>
                     <path d="M16 0C7.2 0 0 7.2 0 16s7.2 16 16 16 16-7.2 16-16S24.8 0 16 0zm1 29.9V24h8v-2h-8v-1.8c.5 0 1-.1 1.5-.2 1.2-.3 2.1-1 2.9-1.9.1-.2.3-.4.4-.6.4-.6.7-1.2.9-1.9.1-.4.2-.7.2-1.1 0-.3.1-.5.1-.8 0-.1.1-.3 0-.4-.1-.1-.4 0-.4.2v-.2-.4c0-.1.1-.3 0-.5-.1-.1-.2.1-.2.2-.1.2-.1.3-.2.4 0 0-.1.1-.1 0 0-.4.1-.7.1-1v-.5-.2c-.1-.1-.2.2-.2.3 0 .2-.1.7-.4.8 0-.2.1-.4.1-.6V11c0-.2 0-.4-.2-.6v.1c-.2 1-.4 1.9-1.1 2.7-.4.5-.9.8-1.5.9-.7.1-1.3.1-2 0-1.3-.2-2.4-.9-3-2.2-.1-.3-.2-.5-.3-.8 0-.2-.2-.6-.1-.8.1-.2.7-.3.9-.5.3-.2.6-.5.7-.8 0 .1-1 .1-1 .1-.1 0-.7.1-.4-.2.6-.3 1.2-.9 1.2-1.5 0 .1-.7.3-.8.3-.3.1-.5.1-.5-.3 0-.3.3-.9 0-1.1-.1-.1-.1-.1-.2 0-.3.1-.7.5-.9.2 0-.1.1-.8-.1-.7-.2.1-1 1.5-1.1.9 0-.1.2-.8-.2-.6-.3.1-.3.6-.4.8 0 .1-.1.8-.3.8-.5.4-.5-.6-.6-.3-.2.5-.3 1.1-.1 1.6 0 .2.1.4 0 .5-.2.1-.3.2-.4.3-.1.1-.3.2-.3.3 0 .1.2.1.3.1.2 0 .8 0 .7.3-.1.3-.3.6-.1.9.2.2.5.1.6-.1.1-.2 0-.4-.1-.6.2.2.4.4.5.6.3.7.2 1.4.1 2.1-.2 1-.2 1.9 0 2.9.4 1.7 1.5 2.8 3 3.5.3.1.7.3 1 .3v2h-4v-1.8L7 23l4 2.7V24h4v5.9C7.7 29.4 2 23.4 2 16 2 8.3 8.3 2 16 2s14 6.3 14 14c0 7.4-5.7 13.4-13 13.9z"/>
                 </svg>`;
-            case "markers--AQI--Gauge--light":
+        }
+    },
+    getGaugeIcon: (type, num=0, limits) => {
+
+        limits = limits && limits.length === 7 ? limits : [0, 34, 67, 100, 150, 300, 1000];
+
+        // Lowest angle -45 and highest is 225
+        var rotationAngle;
+        if (num > limits[6]) {
+            rotationAngle = 225;
+        } else {
+            let l;
+            for(l = 0; num >= limits[l]; l++);
+            // console.log((270 * (l-1) / 6) - 45, 45 * (num - limits[l-1]), (limits[l] - limits[l-1]));
+            rotationAngle = ((270 * (l-1) / 6) - 45) + (45 * (num - limits[l-1]) / (limits[l] - limits[l-1]));
+        }
+        // console.log(rotationAngle);
+        switch (type) {
+        case "light":
                 return `<svg 
                    id="markers--AQI--Gauge"
                    class="speed" 
@@ -714,7 +733,8 @@ export const svgIcons = {
                   <defs>
                     <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%"   stop-color="%2300ff00"/>
-                      <stop offset="50%" stop-color="%23ffff00"/>
+                      <stop offset="30%" stop-color="%23ffff00"/>
+                      <stop offset="70%" stop-color="%23ffff00"/>
                       <stop offset="100%" stop-color="%23ff0000"/>
                     </linearGradient>
                   </defs>
@@ -759,14 +779,14 @@ export const svgIcons = {
                   <!-- <line class="line" x1="53" y1="306" x2="180" y2="180" style="stroke:rgb(255,0,0);stroke-width:2;transform-origin:63px 0px"
                         /> -->
                   <polygon id="bigLine" class="line" fill="url(%23linear2)"
-                    transform="translate(20, 20)"
-                    points="190,168 190,192  85,188  85,172" 
-                    style="fill-opacity:0.9;transform-origin:59px 6px" />
+                    transform="translate(95, 190) rotate(${rotationAngle}, 105, 12)"
+                    points="105,0 105,24  0,20  0,4" 
+                    style="fill-opacity:0.9;" />
                   <polygon points="0,0 100,100 200,0" transform="translate(100, 350)" style="fill:white;stroke:hsla(232, 52%, 8%, 1);stroke-width:8" />
                   <polygon points="0,0 100,100 200,0" transform="translate(100, 344)" style="fill:white;" /> 
                   <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
                         transform="translate(20, 20) rotate(226 180 180)"
-                        >    
+                        >
                   </line>
                   <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
                         transform="translate(20, 20) rotate(270 180 180)"
@@ -791,16 +811,16 @@ export const svgIcons = {
                   <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26" transform="translate(20, 20)">    
                   </line>
                   
-                  <text x="85" y="275" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">0</text>
-                  <text x="50" y="187" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">15</text>
-                  <text x="82" y="100" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">30</text>
-                  <text x="170" y="60" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">60</text>
-                  <text x="255" y="100" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">90</text>
-                  <text x="292" y="187" transform="translate(18, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">120</text>
-                  <text x="255" y="275" transform="translate(16, 16)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">150</text>
+                  <text x="85" y="275" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[0]}</text>
+                  <text x="50" y="187" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[1]}</text>
+                  <text x="82" y="100" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[2]}</text>
+                  <text x="170" y="60" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[3]}</text>
+                  <text x="255" y="100" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[4]}</text>
+                  <text x="292" y="187" transform="translate(18, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[5]}</text>
+                  <text x="255" y="275" transform="translate(16, 16)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[6]}</text>
                 </svg>`
 
-            case "markers--AQI--Gauge--dark":
+            case "dark":
             default:
                 return `<svg 
                    id="markers--AQI--Gauge"
@@ -858,9 +878,9 @@ export const svgIcons = {
                   <!-- <line class="line" x1="53" y1="306" x2="180" y2="180" style="stroke:rgb(255,0,0);stroke-width:2;transform-origin:63px 0px"
                         /> -->
                   <polygon id="bigLine" class="line" fill="url(%23linear2)"
-                    transform="translate(20, 20)"
-                    points="190,168 190,192  85,188  85,172" 
-                    style="fill-opacity:0.9;transform-origin:59px 6px" /> 
+                    transform="translate(95, 190) rotate(${rotationAngle}, 105, 12)"
+                    points="105,0 105,24  0,20  0,4"
+                    style="fill-opacity:0.9;" /> 
                   <polygon points="0,0 100,100 200,0" transform="translate(100, 350)" style="fill:hsla(232, 52%, 8%, 1);stroke:%23FFF;stroke-width:8" />
                   <polygon points="0,0 100,100 200,0" transform="translate(100, 345)" style="fill:hsla(232, 52%, 8%, 1);" /> 
                   <line class="metka" style="stroke-width:5" stroke="%23fff" x1="180" y1="14" x2="180" y2="26"
@@ -890,14 +910,15 @@ export const svgIcons = {
                   <line class="metka" style="stroke-width:5" stroke="%23fff" x1="180" y1="14" x2="180" y2="26" transform="translate(20, 20)">    
                   </line>
                   
-                  <text x="85" y="275" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">0</text>
-                  <text x="50" y="187" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">15</text>
-                  <text x="82" y="100" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">30</text>
-                  <text x="170" y="60" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">60</text>
-                  <text x="255" y="100" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">90</text>
-                  <text x="292" y="187" transform="translate(18, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">120</text>
-                  <text x="255" y="275" transform="translate(16, 16)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">150</text>
+                  <text x="85" y="275" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[0]}</text>
+                  <text x="50" y="187" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[1]}</text>
+                  <text x="82" y="100" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[2]}</text>
+                  <text x="170" y="60" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[3]}</text>
+                  <text x="255" y="100" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[4]}</text>
+                  <text x="292" y="187" transform="translate(18, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[5]}</text>
+                  <text x="255" y="275" transform="translate(16, 16)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[6]}</text>
                 </svg>`
-        }
+        };
     }
 };
+
