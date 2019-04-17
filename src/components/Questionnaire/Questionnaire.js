@@ -30,7 +30,7 @@ class Questionnaire extends Component {
 
   componentWillMount() {
     const { dispatch } = this.props;
-    dispatch(userActions.userActions.getQuestionnaire());
+    dispatch(userActions.getQuestionnaire());
   }
 
   componentDidMount() {

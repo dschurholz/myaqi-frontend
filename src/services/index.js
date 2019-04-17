@@ -1,4 +1,4 @@
-import * as UserService from './UserService';
+import UserService from './UserService';
 import SettingsService from './SettingsService';
 
 export {

@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import Moment from 'react-moment';
+import 'moment-timezone';
 import {
   Card,
   CardBody,
   CardHeader,
+  CardFooter,
   Col,
   Row
 } from 'reactstrap';
 import { FireMap, SvgIcon, SelectedFireDetails } from '../../components';
 import { store } from '../../stores'
 
-import { getAllFires } from '../../actions'
+import { getAllFires } from '../../actions';
+import { utils } from '../../utils';
 
 
 class Fires extends Component {
@@ -20,6 +25,7 @@ class Fires extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
+    const { isFetchingFires, fires } = this.props;
 
     return (
       <div className="animated fadeIn">
@@ -32,6 +38,9 @@ class Fires extends Component {
               <CardBody className="pb-0">
                 <FireMap scaleMarkers={[24, 24]} loaderHeight="300px" loaderMargin="150px" />
               </CardBody>
+              <CardFooter>
+                <strong>Source of data: State of Victoria, Australia.</strong> To know more follow this link: <a href="https://www.emv.vic.gov.au/responsibilities/victorias-warning-system/emergency-data" target="_blank">Emergency Data</a>
+              </CardFooter>
             </Card>
           </Col>
           <Col xs="12" sm="6" lg="6">
@@ -42,6 +51,21 @@ class Fires extends Component {
               <CardBody>
                 <SelectedFireDetails />
               </CardBody>
+              <CardFooter>
+                <strong>Data updated on:</strong>&nbsp;<i>{
+                  isFetchingFires ?
+                  utils.loaders.StandardLoader()
+                  :
+                  (
+                    (!fires || !fires.properties) ?
+                    'No data available.'
+                    :
+                    <Moment parse="YYYY-MM-DDTHH:mm:ss.SSSZ" format="LLL" tz="Australia/Melbourne">
+                      { fires.properties.lastUpdated }
+                    </Moment>
+                  )
+                }</i>
+              </CardFooter>
             </Card>
           </Col>
         </Row>
@@ -51,4 +75,16 @@ class Fires extends Component {
   }
 }
 
-export default Fires;
+const mapStateToProps = state => {
+  const { fires, isFetchingFires } = state.fires;
+  return {
+    fires,
+    isFetchingFires
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(Fires);
+

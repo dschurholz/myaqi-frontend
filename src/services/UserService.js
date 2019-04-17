@@ -1,14 +1,15 @@
 import { utils } from '../utils';
 import axios from 'axios';
 
-export const userService = {
+export default {
     login,
     logout,
     register,
     getMe,
     update,
     delete: _delete,
-    getQuestionnaire
+    getQuestionnaire,
+    checkTokenExpired
 };
 
 function login(username, password) {
@@ -45,6 +46,17 @@ function getMe() {
             utils.auth.setUser(user);
         })
         .catch(handleError);
+}
+
+function checkTokenExpired() {
+    const tokenExp = utils.auth.getAuthTokenExpiration(),
+          expirationDate = new Date(0),
+          now = new Date();
+    expirationDate.setUTCSeconds(tokenExp);
+    if (expirationDate < now) {
+        return true;
+    }
+    return false;
 }
 
 function register(user) {

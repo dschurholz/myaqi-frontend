@@ -22,8 +22,9 @@ export class GoogleMap extends Component {
   infoWindow = null;
   currentInteractiveMarker = null;
   markerEls = [];
-  markerCluster = null;
+  polygonEls=[];
   heatmapLayers = [];
+  markerCluster = null;
 
   onMarkerClick = (marker, markerEl) => {
     if (this.props.onMarkerSelected && typeof this.props.onMarkerSelected === "function") {
@@ -31,11 +32,21 @@ export class GoogleMap extends Component {
     }
   };
 
+  onPolygonClick = (polygon, polygonEl) => {
+    if (this.props.onPolygonSelected && typeof this.props.onPolygonSelected === "function") {
+      this.props.onPolygonSelected(polygon.obj ? polygon.obj : polygon);
+    }
+  };
+
   componentDidUpdate(prevProps) {
-    const { markers, updating, forceRefresh } = this.props;
+    const { markers, polygons, updating, forceRefresh } = this.props;
     let refresh = false;
     if (this.heatmapLayers.length > 0) {
       this.cleanLayers();
+      refresh = true;
+    }
+    if (polygons.length !== prevProps.polygons.length || updating) {
+      this.cleanPolygons();
       refresh = true;
     }
     if (forceRefresh || markers.length !== prevProps.markers.length || updating) {
@@ -56,14 +67,14 @@ export class GoogleMap extends Component {
     map.fitBounds(bounds);
   }
 
-  setMapOnMarkers = (map) => {
-    this.markerEls.forEach(marker => {
-      marker.setMap(map);
+  setMapOnElements = (elements, map) => {
+    elements.forEach(el => {
+      el.setMap(map);
     });
   }
 
   hideMarkers = () => {
-    this.setMapOnMarkers(null);
+    this.setMapOnElements(this.markerEls, null);
   }
 
   cleanMarkers = () => {
@@ -75,10 +86,21 @@ export class GoogleMap extends Component {
     }
   }
 
+  hidePolygons = () => {
+    this.setMapOnElements(this.polygonEls, null);
+  }
+
+  cleanPolygons = () => {
+    this.hidePolygons();
+    this.polygonEls = [];
+  }
+
+  hideLayers = () => {
+    this.setMapOnElements(this.heatmapLayers, null);
+  }
+
   cleanLayers = () => {
-    this.heatmapLayers.forEach(heatmapLayer => {
-      heatmapLayer.setMap(null);
-    });
+    this.hideLayers();
     this.heatmapLayers = [];
   }
 
@@ -187,6 +209,15 @@ export class GoogleMap extends Component {
       });
 
       poly.setMap(map);
+      if(polygon.obj) {
+        let that = this;
+        maps.event.addListener(poly, 'click', function (e) {
+          that.onPolygonClick(polygon, poly);
+          if (e && e.va) e.va.stopPropagation();
+        });  
+      }
+
+      this.polygonEls.push(poly);
     });
 
     if (!!this.props.heatmapLayers) {

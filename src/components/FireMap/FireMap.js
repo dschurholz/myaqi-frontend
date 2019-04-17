@@ -88,7 +88,8 @@ function _format_polygons_vic_emergency_data (features) {
               lng: coordinates[0],
               lat: coordinates[1]
             }
-          })
+          }),
+          obj: feature
         })
       }
     });
@@ -117,6 +118,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onMarkerSelected: selectedFire => {
+      dispatch(fireSelected(selectedFire));
+    },
+    onPolygonSelected: selectedFire => {
       dispatch(fireSelected(selectedFire));
     }
   };

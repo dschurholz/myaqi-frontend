@@ -106,7 +106,7 @@ class Profile extends Component {
 
     const { dispatch } = this.props;
     if(window.confirm("Are you sure you want to remove your account? (This action can't be undone)")) {
-      dispatch(userActions.userActions.delete());
+      dispatch(userActions.delete());
     }
   }
 
@@ -129,7 +129,7 @@ class Profile extends Component {
           answer_id: profile.questionnaireAnswers[a]
         });
       }
-      dispatch(userActions.userActions.updateProfile(
+      dispatch(userActions.updateProfile(
         utils.tools.camelCameToUnderscore(cleanUser)));
     }
   }
@@ -178,10 +178,6 @@ class Profile extends Component {
         numQuestions: numQuestions
       }
     });
-  }
-
-  loader () {
-    return (<img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />)
   }
 
   render() {
@@ -285,7 +281,7 @@ class Profile extends Component {
                       </Collapse>
                     </>
                   :
-                  this.loader()
+                  utils.loaders.StandardLoader()
                 }
                 <hr />
                 <p className="text-muted">User Data</p>
@@ -347,7 +343,7 @@ class Profile extends Component {
                 <Button color="primary" onClick={this.handleSubmit} block>Update Profile</Button>
                 {
                   updating && 
-                  this.loader()
+                  utils.loaders.StandardLoader()
                 }
                 <hr />
                 <Button color="danger" onClick={this.handleDelete} block>Delete Account</Button>

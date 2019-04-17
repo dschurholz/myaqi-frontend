@@ -5,7 +5,7 @@ import { fetchMeasurements, receivedMeasurements, getMeasurementsByQuery } from 
 import { fetchVicRoadsTraffic, receivedVicRoadsTraffic, getVicRoadsTraffic, getBingTraffic } from './traffic';
 import { fetchFires, receivedFires, getAllFires, fireSelected } from './fires';
 import { fetchAqiForecasts, getAqiForecasts, receivedAqiForecasts } from './forecasts';
-import * as userActions from './user';
+import userActions from './user';
 import { getAQIScales } from './aqi_scales';
 
 export {

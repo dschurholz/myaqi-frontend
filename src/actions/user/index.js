@@ -1,9 +1,8 @@
 import * as types from '../types';
 import { UserService } from '../../services';
 import { utils } from '../../utils';
-// import { alertActions } from './';
 
-export const userActions = {
+export default {
     login,
     logout,
     register,
@@ -17,7 +16,7 @@ function login(username, password) {
     return dispatch => {
         dispatch(request({ username }));
 
-        UserService.userService.login(username, password)
+        UserService.login(username, password)
             .then(
                 user => { 
                     dispatch(success(user));
@@ -38,7 +37,7 @@ function login(username, password) {
 }
 
 function logout() {
-    UserService.userService.logout();
+    UserService.logout();
     return { type: types.LOGOUT };
 }
 
@@ -46,7 +45,7 @@ function register(user) {
     return dispatch => {
         dispatch(request(user));
 
-        UserService.userService.register(user)
+        UserService.register(user)
             .then(
                 user => { 
                     dispatch(success());
@@ -69,7 +68,7 @@ function getMe(callback) {
     return dispatch => {
         dispatch(request());
 
-        UserService.userService.getMe()
+        UserService.getMe()
             .then(
                 user => {
                     dispatch(success(user));
@@ -91,7 +90,7 @@ function _delete() {
     return dispatch => {
         dispatch(request());
 
-        UserService.userService.delete()
+        UserService.delete()
             .then(
                 user => {
                     dispatch(success())
@@ -110,7 +109,7 @@ function updateProfile(user) {
     return dispatch => {
         dispatch(request({ user }));
 
-        UserService.userService.update(user)
+        UserService.update(user)
             .then(
                 updatedUser => { 
                     dispatch(success(updatedUser));
@@ -130,7 +129,7 @@ function getQuestionnaire() {
     return dispatch => {
         dispatch(request());
 
-        UserService.userService.getQuestionnaire()
+        UserService.getQuestionnaire()
             .then(
                 updatedUser => { 
                     dispatch(success(updatedUser));

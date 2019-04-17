@@ -1,3 +1,7 @@
+// auth.js
+
+import * as jwt_decode from 'jwt-decode';
+
 export function authHeader() {
     // return authorization header with jwt token
     let token = getAuthToken();
@@ -23,6 +27,11 @@ export function removeUser() {
 
 export function getAuthToken() {
     return JSON.parse(localStorage.getItem('auth-token'));
+}
+
+export function getAuthTokenExpiration() {
+    const token = getAuthToken();
+    return token ? jwt_decode(token).exp : null;
 }
 
 export function setAuthToken(token) {

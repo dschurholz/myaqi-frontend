@@ -1,32 +1,18 @@
 import { svgIcons } from './svgIcons';
-import { MapLoader, BulletList, TableLoader } from './loaders';
-import { aqiDefaultOptions, aqiBeforeDrawPlugin, parseScale } from './charts';
+import loaders from './loaders';
+import * as charts from './charts';
 import { history } from './history';
-import { authHeader, getUser, setUser, removeUser, getAuthToken, setAuthToken, removeAuthToken } from './auth';
+import * as auth from './auth';
 import aqiScaleTools from './aqiScaleTools';
 import tools from './tools';
 
 export const utils = {
+    loaders,
     svgIcons: svgIcons,
-    loaders: {
-        MapLoader: MapLoader,
-        BulletList: BulletList,
-        TableLoader: TableLoader
-    },
-    charts: {
-        aqiDefaultOptions: aqiDefaultOptions,
-        aqiBeforeDrawPlugin: aqiBeforeDrawPlugin,
-        parseScale: parseScale
-    },
+    charts,
     history: history,
     auth: {
-        authHeader: authHeader,
-        getUser: getUser,
-        setUser: setUser,
-        removeUser:removeUser,
-        getAuthToken: getAuthToken,
-        setAuthToken: setAuthToken,
-        removeAuthToken: removeAuthToken,
+        ...auth
     },
     aqiScaleTools: aqiScaleTools,
     tools: tools,

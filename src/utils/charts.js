@@ -125,3 +125,11 @@ export const parseScale = function (aqiScale, pollutant='aqi', extraCheck=null, 
 
   return result;
 };
+
+
+export const getMeasurementPollutantName = function (queryString) {
+  const parseParamStart = 'MonitorId: ',
+        parseParamEnd = 'TimeBasisId',
+        parseParamStartLen = parseParamStart.length;
+  return queryString.substr(queryString.indexOf(parseParamStart) + parseParamStartLen, queryString.indexOf(parseParamEnd)-(queryString.indexOf(parseParamStart) + parseParamStartLen) - 1);
+}

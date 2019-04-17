@@ -58,10 +58,7 @@ class MeasurementsCharts extends Component {
 };
 
 function prepareMeasurementsForCharts (measurements, aqiScale) {
-  const parseParamStart = 'MonitorId: ',
-        parseParamEnd = 'TimeBasisId',
-        parseParamStartLen = parseParamStart.length;
-  var pollutantName = measurements.Parameters.substr(measurements.Parameters.indexOf(parseParamStart) + parseParamStartLen, measurements.Parameters.indexOf(parseParamEnd)-(measurements.Parameters.indexOf(parseParamStart) + parseParamStartLen) - 1),
+  var pollutantName = utils.charts.getMeasurementPollutantName(measurements.Parameters),
     pollutants = {
         'sp_AQI': {
           color: 'rgba(75,192,192'
