@@ -32,9 +32,8 @@ export const getAqiForecasts = (lat, lon) => {
     const { useTestData } = SettingsService.getSettings();
     var url, params = {};
     if (!useTestData) {
-      url = process.env.REACT_APP_WEATHERBIT_AQI_FORECAST;
+      url = process.env.REACT_APP_WEATHERBIT_AQI_FORECAST_LOCAL_URL;
       params = {
-        key: process.env.REACT_APP_WEATHERBIT_API_KEY,
         lat: lat,
         lon: lon
       };
