@@ -176,7 +176,7 @@ const mapStateToProps = state => {
       traffic_stations: experimentsData.traffic_stations,
       fires: experimentsData.fires
     },
-    isFetchingData: experimentsData.isFetchingExperimentsMapData,
+    isFetchingData: isFetchingExperimentsMapData,
     aqiScale: aqiScales ? aqiScales[aqiScales.findIndex(x => {
       return x.abbreviation === 'AUEPA';
     })]: null,

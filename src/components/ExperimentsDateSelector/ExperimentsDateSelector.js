@@ -133,7 +133,7 @@ class ExperimentsDateSelector extends Component {
 
     if(dateRange.length === 0 && !isFetchingData) {
       return (
-      <div>
+      <div className="pl-4">
         No dates available.
       </div>
       );
@@ -206,13 +206,13 @@ function getDateRange(timeline) {
 }
 
 const mapStateToProps = state => {
-  const { experimentsData } = state.experimentsMapData,
+  const { experimentsData, isFetchingExperimentsMapData } = state.experimentsMapData,
     { selectedExperimentsDate } = state;
   
   return {
   selectedDate: selectedExperimentsDate,
   dateRange: experimentsData.timeline ? getDateRange(experimentsData.timeline) : [],
-  isFetchingData: experimentsData.isFetchingExperimentsMapData
+  isFetchingData: isFetchingExperimentsMapData
   };
 };
 

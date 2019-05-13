@@ -122,7 +122,7 @@ function _format_polygons_fires (fires, timelineEntry) {
 
 
 const mapStateToProps = state => {
-  const { experimentsData } = state.experimentsMapData,
+  const { experimentsData, isFetchingExperimentsMapData } = state.experimentsMapData,
         { selectedExperimentsDate } = state,
         timelineEntry = experimentsData.timeline && selectedExperimentsDate ? experimentsData.timeline[selectedExperimentsDate] : null;
 
@@ -145,7 +145,7 @@ const mapStateToProps = state => {
         ploygonFillOpacity: 0.2,
         useLineColour: true
     },
-    isFetchingData: experimentsData.isFetchingExperimentsMapData
+    isFetchingData: isFetchingExperimentsMapData
   };
 };
 

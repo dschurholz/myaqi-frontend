@@ -96,7 +96,7 @@ const mapStateToProps = state => {
   // console.log(historicFires.fires);
   // let markers = (historicFires.fires.fires) ? _format_markers_vic_emergency_data(state.fires.fires.features) : [],
   let polygons = (historicFires.fires.results) ? _format_polygons_fires(historicFires.fires.results) : [];
-  console.log(polygons);
+
   return {
     markers: [],
     paths: [],
