@@ -5,7 +5,8 @@ import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGr
 
 import { userActions } from '../../../actions';
 import { utils } from '../../../utils';
-import logo from '../../../assets/img/brand/logo2.png'
+import logo from '../../../assets/img/brand/newlogo-up.png'
+import { localStore, sessionStore } from '../../../services';
 
 const LogoStyles = {
   textAlign: 'center',

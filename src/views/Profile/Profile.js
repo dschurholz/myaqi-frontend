@@ -266,9 +266,9 @@ class Profile extends Component {
                         <a href="#" target="questionnaire" onClick={this.openCollapse}>
                         {
                           !collapse.questionnaire ?
-                            (sensitivityLevels.length === 0) ?
+                            (!sensitivityLevels || sensitivityLevels.length === 0) ?
                               `Take this questionnaire to assess your sensitivity towards certain pollutants.`
-                            : (questionnaireAnswers.length !== questionnaire.numQuestions)?
+                            : (questionnaireAnswers && questionnaireAnswers.length !== questionnaire.numQuestions)?
                               `Complete your answers. (${questionnaireAnswers.length}/${questionnaire.numQuestions})` :
                               `Review your answers.`
                           :
@@ -359,7 +359,7 @@ class Profile extends Component {
             <Collapse isOpen={collapse.pollutantSensitivity}>
               <CardBody className="p-4">
                 {
-                  sensitivityLevels.length > 0 ?
+                  sensitivityLevels && sensitivityLevels.length > 0 ?
                   <ListGroup>
                     {
                       sensitivityLevels.map(level => {
@@ -432,12 +432,6 @@ function mapStateToProps(state) {
           { aqiScales, isFetchingAqiScales } = state.aqiScales,
           user = currentUser.user || utils.auth.getUser();
 
-    var aqiScale = null;
-    if (aqiScales.length > 0) {
-      aqiScale = aqiScales[aqiScales.findIndex(x => {
-        return x.abbreviation === user.profile.aqi_scale;
-      })];
-    }
     return {
         updating,
         deleting,

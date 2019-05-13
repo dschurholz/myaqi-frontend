@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line
 import { AppAsideToggler, AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
-import logo from '../../assets/img/brand/logo.png'
-import logoSmall from '../../assets/img/brand/logo-small.png'
+import logo from '../../assets/img/brand/newlogo-up.png'
+import logoSmall from '../../assets/img/brand/newlogo-small.png'
 import avatar from '../../assets/img/avatars/user.png'
 import { utils } from '../../utils';
 
@@ -29,7 +29,7 @@ class DefaultHeader extends Component {
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
         <AppNavbarBrand
           full={{ src: logo, height: 30, alt: 'MyAQI Logo' }}
-          minimized={{ src: logoSmall, width: 30, height: 30, alt: 'MyAQI Logo' }}
+          minimized={{ src: logoSmall, width: 30, alt: 'MyAQI Logo' }}
         />
         <AppSidebarToggler className="d-md-down-none" display="lg" />
 

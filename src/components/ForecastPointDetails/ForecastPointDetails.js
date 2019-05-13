@@ -103,14 +103,8 @@ function parseWeatherbitForecasts (forecasts, aqiScale) {
 const mapStateToProps = state => {
   const { aqiForecasts, currentUser } = state,
       { aqiScales, isFetchingAqiScales } = state.aqiScales,
-      user = currentUser.user || utils.auth.getUser();
-
-  var aqiScale = null;
-  if (aqiScales.length > 0) {
-    aqiScale = aqiScales[aqiScales.findIndex(x => {
-      return x.abbreviation === user.profile.aqi_scale;
-    })];
-  }
+      user = currentUser.user || utils.auth.getUser(),
+      aqiScale = utils.aqiScaleTools.getUserAqiScale(aqiScales, user);
       
   const forecasts = (aqiForecasts.forecasts.data && aqiForecasts.forecasts.data.length > 0) ? parseWeatherbitForecasts(aqiForecasts.forecasts, aqiScale): [];
 

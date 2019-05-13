@@ -1,8 +1,8 @@
 // fireReducer.js
 
-import { FETCH_FIRES, RECEIVED_FIRES } from '../actions/types';
+import { FETCH_FIRES, RECEIVED_FIRES, FETCH_HISTORIC_FIRES, RECEIVED_HISTORIC_FIRES } from '../actions/types';
 
-export default function fireReducer(state = { isFetchingFires: true, fires: {} }, action) {
+export const fireReducer =  function(state = { isFetchingFires: true, fires: {} }, action) {
   switch (action.type) {
     case FETCH_FIRES:
       return {
@@ -13,6 +13,24 @@ export default function fireReducer(state = { isFetchingFires: true, fires: {} }
       return {
         ...state,
         isFetchingFires: false,
+        fires: action.fires
+      };
+    default:
+      return state;
+  }
+}
+
+export const historicFireReducer = function(state = { isFetchingHistoricFires: true, fires: {} }, action) {
+  switch (action.type) {
+    case FETCH_HISTORIC_FIRES:
+      return {
+        ...state,
+        isFetchingHistoricFires: true
+      };
+    case RECEIVED_HISTORIC_FIRES:
+      return {
+        ...state,
+        isFetchingHistoricFires: false,
         fires: action.fires
       };
     default:

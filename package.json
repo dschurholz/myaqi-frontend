@@ -23,6 +23,7 @@
     "moment-timezone": "^0.5.23",
     "node-sass": "^4.11.0",
     "prop-types": "^15.7.2",
+    "rc-slider": "^8.6.9",
     "react": "^16.8.2",
     "react-app-polyfill": "^0.2.1",
     "react-chartjs-2": "^2.7.4",

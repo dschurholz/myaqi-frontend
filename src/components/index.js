@@ -1,6 +1,11 @@
+import ExperimentsDetails from './ExperimentsDetails';
+import ExperimentsDateSelector from './ExperimentsDateSelector';
 import FireMap from './FireMap';
 import ForecastMap from './ForecastMap';
 import ForecastPointDetails from './ForecastPointDetails';
+import HistoricalFireDetails from './HistoricalFireDetails';
+import HistoricFireMap from './HistoricFireMap';
+import MainMap from './MainMap';
 import MeasurementsCharts from './MeasurementsCharts';
 import MeasurementsTable from './MeasurementsTable';
 import PreviewMap from './PreviewMap';
@@ -14,9 +19,14 @@ import SvgIcon from './SvgIcon';
 import TrafficMap from './TrafficMap';
 
 export {
+    ExperimentsDetails,
+    ExperimentsDateSelector,
     FireMap,
     ForecastMap,
     ForecastPointDetails,
+    HistoricalFireDetails,
+    HistoricFireMap,
+    MainMap,
     MeasurementsCharts,
     MeasurementsTable,
     PreviewMap,

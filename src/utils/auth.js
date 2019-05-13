@@ -1,6 +1,7 @@
 // auth.js
 
 import * as jwt_decode from 'jwt-decode';
+import { sessionStore } from "../services";
 
 export function authHeader() {
     // return authorization header with jwt token
@@ -14,19 +15,19 @@ export function authHeader() {
 }
 
 export function getUser() {
-    return JSON.parse(localStorage.getItem('user'));
+    return JSON.parse(sessionStore.getItem('user'));
 }
 
 export function setUser(user) {
-    return localStorage.setItem('user', JSON.stringify(user));
+    return sessionStore.setItem('user', JSON.stringify(user));
 }
 
 export function removeUser() {
-    return localStorage.removeItem('user');
+    return sessionStore.removeItem('user');
 }
 
 export function getAuthToken() {
-    return JSON.parse(localStorage.getItem('auth-token'));
+    return JSON.parse(sessionStore.getItem('auth-token'));
 }
 
 export function getAuthTokenExpiration() {
@@ -35,9 +36,9 @@ export function getAuthTokenExpiration() {
 }
 
 export function setAuthToken(token) {
-    return localStorage.setItem('auth-token', JSON.stringify(token));
+    return sessionStore.setItem('auth-token', JSON.stringify(token));
 }
 
 export function removeAuthToken() {
-    return localStorage.removeItem('auth-token');
+    return sessionStore.removeItem('auth-token');
 }

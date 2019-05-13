@@ -26,7 +26,7 @@ class AQIForecastMap extends Component {
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col xs="12" sm="12" lg="12">
+          <Col xs="12" sm="12" md="6" lg="6">
             <Card className="text-black map-card">
               <CardHeader>
                 <i className="fa fa-globe"></i> Forecasts Map
@@ -36,12 +36,12 @@ class AQIForecastMap extends Component {
               </CardBody>
             </Card>
           </Col>
-          <Col xs="12" sm="12" lg="12">
+          <Col xs="12" sm="12" md="6" lg="6">
             <Card className="text-black">
               <CardHeader>
                 <img src={'data:image/svg+xml;utf-8,' + utils.svgIcons.getGaugeIcon("light")} width="25" height="25" alt=""/> Forecast Details
               </CardHeader>
-              <CardBody>
+              <CardBody style={{maxHeight: '600px', overflowY: 'scroll'}}>
                 <ForecastPointDetails />
               </CardBody>
             </Card>

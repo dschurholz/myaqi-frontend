@@ -34,19 +34,16 @@ class Questionnaire extends Component {
   }
 
   componentDidMount() {
-    const {answers} = this.props;
-    var upAnswers = {}
+    const { answers, questionnaire, onInit } = this.props;
+    var upAnswers = {};
+
     for (let ans in answers) {
       upAnswers[answers[ans].question_id] = answers[ans].answer_id;
     }
-
+    
     this.setState({
       answers: upAnswers
     });
-  }
-
-  componentDidUpdate () {
-    const { questionnaire, onInit } = this.props;
 
     if (onInit && typeof onInit === 'function') { 
       onInit((questionnaire && questionnaire.length) || 0);
@@ -94,7 +91,7 @@ class Questionnaire extends Component {
     if(!questionnaire && !isFetchingQuestionnaire) {
       return (
         <div>
-          No questionnaire retrieved.
+          Questionnaire not found.
         </div>
       );
     }
@@ -129,6 +126,7 @@ class Questionnaire extends Component {
 
 function mapStateToProps(state) {
     const { questionnaire, isFetchingQuestionnaire } = state.questionnaire;
+  
     return {
         questionnaire: questionnaire,
         isFetchingQuestionnaire: isFetchingQuestionnaire

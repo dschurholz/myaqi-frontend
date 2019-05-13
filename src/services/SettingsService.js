@@ -1,5 +1,6 @@
 import { utils } from '../utils';
 import axios from 'axios';
+import { localStore } from './index';
 
 export default {
     getSettings: getSettings,

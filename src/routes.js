@@ -6,6 +6,7 @@ const AQIMap = React.lazy(() => import('./views/AQIMap'));
 const AQIForecastMap = React.lazy(() => import('./views/AQIForecastMap'));
 const Traffic = React.lazy(() => import('./views/Traffic'));
 const Fires = React.lazy(() => import('./views/Fires'));
+const HistoricFires = React.lazy(() => import('./views/HistoricFires'));
 const CurrentProgress = React.lazy(() => import('./views/CurrentProgress'));
 const Profile = React.lazy(() => import('./views/Profile'));
 const Settings = React.lazy(() => import('./views/Settings'));
@@ -18,6 +19,7 @@ const routes = [
   { path: '/aqiForecasts', name: 'AQIForecastMap', component: AQIForecastMap, routeType: 'private' },
   { path: '/traffic', name: 'Traffic', component: Traffic, routeType: 'private' },
   { path: '/fires', name: 'Fires', component: Fires, routeType: 'private' },
+  { path: '/historical-fires', name: 'HistoricFires', component: HistoricFires, routeType: 'private' },
   { path: '/tesis-progress/current', name: 'CurrentProgress', component: CurrentProgress, routeType: 'private' },
   { path: '/profile', exact: true, name: 'Profile', component: Profile, routeType: 'private' },
   { path: '/settings', exact: true, name: 'Settings', component: Settings, routeType: 'private' }

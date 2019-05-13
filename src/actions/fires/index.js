@@ -1,50 +1,68 @@
 // index.js
 
-import { FETCH_FIRES, RECEIVED_FIRES, FIRE_SELECTED } from '../types';
-import axios from 'axios';
-import { SettingsService } from '../../services';
+import {
+  FETCH_FIRES,
+  RECEIVED_FIRES,
+  FIRES_FAILURE,
+  FIRE_SELECTED,
+  FETCH_HISTORIC_FIRES,
+  RECEIVED_HISTORIC_FIRES,
+  HISTORIC_FIRE_SELECTED,
+  HISTORIC_FIRES_FAILURE } from '../types';
+import { FireService } from '../../services';
 
 export const getAllFires = (query={}) => {
   return (dispatch) => {
-    dispatch(fetchFires({}));
 
-    const { useTestData } = SettingsService.getSettings();
-    var url, params = {};
-    if (!useTestData) {
-      url = process.env.REACT_APP_AU_VIC_EMERGENCY_URL;
-      params = query;
-    } else {
-      url = 'data/fire_test_data.json';
-    }
-
-    return axios.get(url, { params: params })
-      .then(response => {
-        dispatch(receivedFires(response.data))
-      })
-      .catch(error => {
-        throw(error);
-      });
+    dispatch(request({}));
+    FireService.getVicEmergencyFires(query)
+      .then(
+          fires => {
+            dispatch(success(fires))
+          },
+          error => {
+              dispatch(failure(error.toString()));
+              // dispatch(alertActions.error(error.toString()));
+          }
+      );
   };
+
+  function request(fires) { return { type: FETCH_FIRES, fires } }
+  function success(fires) { return { type: RECEIVED_FIRES, firesReceivedAt: Date.now(), fires } }
+  function failure(error) { return { type: FIRES_FAILURE, error } }
 };
 
-export const fetchFires = (fires) => {
-  return {
-    type: FETCH_FIRES,
-    fires
-  }
-};
+export const getHistoricAllFires = (query={}) => {
+  return (dispatch) => {
+    dispatch(request({}));
 
-export const receivedFires = (fires) => {
-  return {
-    type: RECEIVED_FIRES,
-    firesReceivedAt: Date.now(),
-    fires
-  }
+    FireService.getHistoricFires(query)
+      .then(
+          fires => {
+            dispatch(success(fires))
+          },
+          error => {
+              dispatch(failure(error.toString()));
+              // dispatch(alertActions.error(error.toString()));
+          }
+      );
+  };
+
+  function request(fires) { return { type: FETCH_HISTORIC_FIRES, fires } }
+  function success(fires) { return { type: RECEIVED_HISTORIC_FIRES, firesReceivedAt: Date.now(), fires } }
+  function failure(error) { return { type: HISTORIC_FIRES_FAILURE, error } }
 };
 
 export const fireSelected = (selectedFire) => {
   return {
     type: FIRE_SELECTED,
     selectedFire
+  }
+};
+
+export const historicFireSelected = (selectedHistoricFire) => {
+  return {
+    type: HISTORIC_FIRE_SELECTED,
+    selectedHistoricFire
   }
 };

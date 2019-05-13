@@ -158,16 +158,11 @@ function prepareMeasurementsForCharts (measurements, aqiScale) {
 const mapStateToProps = state => {
   const { measurements, currentUser } = state,
         { aqiScales, isFetchingAqiScales } = state.aqiScales,
-        user = currentUser.user || utils.auth.getUser();
+        user = currentUser.user || utils.auth.getUser(),
+        aqiScale = utils.aqiScaleTools.getUserAqiScale(aqiScales, user),
+        preparedMeasurements = (measurements.measurements.Measurements) ?
+        prepareMeasurementsForCharts(measurements.measurements, aqiScale): {};
 
-  var aqiScale = null;
-  if (aqiScales.length > 0) {
-    var aqiScale = aqiScales[aqiScales.findIndex(x => {
-        return x.abbreviation === user.profile.aqi_scale;
-      })];
-  }
-
-  const preparedMeasurements = (measurements.measurements.Measurements) ? prepareMeasurementsForCharts(measurements.measurements, aqiScale): {};
   return {
     measurements: preparedMeasurements,
     isFetchingMeasurements: measurements.isFetchingMeasurements,

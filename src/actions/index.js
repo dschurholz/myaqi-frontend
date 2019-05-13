@@ -3,8 +3,8 @@
 import { fetchSites, receivedSites, getSites, siteSelected } from './sites';
 import { fetchMeasurements, receivedMeasurements, getMeasurementsByQuery } from './measurements';
 import { fetchVicRoadsTraffic, receivedVicRoadsTraffic, getVicRoadsTraffic, getBingTraffic } from './traffic';
-import { fetchFires, receivedFires, getAllFires, fireSelected } from './fires';
-import { fetchAqiForecasts, getAqiForecasts, receivedAqiForecasts } from './forecasts';
+import { getHistoricAllFires, getAllFires, fireSelected, historicFireSelected } from './fires';
+import { fetchAqiForecasts, getAqiForecasts, receivedAqiForecasts, getExperimentsMapData, experimentsDateSelected} from './forecasts';
 import userActions from './user';
 import { getAQIScales } from './aqi_scales';
 
@@ -20,13 +20,15 @@ export {
   getVicRoadsTraffic,
   receivedVicRoadsTraffic,
   fetchVicRoadsTraffic,
-  fetchFires,
-  receivedFires,
   getAllFires,
+  getHistoricAllFires,
   fireSelected,
+  historicFireSelected,
   fetchAqiForecasts,
   getAqiForecasts,
   receivedAqiForecasts,
+  getExperimentsMapData,
   getBingTraffic,
-  getAQIScales
+  getAQIScales,
+  experimentsDateSelected
 };

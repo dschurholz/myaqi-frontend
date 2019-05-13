@@ -16,7 +16,7 @@ class DefaultFooter extends Component {
     return (
       <React.Fragment>
         <span><a href="https://coreui.io">MyAQI</a> &copy; 2019 PERCCOMLabs <i style={{fontSize: "10px"}}>- Daniel Schürholz</i></span>
-        <span className="ml-auto">Powered by <a href="https://coreui.io/react">MyAQI4U</a></span>
+        <span className="ml-auto">Powered by <a href="https://coreui.io/react">CoreUI</a></span>
       </React.Fragment>
     );
   }

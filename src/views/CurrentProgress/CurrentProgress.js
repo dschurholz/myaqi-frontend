@@ -22,256 +22,272 @@ class CurrentProgress extends Component {
         overallPages: 0,
         chapters: [
           {
-            title: 'Introduction Title',
-            pages: 6,
-            progress: 95,
+            title: 'Introduction',
+            pages: 7,
+            progress: 99,
             isOpen: false,
             subchapters: [
               {
                 title: "Introduction",
-                progress: 95,
-                depth: 0
+                progress: 100,
+                subchapterNum: 1
               }, {
                 title: "Research Motivation",
-                progress: 95,
-                depth: 0
+                progress: 100,
+                subchapterNum: 2
               }, {
                 title: "Contribution",
-                progress: 95,
-                depth: 0
+                progress: 100,
+                subchapterNum: 3
               }, {
                 title: "Research Methodology",
-                progress: 95,
-                depth: 0
+                progress: 100,
+                subchapterNum: 4
               }, {
                 title: "Sustainability Analysis",
-                progress: 95,
-                depth: 0
+                progress: 100,
+                subchapterNum: 5
               }, {
                 title: "Thesis Structure",
-                progress: 95,
-                depth: 0
+                progress: 100,
+                subchapterNum: 6
               }
             ]
           }, {
             title: 'Background & Literature Review',
-            pages: 17,
-            progress: 95,
+            pages: 30,
+            progress: 98,
             isOpen: false,
             subchapters: [
               {
                 title: "Context Awareness",
-                progress: 95,
-                depth: 0
+                progress: 100,
+                subchapterNum: 1
               }, {
                 title: "Definitions",
-                progress: 95,
-                depth: 1
+                progress: 100,
+                subchapterNum: 1,
+                subsubchapterNum: 1
               }, {
                 title: "Context Space Theory",
-                progress: 95,
-                depth: 2
+                progress: 100,
+                subchapterNum: 1,
+                subsubchapterNum: 2
               }, {
                 title: "Context Prediction",
-                progress: 95,
-                depth: 3
+                progress: 100,
+                subchapterNum: 1,
+                subsubchapterNum: 3
               }, {
                 title: "Context Aware System Architecture",
-                progress: 95,
-                depth: 4
+                progress: 100,
+                subchapterNum: 1,
+                subsubchapterNum: 4
               }, {
-                title: "General Prediction Methods",
-                progress: 95,
-                depth: 0
+                title: "Context Prediction Methods",
+                progress: 100,
+                subchapterNum: 2
+              }, {
+                title: "Continous Time-Series Prediction",
+                progress: 100,
+                subchapterNum: 2,
+                subsubchapterNum: 1
+              }, {
+                title: "Categorical Time-Series Prediction",
+                progress: 100,
+                subchapterNum: 2,
+                subsubchapterNum: 2
               }, {
                 title: "Outdoor Air Quality Monitoring",
-                progress: 95,
-                depth: 0
+                progress: 100,
+                subchapterNum: 3
               }, {
                 title: "Outdoor Air Quality Prediction",
-                progress: 80,
-                depth: 1
+                progress: 95,
+                subchapterNum: 3,
+                subsubchapterNum: 1
               }, {
                 title: "Context Aware Outdoor Air Quality Monitoring and Prediction",
                 progress: 95,
-                depth: 2
+                subchapterNum: 3,
+                subsubchapterNum: 2
               }
             ]
           }, {
-            title: 'Context Model',
-            pages: 2,
-            progress: 40,
+            title: 'Context Modelling',
+            pages: 10,
+            progress: 100,
             isOpen: false,
             subchapters: [
               {
                 title: "Introduction",
-                progress: 50,
-                depth: 0
+                progress: 100,
+                subchapterNum: 1
               }, {
-                title: "Context Model",
-                progress: 80,
-                depth: 0
+                title: "Context Modelling",
+                progress: 100,
+                subchapterNum: 2
               }, {
-                title: "Air Quality Context Model",
-                progress: 50,
-                depth: 1
+                title: "Air Quality Attributes",
+                progress: 100,
+                subchapterNum: 2,
+                subsubchapterNum: 1
               }, {
-                title: "User Context Model",
-                progress: 10,
-                depth: 2
+                title: "Extended External Attributes",
+                progress: 100,
+                subchapterNum: 2,
+                subsubchapterNum: 2
               }, {
-                title: "Extended Context Attributes",
-                progress: 50,
-                depth: 3
+                title: "User Attributes",
+                progress: 100,
+                subchapterNum: 2,
+                subsubchapterNum: 3
               }, {
-                title: "ECSTRA Situation Reasoning",
-                progress: 0,
-                depth: 0
-              }, {
-                title: "Summary",
-                progress: 0,
-                depth: 0
-              }
-            ]
-          }, {
-            title: 'System Design & Architecture',
-            pages: 2,
-            progress: 40,
-            isOpen: false,
-            subchapters: [
-              {
-                title: "Overall System Architecture",
+                title: "Situation Reasoning",
                 progress: 90,
-                depth: 0
+                subchapterNum: 3
               }, {
-                title: "Data Storage Level",
+                title: "Prediction Model",
                 progress: 10,
-                depth: 0
-              }, {
-                title: "Prediction Algorithm",
-                progress: 10,
-                depth: 0
-              }, {
-                title: "Context Feeding Layer",
-                progress: 0,
-                depth: 0
-              }, {
-                title: "Situation Reasoning Layer",
-                progress: 0,
-                depth: 0
-              }, {
-                title: "Visualization Layer",
-                progress: 0,
-                depth: 0
+                subchapterNum: 4
               }, {
                 title: "Summary",
-                progress: 0,
-                depth: 0
+                progress: 90,
+                subchapterNum: 5
               }
             ]
           }, {
-            title: 'Implementation and Experiment Setup',
-            pages: 1.5,
-            progress: 20,
+            title: 'System Architecture & Implementation',
+            pages: 7,
+            progress: 97,
             isOpen: false,
             subchapters: [
               {
-                title: "Implementation",
-                progress: 50,
-                depth: 0
+                title: "Architecture",
+                progress: 100,
+                subchapterNum: 1
               }, {
-                title: "System Setup",
-                progress: 10,
-                depth: 1
+                title: "Backend Layer",
+                progress: 100,
+                subchapterNum: 1,
+                subsubchapterNum: 1
+              }, {
+                title: "Frontend Layer",
+                progress: 100,
+                subchapterNum: 1,
+                subsubchapterNum: 2
+              }, {
+                title: "Implementation",
+                progress: 95,
+                subchapterNum: 2
               }, {
                 title: "Equipment and Devices",
-                progress: 0,
-                depth: 2
+                progress: 100,
+                subchapterNum: 2,
+                subsubchapterNum: 1
               }, {
                 title: "Software",
-                progress: 50,
-                depth: 3
+                progress: 100,
+                subchapterNum: 2,
+                subsubchapterNum: 2
               }, {
-                title: "Networking",
-                progress: 0,
-                depth: 4
+                title: "Communications",
+                progress: 100,
+                subchapterNum: 2,
+                subsubchapterNum: 3
               }, {
                 title: "End-user interface",
-                progress: 40,
-                depth: 5
+                progress: 100,
+                subchapterNum: 2,
+                subsubchapterNum: 4
               }, {
                 title: "Development",
-                progress: 0,
-                depth: 6
+                progress: 90,
+                subchapterNum: 2,
+                subsubchapterNum: 5
               }, {
+                title: "Summary",
+                progress: 100,
+                subchapterNum: 3
+              }
+            ]
+          }, {
+            title: 'Experiments and Results',
+            pages: 1,
+            progress: 10,
+            isOpen: false,
+            subchapters: [
+              {
                 title: "Experiments",
                 progress: 20,
-                depth: 0
+                subchapterNum: 1
               }, {
                 title: "Datasets Descriptions",
                 progress: 40,
-                depth: 1
+                subchapterNum: 1,
+                subsubchapterNum: 1
               }, {
                 title: "Experiment Setup",
-                progress: 10,
-                depth: 2
+                progress: 0,
+                subchapterNum: 1,
+                subsubchapterNum: 2
+              }, {
+                title: "Results",
+                progress: 0,
+                subchapterNum: 2
               }
             ]
           }, {
-            title: 'Results',
-            pages: 0,
-            progress: 0,
-            isOpen: false,
-            subchapters: []
-          }, {
-            title: 'Conclusions',
-            pages: 0.5,
+            title: 'Conclusions & Future Work',
+            pages: 1,
             progress: 10,
-            isOpen: false,
-            subchapters: []
-          }, {
-            title: 'Future Work',
-            pages: 0,
-            progress: 0,
             isOpen: false,
             subchapters: []
           }
         ],
-        references: 46
+        references: 65
       },
       extraProgress: [
         {
-          task: "Finished General Context Prediction Section in literature review",
+          task: "Finish outdoor air quality monitoring techniques table in literature review",
           color: "secondary"
         },
         {
-          task: "Added 3 Deep Learning AQ Prediction Approaches to Taxonomy and Literature Review",
+          task: "Add system architecture to thesis",
           color: "secondary"
         },
         {
-          task: "Added Traffic from Google Maps to simulator",
+          task: "Add system implementation to thesis",
           color: "secondary"
         },
         {
-          task: "Started adding Bing Maps incidents to simulator, will use this as traffic events.",
+          task: "Work on context and situation prediction algorithm with TensorFlow and Keras libraries",
           color: "success"
         },
         {
-          task: "Started working on context and situation prediction algorithm with TensorFlow and Keras libraries",
+          task: "Get prediction results and compare to other methods.",
           color: "success"
         }
       ],
       futureTasks: [
         {
-          task: "Finish dataset preparing for prediction algorithm input",
+          task: "Finish experiments and results chapter on thesis document.",
           color: "warning"
         },
         {
-          task: "Continue on prediction algorithm development",
+          task: "Add prediction algorithm subsection to thesis",
           color: "warning"
         },
         {
-          task: "Start outline and draft of paper",
+          task: "Fill paper for RuSMART publication",
+          color: "secondary"
+        },
+        {
+          task: "Fill paper for IoT Conference publication",
+          color: "secondary"
+        },
+        {
+          task: "Write abstract",
           color: "secondary"
         }
       ]
@@ -329,7 +345,7 @@ class CurrentProgress extends Component {
                                   {
                                     chapter.subchapters.map((subchapter, index) => {
                                       return (
-                                        <ListGroupItem key={index} className="justify-content-between">{(subchapter.depth > 0 ? '\t': '') + (idx+1) + '.' + (index+1-subchapter.depth) + (subchapter.depth === 0 ? '. ': '.' + subchapter.depth + '. ') + subchapter.title}<span className="float-right"><b>Progress:</b> {subchapter.progress}%</span></ListGroupItem>
+                                        <ListGroupItem key={index} className="justify-content-between">{(!subchapter.subsubchapterNum ? '' : <>&nbsp;&nbsp;</>)}{subchapter.subchapterNum + (!subchapter.subsubchapterNum ? '': '.' + subchapter.subsubchapterNum)  + '. ' + subchapter.title}<span className="float-right"><b>Progress:</b> {subchapter.progress}%</span></ListGroupItem>
                                       )
                                     })
                                   }

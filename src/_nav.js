@@ -3,11 +3,7 @@ export default {
     {
       name: 'Dashboard',
       url: '/dashboard',
-      icon: 'icon-speedometer',
-      badge: {
-        variant: 'warning',
-        text: '42',
-      },
+      icon: 'icon-speedometer'
     },
     {
       title: true,
@@ -72,6 +68,10 @@ export default {
           name: 'Live',
           url: '/fires',
           icon: 'icon-fire'
+        }, {
+          name: 'Historical',
+          url: '/historical-fires',
+          icon: 'icon-fire-alt'
         }
       ],
     },

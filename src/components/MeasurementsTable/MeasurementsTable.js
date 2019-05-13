@@ -79,14 +79,9 @@ const mapStateToProps = state => {
         { measurements, isFetchingMeasurements } = state.measurements,
         { aqiScales, isFetchingAqiScales } = state.aqiScales,
         user = currentUser.user || utils.auth.getUser(),
-        pollutant = measurements && measurements.Parameters ? utils.charts.getMeasurementPollutantName(measurements.Parameters): 'aqi';
-
-  var aqiScale = null;
-  if (aqiScales.length > 0) {
-    aqiScale = aqiScales[aqiScales.findIndex(x => {
-      return x.abbreviation === user.profile.aqi_scale;
-    })];
-  }
+        aqiScale = utils.aqiScaleTools.getUserAqiScale(aqiScales, user),
+        pollutant = measurements && measurements.Parameters ?
+        utils.charts.getMeasurementPollutantName(measurements.Parameters): 'aqi';
 
   return {
     isFetchingMeasurements,

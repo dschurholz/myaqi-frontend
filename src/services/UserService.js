@@ -37,7 +37,8 @@ function logout() {
 
 function getMe() {
     const requestOptions = {
-        headers: utils.auth.authHeader()
+        headers: utils.auth.authHeader(),
+        withCredentials: true
     };
 
     return axios.get(`${process.env.REACT_APP_API_ROOT}me`, requestOptions)
@@ -114,10 +115,11 @@ function handleError(error) {
         window.location.reload(true);
     } 
     var errorText;
-    if (error.response.status === 400 && error.response.data && error.response.data['non_field_errors']) {
-        errorText = error.response.data['non_field_errors'][0];
-    } else {
-        errorText = error.response.data || error.response.statusText;
-    }
+    // if (error.response && error.response.status === 400 && error.response.data && error.response.data['non_field_errors']) {
+    //     errorText = error.response.data['non_field_errors'][0];
+    // } else {
+    //     errorText = error.response.data || error.response.statusText;
+    // }
+    errorText = error;
     return Promise.reject(errorText);
 }

@@ -106,6 +106,7 @@ export class GoogleMap extends Component {
 
   loadMap = (map, maps) => {
     var bounds = new maps.LatLngBounds();
+    const { extraMapStyles } = this.props;
     this.infowindow = new maps.InfoWindow();
     this.props.markers.forEach((marker, idx) => {
       var mar = {
@@ -134,6 +135,7 @@ export class GoogleMap extends Component {
         this.infowindow.open(map, mar);
         this.onMarkerClick(marker, mar);
         if (e && e.va) e.va.stopPropagation();
+        if (e && e.wa) e.wa.stopPropagation();
       });
 
       this.markerEls.push(mar);
@@ -200,7 +202,9 @@ export class GoogleMap extends Component {
         paths: polygon.coordinates,
         strokeColor: polygon.lineColor,
         strokeOpacity: 1,
-        strokeWeight: 2,
+        fillColor: (extraMapStyles && extraMapStyles.useLineColour) ? polygon.lineColor : '#333333',
+        fillOpacity: (extraMapStyles && extraMapStyles.ploygonFillOpacity) ? extraMapStyles.ploygonFillOpacity : 0.35,
+        strokeWeight: (extraMapStyles && extraMapStyles.ploygonStrokeWight) ? extraMapStyles.ploygonStrokeWight : 2,
         icons: [{ 
           icon: "hello",
           offset: '0',

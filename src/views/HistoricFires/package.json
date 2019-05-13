@@ -1,0 +1,6 @@
+{
+  "name": "HistoricFires",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./HistoricFires.js"
+}

@@ -116,14 +116,8 @@ const mapStateToProps = (state, ownProps) => {
         { updating } = currentUser,
         { aqiScales, isFetchingAqiScales } = state.aqiScales,
         user = currentUser.user || utils.auth.getUser(),
-        { visualization } = ownProps; 
-
-  var aqiScale = null;
-  if (aqiScales.length > 0) {
-    aqiScale = aqiScales[aqiScales.findIndex(x => {
-      return x.abbreviation === user.profile.aqi_scale;
-    })];
-  }
+        { visualization } = ownProps,
+        aqiScale = utils.aqiScaleTools.getUserAqiScale(aqiScales, user);
 
   return {
     markers: (!!aqiScale && visualization && (visualization.pins || visualization.pinsText)) ? _randomMarkers(aqiScale, visualization) : [],
