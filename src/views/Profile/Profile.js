@@ -201,7 +201,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { updating, aqiScales, isFetchingAqiScales } = this.props;
+    const { updating, aqiScales } = this.props;
     const { user, profile, submitted, collapse, visualization, questionnaire } = this.state;
     const modified = (this.props.user.profile && this.props.user.profile.modified) || 'new';
     const questionnaireAnswers = this.props.user.profile && this.props.user.profile.questionnaire_answers,

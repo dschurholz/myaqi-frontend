@@ -739,14 +739,14 @@ export const svgIcons = {
                      height="100%"
                      xmlns:xlink="http://www.w3.org/1999/xlink"
                      xmlns="http://www.w3.org/2000/svg"
-                     viewBox="0 0 400 ${squared ? '350' : '455'}">
+                     viewBox="0 0 400 ${squared ? (stroke ? '358' : '350') : '455'}">
                   <defs>
                     <linearGradient id="linear2" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="80%"   stop-color="${fgaColor}, 1)"/>
                       <stop offset="90%" stop-color="${fgaColor}, 0)"/>
                     </linearGradient>
                   </defs>
-                  <rect x="0" y="0" rx="25" ry="25" width="${stroke ? '392' : '100%'}" ${stroke ? 'transform="translate(4, 0)"' : ''} height="350"
+                  <rect x="0" y="0" rx="25" ry="25" width="${stroke ? '392' : '100%'}" ${stroke ? 'transform="translate(4, 4)"' : ''} height="350"
                         style="fill:${bgColor};fill-rule:evenodd;stroke-width:8;stroke-miterlimit:1;" ${stroke ? `stroke="${fgColor}"` : '' } />
                   <path id="path"
                        transform="translate(20, 20)"
