@@ -1,0 +1,73 @@
+<svg id="markers--AQI--Gauge"
+     class="speed" 
+     width="100%"
+     height="100%"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 400 455">
+  <defs>
+    <linearGradient id="linear2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="50%"   stop-color="hsla(232, 52%, 8%, 1)"/>
+      
+      <stop offset="90%" stop-color="hsla(232, 52%, 8%, 0)"/>
+    </linearGradient>
+  </defs>
+<defs>
+    <filter id="f4" x="0" y="0" width="200%" height="200%">
+      <feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />
+      
+      <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="25" />
+      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+    </filter>
+  </defs>
+  <defs>
+    <filter id="f1" x="0" y="0">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="7" />
+    </filter>
+  </defs>
+  <rect x="0" y="0" rx="25" ry="25" width="100%" height="350" style="fill:#FFF;fill-rule:evenodd;stroke-width:8;stroke-miterlimit:1;" stroke="hsla(232, 52%, 8%, 1)" />
+  <image xlink:href="gauge-outline.png" height="420" width="380" transform="translate(10,-35)"/>
+  
+  <!-- <line class="line" x1="53" y1="306" x2="180" y2="180" style="stroke:rgb(255,0,0);stroke-width:2;transform-origin:63px 0px"
+        /> -->
+  <polygon id="bigLine" class="line" fill="url(#linear2)"
+    transform="translate(95, 190) rotate(45, 105, 12)"
+    points="105,0 105,24  0,20  0,4" 
+    style="fill-opacity:0.9;" />
+  <polygon points="0,0 100,100 200,0" transform="translate(100, 350)" style="fill:white;stroke:hsla(232, 52%, 8%, 1);stroke-width:8" />
+  <polygon points="0,0 100,100 200,0" transform="translate(100, 344)" style="fill:white;" /> 
+  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
+        transform="translate(20, 20) rotate(226 180 180)"
+        >
+  </line>
+  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
+        transform="translate(20, 20) rotate(270 180 180)"
+        >    
+  </line>
+  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
+        transform="translate(20, 20) rotate(315 180 180)"
+        >    
+  </line>
+  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
+        transform="translate(20, 20) rotate(405 180 180)"
+        >    
+  </line>
+<line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
+        transform="translate(20, 20) rotate(450 180 180)"
+        >    
+  </line>  
+  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
+        transform="translate(20, 20) rotate(494 180 180)"
+        >    
+  </line>
+  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26" transform="translate(20, 20)">    
+  </line>
+  
+  <text x="85" y="275" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">0</text>
+  <text x="50" y="187" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">30</text>
+  <text x="82" y="100" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">60</text>
+  <text x="170" y="60" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">90</text>
+  <text x="255" y="100" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">120</text>
+  <text x="292" y="187" transform="translate(18, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">150</text>
+  <text x="255" y="275" transform="translate(16, 16)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">300</text>
+</svg>

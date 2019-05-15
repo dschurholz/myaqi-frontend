@@ -71,7 +71,7 @@ export default {
         }, {
           name: 'Historical',
           url: '/historical-fires',
-          icon: 'icon-fire-alt'
+          icon: 'fa fa-history'
         }
       ],
     },

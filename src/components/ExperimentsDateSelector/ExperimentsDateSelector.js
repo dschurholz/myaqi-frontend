@@ -3,18 +3,14 @@
 import React, { Component, Suspense } from 'react';
 import { connect } from 'react-redux';
 import {
-  Badge,
   Button,
   ButtonGroup,
   Col,
   FormGroup,
   FormText,
   Input,
-  ListGroup,
-  ListGroupItem,
   Row
 } from 'reactstrap';
-import Moment from 'react-moment';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
 import { utils } from "../../utils";
 import { experimentsDateSelected } from '../../actions';
@@ -69,7 +65,7 @@ class ExperimentsDateSelector extends Component {
   }
 
   togglePlay = () => {
-    const { playing, dateIdx, speed } = this.state;
+    const { playing, speed } = this.state;
     this.setState({
       playing: !playing
     });
@@ -118,7 +114,7 @@ class ExperimentsDateSelector extends Component {
   }
 
   handleDateChange(event) {
-    const { name, value } = event.target,
+    const { value } = event.target,
           { dateRange } = this.props,
           newIdx = dateRange.indexOf(value + 'T00:00:00');
     
@@ -129,7 +125,7 @@ class ExperimentsDateSelector extends Component {
   }
 
   render () {
-    const { dateRange, isFetchingData, selectedDate } = this.props;
+    const { dateRange, isFetchingData } = this.props;
 
     if(dateRange.length === 0 && !isFetchingData) {
       return (
@@ -208,7 +204,7 @@ function getDateRange(timeline) {
 const mapStateToProps = state => {
   const { experimentsData, isFetchingExperimentsMapData } = state.experimentsMapData,
     { selectedExperimentsDate } = state;
-  
+
   return {
   selectedDate: selectedExperimentsDate,
   dateRange: experimentsData.timeline ? getDateRange(experimentsData.timeline) : [],

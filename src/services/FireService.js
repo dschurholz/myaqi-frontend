@@ -1,4 +1,3 @@
-import { utils } from '../utils';
 import axios from 'axios';
 
 import { SettingsService } from './index';
@@ -29,10 +28,6 @@ function getVicEmergencyFires(query) {
 }
 
 function getHistoricFires(query) {
-    const requestOptions = {
-        headers: utils.auth.authHeader()
-    };
-
     const { useTestData } = SettingsService.getSettings();
     var url, params = {};
     if (!useTestData) {

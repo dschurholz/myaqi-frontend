@@ -5,7 +5,7 @@ import GoogleMap from '../GoogleMap';
 
 import { utils } from '../../utils';
 
-
+// eslint-disable-next-line
 function _format_markers_vic_roads_anual_data (features) {
   let icon = 'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--community--Community_Information_Point");
   return features.map(feature => {
@@ -19,6 +19,7 @@ function _format_markers_vic_roads_anual_data (features) {
   });
 }
 
+// eslint-disable-next-line
 function _format_paths_vic_roads_anual_data (features) {
   let getPathColor = (feature) => {
     let ratio = 1.0*feature.attributes["ALLVEHS_MMW"] / feature.attributes["ALLVEHS_AADT"];
@@ -30,9 +31,10 @@ function _format_paths_vic_roads_anual_data (features) {
     }
     return "#FF0000";
   };
+
   let paths = [];
-  features.map(feature => {
-    feature.geometry.paths.map((path, idx) => {
+  features.forEach(feature => {
+    feature.geometry.paths.forEach((path, idx) => {
       let pathColor = getPathColor(feature);
       paths.push({
         objectId: feature.attributes["OBJECTID"] + "_" + (idx+1),
@@ -114,6 +116,7 @@ function _format_markers_vic_roads_live_data (traffic) {
   return markers;
 }
 
+// eslint-disable-next-line
 function _format_paths_vic_roads_live_data (features) {
   let getPathColor = (feature) => {
     let ratio = 1.0*feature.attributes["ALLVEHS_MMW"] / feature.attributes["ALLVEHS_AADT"];
@@ -126,8 +129,8 @@ function _format_paths_vic_roads_live_data (features) {
     return "#FF0000";
   };
   let paths = [];
-  features.map(feature => {
-    feature.geometry.paths.map((path, idx) => {
+  features.forEach(feature => {
+    feature.geometry.paths.forEach((path, idx) => {
       let pathColor = getPathColor(feature);
       paths.push({
         objectId: feature.attributes["OBJECTID"] + "_" + (idx+1),

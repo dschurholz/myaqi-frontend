@@ -2,7 +2,6 @@
 
 import { connect } from 'react-redux';
 import GoogleMap from '../GoogleMap';
-import { siteSelected } from '../../actions';
 
 import { utils } from '../../utils';
 
@@ -42,7 +41,7 @@ function _randomMarkers(aqiScale, visualization={pinsText:true}, center=VICTORIA
 
   const extraCheck = utils.aqiScaleTools.extraChecks(aqiScale.abbreviation),
         extended = true,
-        aqiScaleThresholds = utils.charts.parseScale(aqiScale, 'aqi', extraCheck, true);
+        aqiScaleThresholds = utils.charts.parseScale(aqiScale, 'aqi', extraCheck, extended);
 
   for (let thresh = 0; thresh < aqiScaleThresholds.upperLimits.length; thresh++) {
     markers.push({
@@ -114,7 +113,7 @@ function _randomHeatmap(aqiScale, visualization={heatmap:true}, center=VICTORIA_
 const mapStateToProps = (state, ownProps) => {
   const { currentUser } = state,
         { updating } = currentUser,
-        { aqiScales, isFetchingAqiScales } = state.aqiScales,
+        { aqiScales } = state.aqiScales,
         user = currentUser.user || utils.auth.getUser(),
         { visualization } = ownProps,
         aqiScale = utils.aqiScaleTools.getUserAqiScale(aqiScales, user);

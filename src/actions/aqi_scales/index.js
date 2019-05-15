@@ -20,7 +20,6 @@ export const receivedScales = (aqiScales) => {
 
 export const getAQIScales = () => {
   return (dispatch) => {
-    console.log(process.env.REACT_APP_API_ROOT);
     dispatch(fetchScales([]));
     return axios.get(process.env.REACT_APP_API_ROOT + 'aqi-scales/')
       .then(response => {

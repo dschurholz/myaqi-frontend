@@ -8,7 +8,7 @@ class MeasurementsTableRow extends React.Component {
   render() {
 
     var customStyle = null;
-    const { measurement, getAQIScaleCustom, aqiScale, pollutant } = this.props,
+    const { measurement, getAQIScaleCustom, pollutant } = this.props,
           { DateTimeStart, SiteId, MonitorName, Value, AQIIndex, AQICategoryDescription, AQIBackgroundColour, AQIForegroundColour } = measurement;
 
     if (Value !== '-' && getAQIScaleCustom && typeof getAQIScaleCustom === 'function') {

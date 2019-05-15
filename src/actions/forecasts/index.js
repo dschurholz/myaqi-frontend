@@ -58,7 +58,7 @@ export const getExperimentsMapData = (query) => {
     const { useTestData } = SettingsService.getSettings();
     var url, params = {};
     if (!useTestData) {
-      // url = process.env.REACT_APP_EXPERIMENTS_MAP_DATA_URL;
+      //url = process.env.REACT_APP_EXPERIMENTS_MAP_DATA_URL;
       url = 'data/historic_overall_data_2017_2018.json';
       params = query;
     } else {

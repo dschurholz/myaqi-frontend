@@ -1,5 +1,3 @@
-import { utils } from '../utils';
-import axios from 'axios';
 import { localStore } from './index';
 
 export default {
@@ -9,14 +7,15 @@ export default {
 };
 
 function getSettings() {
-    let settings = JSON.parse(localStorage.getItem('global-settings'));
+    let settings = JSON.parse(localStore.getItem('global-settings'));
     return settings? settings : {};
 }
 
 function updateSettings(settings) {
-    return localStorage.setItem('global-settings', JSON.stringify(settings));
+    localStore.setItem('global-settings', JSON.stringify(settings));
+    return settings;
 }
 
 function removeSettings() {
-    return localStorage.removeItem('global-settings');
+    return localStore.removeItem('global-settings');
 }

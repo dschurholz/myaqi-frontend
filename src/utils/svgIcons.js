@@ -705,9 +705,17 @@ export const svgIcons = {
                 </svg>`;
         }
     },
-    getGaugeIcon: (type, num=0, limits) => {
-
-        limits = limits && limits.length === 7 ? limits : [0, 34, 67, 100, 150, 300, 1000];
+    getGaugeIcon: (type, num=0, limits, colors, stroke=true, squared=false) => {
+        limits = limits && limits.length === 7 ? limits.map(l => Math.round(l)) :
+                 [0, 34, 67, 100, 150, 300, 1000];
+        colors = colors && colors.length >= 6 ? colors.map(c => {
+          if (type === 'dark' && (c === '#000' || c === '#000000')) {
+            return '%23212121'
+          }
+          return c.replace('#', '%23');
+        }) :
+                 ['%23349d69', '%233787d7', '%23ffff05', '%23ff0a0a', '%23333', '%23212121'];
+        // console.log(colors)
 
         // Lowest angle -45 and highest is 225
         var rotationAngle;
@@ -720,205 +728,68 @@ export const svgIcons = {
             rotationAngle = ((270 * (l-1) / 6) - 45) + (45 * (num - limits[l-1]) / (limits[l] - limits[l-1]));
         }
         // console.log(rotationAngle);
-        switch (type) {
-        case "light":
-                return `<svg 
-                   id="markers--AQI--Gauge"
-                   class="speed" 
-                   width="100%"
-                   height="100%"
-                   xmlns:xlink="http://www.w3.org/1999/xlink"
-                   xmlns="http://www.w3.org/2000/svg"
-                   viewBox="0 0 400 455">
-                  <defs>
-                    <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%"   stop-color="%2300ff00"/>
-                      <stop offset="30%" stop-color="%23ffff00"/>
-                      <stop offset="70%" stop-color="%23ffff00"/>
-                      <stop offset="100%" stop-color="%23ff0000"/>
-                    </linearGradient>
-                  </defs>
+
+        var bgColor = '%23FFF', fgColor = '%23000', fgaColor = 'rgba(0, 0, 0';
+        if (type === "dark") {
+          bgColor = '%23000'; fgColor = '%23FFF'; fgaColor = 'rgba(255, 255, 255';
+        }
+        return `<svg id="markers--AQI--Gauge"
+                     class="speed" 
+                     width="100%"
+                     height="100%"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 400 ${squared ? '350' : '455'}">
                   <defs>
                     <linearGradient id="linear2" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="50%"   stop-color="hsla(232, 52%, 8%, 1)"/>
-                      
-                      <stop offset="90%" stop-color="hsla(232, 52%, 8%, 0)"/>
+                      <stop offset="80%"   stop-color="${fgaColor}, 1)"/>
+                      <stop offset="90%" stop-color="${fgaColor}, 0)"/>
                     </linearGradient>
                   </defs>
-                <defs>
-                    <filter id="f4" x="0" y="0" width="200%" height="200%">
-                      <feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />
-                      
-                      <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="25" />
-                      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-                    </filter>
-                  </defs>
-                  <defs>
-                    <filter id="f1" x="0" y="0">
-                      <feGaussianBlur in="SourceGraphic" stdDeviation="7" />
-                    </filter>
-                  </defs>
-                  <rect x="0" y="0" rx="25" ry="25" width="100%" height="350" style="fill:%23FFF;fill-rule:evenodd;stroke-width:8;stroke-miterlimit:1;" stroke="hsla(232, 52%, 8%, 1)" />
-                <path  id="arc2"
-                      style="fill:none;fill-rule:evenodd;stroke-width:52;stroke-miterlimit:1;stroke-opacity:0.05;transform-origin:180px 180px;transform:scale(0.9 0.9)"
-                      transform="scale(0.9 0.9) translate(40 38)"
-                      stroke="url(%23linear)" 
-                      filter="url(%23f1)"
-                      
-                        d="m 66.906305,293.33748 a 160.10918,160.10918 0 0 1 10e-7,-226.428566 a 160.10918,160.10918 0 0 1 226.428574,10e-7 a 160.10918,160.10918 0 0 1 -10e-6,226.428565" />
-                   <path id="path"
+                  <rect x="0" y="0" rx="25" ry="25" width="${stroke ? '392' : '100%'}" ${stroke ? 'transform="translate(4, 0)"' : ''} height="350"
+                        style="fill:${bgColor};fill-rule:evenodd;stroke-width:8;stroke-miterlimit:1;" ${stroke ? `stroke="${fgColor}"` : '' } />
+                  <path id="path"
                        transform="translate(20, 20)"
-                       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:%23223050;stroke-opacity:0.5;"          
-                        d="m 66.906305,293.33748 a 160.10918,160.10918 0 0 1 10e-7,-226.428566 a 160.10918,160.10918 0 0 1 226.428574,10e-7 a 160.10918,160.10918 0 0 1 -10e-6,226.428565" />
-                  <path
+                       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:${colors[0]};stroke-opacity:1;"
+                       d="m 67.706305,292.5 a 160.10918,160.10918 0 0 1 -46.5,-113.214" />
+                  <path id="path"
                        transform="translate(20, 20)"
-                       style="fill:none;fill-rule:evenodd;;stroke-width:40;stroke-miterlimit:4;" stroke="url(%23linear)"   
-                       id="arc"        
-                        d="m 66.906305,293.33748 a 160.10918,160.10918 0 0 1 10e-7,-226.428566 a 160.10918,160.10918 0 0 1 226.428574,10e-7 a 160.10918,160.10918 0 0 1 -10e-6,226.428565" />
-                  
-                  <!-- <line class="line" x1="53" y1="306" x2="180" y2="180" style="stroke:rgb(255,0,0);stroke-width:2;transform-origin:63px 0px"
-                        /> -->
+                       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:${colors[1]};stroke-opacity:1;"
+                       d="m 21.3,180 a 160.10918,160.10918 0 0 1 46,-113.214" />
+                  <path id="path"
+                       transform="translate(20, 20)"
+                       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:${colors[2]};stroke-opacity:1;"
+                       d="m 67.05,67.2 a 160.10918,160.10918 0 0 1 113.214,-46" />
+                  <path id="path"
+                       transform="translate(20, 20)"
+                       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:${colors[3]};stroke-opacity:1;"
+                       d="m 179.5,21.2 a 160.10918,160.10918 0 0 1 113.214,46" />
+                  <path id="path"
+                       transform="translate(20, 20)"
+                       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:${colors[4]};stroke-opacity:1;"
+                       d="m 292,66 a 160.10918,160.10918 0 0 1 48.5,113.214" />
+                  <path id="path"
+                       transform="translate(20, 20)"
+                       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:${colors[5]};stroke-opacity:1;"
+                       d="m 340.7,178 a 160.10918,160.10918 0 0 1 -48,113.214" />
                   <polygon id="bigLine" class="line" fill="url(%23linear2)"
                     transform="translate(95, 190) rotate(${rotationAngle}, 105, 12)"
                     points="105,0 105,24  0,20  0,4" 
                     style="fill-opacity:0.9;" />
-                  <polygon points="0,0 100,100 200,0" transform="translate(100, 350)" style="fill:white;stroke:hsla(232, 52%, 8%, 1);stroke-width:8" />
-                  <polygon points="0,0 100,100 200,0" transform="translate(100, 344)" style="fill:white;" /> 
-                  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(226 180 180)"
-                        >
-                  </line>
-                  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(270 180 180)"
-                        >    
-                  </line>
-                  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(315 180 180)"
-                        >    
-                  </line>
-                  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(405 180 180)"
-                        >    
-                  </line>
-                <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(450 180 180)"
-                        >    
-                  </line>  
-                  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(494 180 180)"
-                        >    
-                  </line>
-                  <line class="metka" style="stroke-width:5" stroke="hsla(232, 52%, 8%, 1)" x1="180" y1="14" x2="180" y2="26" transform="translate(20, 20)">    
-                  </line>
-                  
-                  <text x="85" y="275" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[0]}</text>
-                  <text x="50" y="187" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[1]}</text>
-                  <text x="82" y="100" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[2]}</text>
-                  <text x="170" y="60" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[3]}</text>
-                  <text x="255" y="100" transform="translate(20, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[4]}</text>
-                  <text x="292" y="187" transform="translate(18, 20)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[5]}</text>
-                  <text x="255" y="275" transform="translate(16, 16)" style="fill:hsla(232, 52%, 8%, 1);font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[6]}</text>
-                </svg>`
-
-            case "dark":
-            default:
-                return `<svg 
-                   id="markers--AQI--Gauge"
-                   class="speed" 
-                   width="100%"
-                   height="100%"
-                   xmlns:xlink="http://www.w3.org/1999/xlink"
-                   xmlns="http://www.w3.org/2000/svg"
-                   viewBox="0 0 400 455">
-                  <defs>
-                    <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%"   stop-color="%2300ff00"/>
-                      <stop offset="50%" stop-color="%23ffff00"/>
-                      <stop offset="100%" stop-color="%23ff0000"/>
-                    </linearGradient>
-                  </defs>
-                  <defs>
-                    <linearGradient id="linear2" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="50%"   stop-color="%23fff"/>
-                      
-                      <stop offset="90%" stop-color="rgba(255,255,255,0)"/>
-                    </linearGradient>
-                  </defs>
-                <defs>
-                    <filter id="f4" x="0" y="0" width="200%" height="200%">
-                      <feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />
-                      
-                      <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="25" />
-                      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-                    </filter>
-                  </defs>
-                  <defs>
-                    <filter id="f1" x="0" y="0">
-                      <feGaussianBlur in="SourceGraphic" stdDeviation="7" />
-                    </filter>
-                  </defs>
-                  <rect x="0" y="0" rx="25" ry="5" width="100%" height="350" style="fill:hsla(232, 52%, 8%, 1);fill-rule:evenodd;;stroke-width:8;stroke-miterlimit:1;" stroke="%23FFF" />
-                <path  id="arc2"
-                      style="fill:none;fill-rule:evenodd;stroke-width:52;stroke-miterlimit:1;stroke-opacity:0.05;transform-origin:180px 180px;transform:scale(0.9 0.9)"
-                      transform="scale(0.9 0.9) translate(40 38)"
-                      stroke="url(%23linear)" 
-                      filter="url(%23f1)"
-                      
-                        d="m 66.906305,293.33748 a 160.10918,160.10918 0 0 1 10e-7,-226.428566 a 160.10918,160.10918 0 0 1 226.428574,10e-7 a 160.10918,160.10918 0 0 1 -10e-6,226.428565" />
-                   <path id="path"
-                       transform="translate(20, 20)"
-                       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:%23223050;stroke-opacity:0.5;"          
-                        d="m 66.906305,293.33748 a 160.10918,160.10918 0 0 1 10e-7,-226.428566 a 160.10918,160.10918 0 0 1 226.428574,10e-7 a 160.10918,160.10918 0 0 1 -10e-6,226.428565" />
-                  <path
-                       transform="translate(20, 20)"
-                       style="fill:none;fill-rule:evenodd;;stroke-width:40;stroke-miterlimit:4;" stroke="url(%23linear)"   
-                       id="arc"        
-                        d="m 66.906305,293.33748 a 160.10918,160.10918 0 0 1 10e-7,-226.428566 a 160.10918,160.10918 0 0 1 226.428574,10e-7 a 160.10918,160.10918 0 0 1 -10e-6,226.428565" />
-                  
-                  <!-- <line class="line" x1="53" y1="306" x2="180" y2="180" style="stroke:rgb(255,0,0);stroke-width:2;transform-origin:63px 0px"
-                        /> -->
-                  <polygon id="bigLine" class="line" fill="url(%23linear2)"
-                    transform="translate(95, 190) rotate(${rotationAngle}, 105, 12)"
-                    points="105,0 105,24  0,20  0,4"
-                    style="fill-opacity:0.9;" /> 
-                  <polygon points="0,0 100,100 200,0" transform="translate(100, 350)" style="fill:hsla(232, 52%, 8%, 1);stroke:%23FFF;stroke-width:8" />
-                  <polygon points="0,0 100,100 200,0" transform="translate(100, 345)" style="fill:hsla(232, 52%, 8%, 1);" /> 
-                  <line class="metka" style="stroke-width:5" stroke="%23fff" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(226 180 180)"
-                        >    
-                  </line>
-                  <line class="metka" style="stroke-width:5" stroke="%23fff" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(270 180 180)"
-                        >    
-                  </line>
-                  <line class="metka" style="stroke-width:5" stroke="%23fff" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(315 180 180)"
-                        >    
-                  </line>
-                  <line class="metka" style="stroke-width:5" stroke="%23fff" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(405 180 180)"
-                        >    
-                  </line>
-                <line class="metka" style="stroke-width:5" stroke="%23fff" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(450 180 180)"
-                        >    
-                  </line>  
-                  <line class="metka" style="stroke-width:5" stroke="%23fff" x1="180" y1="14" x2="180" y2="26"
-                        transform="translate(20, 20) rotate(494 180 180)"
-                        >    
-                  </line>
-                  <line class="metka" style="stroke-width:5" stroke="%23fff" x1="180" y1="14" x2="180" y2="26" transform="translate(20, 20)">    
-                  </line>
-                  
-                  <text x="85" y="275" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[0]}</text>
-                  <text x="50" y="187" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[1]}</text>
-                  <text x="82" y="100" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[2]}</text>
-                  <text x="170" y="60" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[3]}</text>
-                  <text x="255" y="100" transform="translate(20, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[4]}</text>
-                  <text x="292" y="187" transform="translate(18, 20)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[5]}</text>
-                  <text x="255" y="275" transform="translate(16, 16)" style="fill:%23fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[6]}</text>
-                </svg>`
-        };
+                  ${
+                    !squared ?
+                    `<polygon points="0,0 100,100 200,0" transform="translate(100, 350)" style="fill:${bgColor};${stroke ? `stroke:${fgColor};` : '' }stroke-width:8" />
+                     <polygon points="0,0 100,100 200,0" transform="translate(100, 344)" style="fill:${bgColor};" />`
+                    : ''
+                  }
+                  <text x="85" y="275" transform="translate(20, 20)" style="fill:${fgColor};font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[0]}</text>
+                  <text x="50" y="187" transform="translate(20, 20)" style="fill:${fgColor};font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[1]}</text>
+                  <text x="82" y="100" transform="translate(20, 20)" style="fill:${fgColor};font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[2]}</text>
+                  <text x="170" y="60" transform="translate(20, 20)" style="fill:${fgColor};font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[3]}</text>
+                  <text x="255" y="100" transform="translate(20, 20)" style="fill:${fgColor};font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[4]}</text>
+                  <text x="292" y="187" transform="translate(18, 20)" style="fill:${fgColor};font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[5]}</text>
+                  <text x="255" y="275" transform="translate(16, 16)" style="fill:${fgColor};font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[6]}</text>
+                </svg>`;
     }
 };
 

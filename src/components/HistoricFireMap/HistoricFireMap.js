@@ -6,13 +6,12 @@ import { historicFireSelected } from '../../actions';
 
 import { utils } from '../../utils';
 
-var CATEGORIES = ["Fire", "Burn Area"];
 var FIGURE_TYPES = ["Polygon", "MultiPolygon"];
 
 var getFireStyles = (fire) => {
-  if(fire.fire_svrty.startsWith("BURNT_5"))
+  if(fire.fire_svrty.startsWith("BURNT_5") || fire.fire_svrty.startsWith("BURNT_NONFOREST"))
     return {color: "#333333", icon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--incident--Fire_Active")};
-  if(fire.fire_svrty.startsWith("BURNT_4"))
+  if(fire.fire_svrty.startsWith("BURNT_4") || fire.fire_svrty.startsWith("BURNT_FOREST"))
     return {color: "red", icon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--warning--Emergency_Warning")};
   if(fire.fire_svrty.startsWith("BURNT_3"))
     return {color: "orange", icon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--incident--Fire")};

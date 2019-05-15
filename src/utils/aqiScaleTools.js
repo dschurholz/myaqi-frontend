@@ -2,12 +2,21 @@
 
 import { parseScale } from './charts';
 
+const POLLUTANTS = ['aqi', 'pm2.5', 'pm10', 'no2', 'o3', 'so2', 'co'];
+const WEATHER_VARIABLES = ['rh', 'temp', 'wspeed', 'wdir']
+
 export default {
+    POLLUTANTS,
+    WEATHER_VARIABLES,
     normalizePollutantId: normalizePollutantId,
     extraChecks: extraChecks,
     getUserAqiScale: getUserAqiScale,
     parseAqiScale: parseAqiScale,
-    parseAqiScaleAllPollutants: parseAqiScaleAllPollutants
+    parseAqiScaleAllPollutantsStyles:parseAqiScaleAllPollutantsStyles,
+    parseScaleAllPollutants: parseScaleAllPollutants,
+    sortMeasurementsArray: sortMeasurementsArray,
+    prepareThresholdsForGauge,
+    sortPollutantsArray
 };
 
 function normalizePollutantId(id) {
@@ -69,9 +78,8 @@ function parseAqiScale (pollutant='aqi', aqiScale=null) {
   }
 }
 
-function parseAqiScaleAllPollutants (aqiScale=null) {
+function parseAqiScaleAllPollutantsStyles (aqiScale=null) {
   if (!aqiScale) return null;
-  const POLLUTANTS = ['aqi', 'pm2.5', 'o3', 'pm10', 'so2', 'no2', 'co'];
 
   var pollutantsStyles = {};
   for (let p in POLLUTANTS) {
@@ -79,4 +87,73 @@ function parseAqiScaleAllPollutants (aqiScale=null) {
   }
 
   return pollutantsStyles;
+}
+
+function getPollutantsForScale (aqiScale) {
+  let pollutants = []
+  aqiScale.aqi_category_thresholds.forEach(thresh => {
+    if (!pollutants.includes(thresh.pollutant)) {
+      pollutants.push(thresh.pollutant);
+    }
+  });
+
+  return pollutants;
+}
+
+function parseScaleAllPollutants (aqiScale=null) {
+  if (!aqiScale) return null;
+
+  const pollutants = getPollutantsForScale(aqiScale),
+        extraCheck = extraChecks(aqiScale.abbreviation),
+        extended = true;
+  var parsedPollutants = {};
+  for (let p in pollutants) {
+    parsedPollutants[pollutants[p]] = parseScale(aqiScale, pollutants[p], extraCheck, extended);
+  }
+
+  return parsedPollutants;
+}
+
+function sortPollutantsArray (array, withWeatherVars=false) {
+  var wholeKeys = (withWeatherVars) ? POLLUTANTS.concat(WEATHER_VARIABLES) : POLLUTANTS;
+  const arr = array.sort((el1, el2) => {
+    let el1idx = wholeKeys.indexOf(el1.toLowerCase()),
+        el2idx = wholeKeys.indexOf(el2.toLowerCase());
+    el1idx = el1idx > -1 ? el1idx : 999999;
+    el2idx = el2idx > -1 ? el2idx : 999999;
+    if (el1idx > el2idx) return 1;
+    if (el2idx > el1idx) return -1;
+    return 0;
+  });
+  return arr;
+}
+
+function sortMeasurementsArray (array) {
+  const wholeKeys = POLLUTANTS.concat(WEATHER_VARIABLES);
+  const arr = array.sort((el1, el2) => {
+    const el1idx = wholeKeys.indexOf(Object.keys(el1)[0].toLowerCase()),
+          el2idx = wholeKeys.indexOf(Object.keys(el2)[0].toLowerCase())
+    if (el1idx > el2idx) return 1;
+    if (el2idx > el1idx) return -1;
+    return 0;
+  });
+  return arr;
+}
+
+function prepareThresholdsForGauge (aqiThresholds) {
+  let thresholds = { colors: [], limits: []};
+  if (aqiThresholds && aqiThresholds.upperLimits && aqiThresholds.backgroundColors) {
+    thresholds.colors = aqiThresholds.backgroundColors;
+    thresholds.limits = aqiThresholds.upperLimits;
+    thresholds.limits.pop();
+    if (thresholds.limits.length === 4) {
+      thresholds.limits.push(thresholds.limits[thresholds.limits.length-1] * 2);
+    }
+    thresholds.limits.push(1000);
+    thresholds.limits.unshift(0);
+    if (thresholds.colors.length === 5) {
+      thresholds.colors.push(thresholds.colors[thresholds.colors.length-1]);
+    }
+  }
+  return thresholds;
 }

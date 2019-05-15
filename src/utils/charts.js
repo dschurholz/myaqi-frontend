@@ -102,6 +102,8 @@ export const parseScale = function (aqiScale, pollutant='aqi', extraCheck=null, 
     result.foregroundColors = [];
     result.abbreviations = [];
     result.descriptions = [];
+    result.lowerLimits = [];
+    result.units = '-';
   }
 
   aqi_category_thresholds.sort((thresh1, thresh2) => {
@@ -113,19 +115,22 @@ export const parseScale = function (aqiScale, pollutant='aqi', extraCheck=null, 
       if (extraCheck && typeof extraCheck === 'function' && !extraCheck(thresh, pollutant)) {
         return;
       }
+      if (thresh.units && result.units === '-') {
+        result.units = thresh.units;
+      }
       result.backgroundColors.push(thresh.background_colour);
       result.upperLimits.push(thresh.upper_threshold_value);
       if (extended) {
         result.foregroundColors.push(thresh.foreground_colour || '#000000');
         result.abbreviations.push(thresh.abbreviation);
         result.descriptions.push(thresh.description);
+        result.lowerLimits.push(thresh.lower_threshold_value);
       }
     }
   });
 
   return result;
 };
-
 
 export const getMeasurementPollutantName = function (queryString) {
   const parseParamStart = 'MonitorId: ',

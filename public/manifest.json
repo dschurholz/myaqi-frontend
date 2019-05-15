@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "MyAQI",
+  "name": "My Air Quality Index",
   "icons": [
     {
       "src": "favicon.ico",

@@ -1,0 +1,52 @@
+<svg id="markers--AQI--Gauge--dark"
+     class="speed" 
+     width="100%"
+     height="100%"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 400 455">
+  <defs>
+    <linearGradient id="linear2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="50%"   stop-color="#fff"/>
+      <stop offset="90%" stop-color="#fff"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" rx="25" ry="25" width="100%" height="350" style="fill:#000;fill-rule:evenodd;stroke-width:8;stroke-miterlimit:1;" stroke="#fff" />
+  <path id="path"
+       transform="translate(20, 20)"
+       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:#349d69;stroke-opacity:1;"
+       d="m 66.906305,293 a 160.10918,160.10918 0 0 1 -46.5,-113.214" />
+  <path id="path"
+       transform="translate(20, 20)"
+       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:#3787d7;stroke-opacity:1;"
+       d="m 20.5,180 a 160.10918,160.10918 0 0 1 46,-113.214" />
+  <path id="path"
+       transform="translate(20, 20)"
+       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:#ffff05;stroke-opacity:1;"
+       d="m 66.906305,66.89 a 160.10918,160.10918 0 0 1 113.214,-46" />
+  <path id="path"
+       transform="translate(20, 20)"
+       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:#ff0a0a;stroke-opacity:1;"
+       d="m 180.906305,20.89 a 160.10918,160.10918 0 0 1 113.214,46" />
+  <path id="path"
+       transform="translate(20, 20)"
+       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:#333;stroke-opacity:1;"
+       d="m 294.02,67.02 a 160.10918,160.10918 0 0 1 48.5,113.214" />
+  <path id="path"
+       transform="translate(20, 20)"
+       style="fill:none;fill-rule:evenodd;stroke-width:38;stroke-miterlimit:4;stroke:#333;stroke-opacity:1;"
+       d="m 342.5,179.7 a 160.10918,160.10918 0 0 1 -48,113.214" />
+  <polygon id="bigLine" class="line" fill="url(#linear2)"
+    transform="translate(95, 190) rotate(45, 105, 12)"
+    points="105,0 105,24  0,20  0,4" 
+    style="fill-opacity:0.9;" />
+  <polygon points="0,0 100,100 200,0" transform="translate(100, 350)" style="fill:#000;stroke:#fff;stroke-width:8" />
+  <polygon points="0,0 100,100 200,0" transform="translate(100, 344)" style="fill:#000;" />  
+  <text x="85" y="275" transform="translate(20, 20)" style="fill:#fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">0</text>
+  <text x="50" y="187" transform="translate(20, 20)" style="fill:#fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">30</text>
+  <text x="82" y="100" transform="translate(20, 20)" style="fill:#fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">60</text>
+  <text x="170" y="60" transform="translate(20, 20)" style="fill:#fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">90</text>
+  <text x="255" y="100" transform="translate(20, 20)" style="fill:#fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">120</text>
+  <text x="292" y="187" transform="translate(18, 20)" style="fill:#fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">150</text>
+  <text x="255" y="275" transform="translate(16, 16)" style="fill:#fff;font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">300</text>
+</svg>

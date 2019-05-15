@@ -31,7 +31,6 @@ class Dashboard extends Component {
   }
 
   setDate = (newDate) => {
-    const { date } = this.state;
     this.setState({
       date: newDate
     });
@@ -48,7 +47,7 @@ class Dashboard extends Component {
                 <i className="fa fa-align-justify"></i> Experiments Map
               </CardHeader>
               <CardBody className="pb-0">
-                <MainMap scaleMarkers={[32, 32]} loaderHeight="300px" loaderMargin="150px" />
+                <MainMap scaleMarkers={[40, 40]} loaderHeight="300px" loaderMargin="150px" />
               </CardBody>
             </Card>
           </Col>
@@ -74,7 +73,14 @@ class Dashboard extends Component {
           <Col xs="12" sm="12" lg="12">
             <Card className="text-black map-card">
               <CardHeader>
-                <i className="fa fa-align-justify"></i> Date Range
+                <i className="fa fa-calendar"></i> Date Range
+                {
+                  (!!this.state.date) ?
+                    <strong className="float-right">
+                      <i>current</i>&nbsp;<Moment format="YYYY-MM-DD HH">{ this.state.date }</Moment>h
+                    </strong>
+                  : <></>
+                }
               </CardHeader>
               <CardBody className="pb-0 pt-1">
                 <ExperimentsDateSelector value={0}/>

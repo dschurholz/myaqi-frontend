@@ -6,11 +6,9 @@ import {
   Col,
   Row
 } from 'reactstrap';
-import Moment from 'react-moment';
 import * as moment from 'moment';
 import { Chart, Line } from 'react-chartjs-2';
 
-import { updateQuery } from '../../actions';
 import { utils } from "../../utils";
 
 class MeasurementsCharts extends Component {

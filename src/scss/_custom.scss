@@ -69,3 +69,21 @@
 .pinpoint-location {
   font-style: italic;
 }
+
+.site-details-toggle {
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 5px;
+  padding: 0px 6px 0px 6px;
+  background-color: $t1-primary-color;
+  color: white;
+  img {
+    margin-top: 2px;
+  }
+  &:hover {
+    background-color: $t1-primary-dark-color;
+    img, i {
+      transform: scale(1.1, 1.1);
+    }
+  }
+}

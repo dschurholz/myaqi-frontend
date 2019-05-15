@@ -1,3 +1,4 @@
+import AQIScaleTable from './AQIScaleTable';
 import ExperimentsDetails from './ExperimentsDetails';
 import ExperimentsDateSelector from './ExperimentsDateSelector';
 import FireMap from './FireMap';
@@ -19,6 +20,7 @@ import SvgIcon from './SvgIcon';
 import TrafficMap from './TrafficMap';
 
 export {
+    AQIScaleTable,
     ExperimentsDetails,
     ExperimentsDateSelector,
     FireMap,

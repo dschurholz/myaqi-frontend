@@ -1,0 +1,6 @@
+{
+  "name": "AQIScaleTable",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./AQIScaleTable.js"
+}

@@ -6,7 +6,6 @@ import {
   Row
 } from 'reactstrap';
 import { Line, Chart } from 'react-chartjs-2';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { utils } from "../../utils";
 
 

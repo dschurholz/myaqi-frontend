@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import {
 // eslint-disable-next-line
@@ -91,6 +91,7 @@ class DefaultLayout extends Component {
                             )} />)
                     ) : (null);
                   })}
+                  <Redirect from="/" to="/dashboard" />
                 </Switch>
               </Suspense>
             </Container>

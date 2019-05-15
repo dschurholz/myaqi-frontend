@@ -35,9 +35,10 @@ class Traffic extends Component {
   }
   
   componentDidMount() {
+    var apis;
     if (this.state.apis.bing.isActive) {
       store.dispatch(getBingTraffic());
-      var apis = this.state.apis;
+      apis = this.state.apis;
       apis.bing.collected = true;
       this.setState({
         apis: apis
@@ -45,7 +46,7 @@ class Traffic extends Component {
     }
     if (this.state.apis.vicRoads.isActive) {
       store.dispatch(getVicRoadsTraffic());
-      var apis = this.state.apis;
+      apis = this.state.apis;
       apis.vicRoads.collected = true;
       this.setState({
         apis: apis

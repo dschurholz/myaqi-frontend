@@ -14,6 +14,7 @@ import {
   Row
 } from 'reactstrap';
 import * as moment from 'moment';
+import { utils } from '../../utils';
 
 class SiteDetails extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
@@ -29,12 +30,14 @@ class SiteDetails extends Component {
   };
 
   componentDidUpdate = () => {
-    const { onChange, selectedSite } = this.props;
+    const { onChange, selectedSite, aqiThresholds, aqiScaleParsed } = this.props;
     if (onChange && typeof onChange === 'function' && selectedSite && selectedSite.current_status && selectedSite.current_status.length > 0) {
       let monitor = selectedSite.current_status.find(monitor => {
           return monitor.name === 'Summary';
         });
-      onChange(monitor.value);
+
+      let thresholds = utils.aqiScaleTools.prepareThresholdsForGauge(aqiThresholds);
+      onChange(selectedSite ? selectedSite.name : '', monitor.value, thresholds.limits, thresholds.colors, aqiScaleParsed);
     }
   }
 
@@ -165,7 +168,7 @@ class SiteDetails extends Component {
                 </Col>
               </FormGroup>
               <div style={{textAlign: 'right'}}>
-                <a href="#" onClick={ this.fillDates }>Past 5 Days</a>
+                <a href="fillDates" onClick={ this.fillDates }>Past 5 Days</a>
               </div>
               <FormGroup className="form-actions" style={{textAlign: 'center'}}>
                 <Button type="submit" color="primary" size="lg" onClick={ this.handleSubmit }>Update Measurements Table</Button>

@@ -1,13 +1,33 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Badge, Button, Card, CardHeader, CardBody, CardFooter, Col, Container, Form, FormText, FormGroup, Label, Input, InputGroup, InputGroupAddon, InputGroupText, Row, FormFeedback, Collapse, ListGroup, ListGroupItem } from 'reactstrap';
+import { 
+  Badge,
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Col,
+  Form,
+  FormText,
+  FormGroup,
+  Label,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  Row,
+  FormFeedback,
+  Collapse,
+  ListGroup,
+  ListGroupItem } from 'reactstrap';
 import Moment from 'react-moment';
 import { AppSwitch } from '@coreui/react'
 
 import { store } from '../../stores';
 import { userActions } from '../../actions';
 import { utils } from '../../utils';
-import { Questionnaire, PreviewMap } from '../../components';
+import { Questionnaire, PreviewMap, AQIScaleTable } from '../../components';
 import { getAQIScales } from '../../actions';
 
 const YES = 'Yes';
@@ -263,7 +283,7 @@ class Profile extends Component {
                   !!this.props.user ?
                     <>
                       <FormText className={!collapse.questionnaire ? 'mb-0' : 'mb-2'}>
-                        <a href="#" target="questionnaire" onClick={this.openCollapse}>
+                        <a href="questionnaire" target="questionnaire" onClick={this.openCollapse}>
                         {
                           !collapse.questionnaire ?
                             (!sensitivityLevels || sensitivityLevels.length === 0) ?
@@ -375,7 +395,7 @@ class Profile extends Component {
               </CardBody>
             </Collapse>
             <CardFooter>
-              <a href="#" onClick={this.openCollapse} className={'btn btn-primary mb-1'} id="pollutantSensitivityToggle" target="pollutantSensitivity">{!collapse.pollutantSensitivity?'Show':'Hide'}</a>
+              <a href="pollutant-sensitivity" onClick={this.openCollapse} className={'btn btn-primary mb-1'} id="pollutantSensitivityToggle" target="pollutantSensitivity">{!collapse.pollutantSensitivity?'Show':'Hide'}</a>
             </CardFooter>
           </Card>
           <Card className="mx-4">
@@ -404,7 +424,7 @@ class Profile extends Component {
               </CardBody>
             </Collapse>
             <CardFooter>
-              <a href="#" onClick={this.openCollapse} className={'btn btn-primary mb-1'} id="pollutantSensitivityToggle" target="mapsAndIcons">{!collapse.mapsAndIcons?'Show':'Hide'}</a>
+              <a href="pollutant-sensitivity-map" onClick={this.openCollapse} className={'btn btn-primary mb-1'} id="pollutantSensitivityMapToggle" target="mapsAndIcons">{!collapse.mapsAndIcons?'Show':'Hide'}</a>
             </CardFooter>
           </Card>
           <Card className="mx-4">
@@ -412,12 +432,12 @@ class Profile extends Component {
               <strong>AQI Scale</strong>&nbsp;<i>Preview</i>
             </CardHeader>
             <Collapse isOpen={collapse.AQIScales}>
-              <CardBody className="p-4">
-                AQI Scales
+              <CardBody className="p-0">
+                <AQIScaleTable />
               </CardBody>
             </Collapse>
             <CardFooter>
-              <a href="#" onClick={this.openCollapse} className={'btn btn-primary mb-1'} id="pollutantSensitivityToggle" target="AQIScales">{!collapse.AQIScales?'Show':'Hide'}</a>
+              <a href="aqi-scale" onClick={this.openCollapse} className={'btn btn-primary mb-1'} id="aqiScaleToggle" target="AQIScales">{!collapse.AQIScales?'Show':'Hide'}</a>
             </CardFooter>
           </Card>
         </Col>

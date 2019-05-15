@@ -23,6 +23,7 @@ export class GoogleMap extends Component {
   currentInteractiveMarker = null;
   markerEls = [];
   polygonEls=[];
+  pathEls=[];
   heatmapLayers = [];
   markerCluster = null;
 
@@ -39,14 +40,18 @@ export class GoogleMap extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { markers, polygons, updating, forceRefresh } = this.props;
+    const { markers, polygons, paths, updating, forceRefresh } = this.props;
     let refresh = false;
     if (this.heatmapLayers.length > 0) {
       this.cleanLayers();
       refresh = true;
     }
-    if (polygons.length !== prevProps.polygons.length || updating) {
+    if (forceRefresh || polygons.length !== prevProps.polygons.length || updating) {
       this.cleanPolygons();
+      refresh = true;
+    }
+    if (forceRefresh || paths.length !== prevProps.paths.length || updating) {
+      this.cleanPaths();
       refresh = true;
     }
     if (forceRefresh || markers.length !== prevProps.markers.length || updating) {
@@ -95,6 +100,15 @@ export class GoogleMap extends Component {
     this.polygonEls = [];
   }
 
+  hidePaths = () => {
+    this.setMapOnElements(this.pathEls, null);
+  }
+
+  cleanPaths = () => {
+    this.hidePaths();
+    this.pathEls = [];
+  }
+
   hideLayers = () => {
     this.setMapOnElements(this.heatmapLayers, null);
   }
@@ -104,9 +118,9 @@ export class GoogleMap extends Component {
     this.heatmapLayers = [];
   }
 
-  loadMap = (map, maps) => {
+  loadMap = (map, maps, initial=false) => {
     var bounds = new maps.LatLngBounds();
-    const { extraMapStyles } = this.props;
+    const { extraMapStyles, forceClusters, noZoomToBounds, hideWhenFar } = this.props;
     this.infowindow = new maps.InfoWindow();
     this.props.markers.forEach((marker, idx) => {
       var mar = {
@@ -115,7 +129,8 @@ export class GoogleMap extends Component {
           lng: Number.parseFloat(marker.longitude)
         },
         title: marker.name,
-        map: map
+        map: map,
+        hideWhenFar: marker.hideWhenFar
       };
 
       if (!!marker.iconUrl) {
@@ -138,15 +153,20 @@ export class GoogleMap extends Component {
         if (e && e.wa) e.wa.stopPropagation();
       });
 
+      if (hideWhenFar && mar.hideWhenFar) {
+        var zoom = map.getZoom();
+        mar.setVisible(zoom >= 14);
+      }
+
       this.markerEls.push(mar);
       bounds.extend(mar.getPosition());
     });
 
-    if (this.markerEls.length > 0) {
+    if (this.markerEls.length > 0 && (!noZoomToBounds || initial)) {
       map.fitBounds(bounds);
     }
 
-    if (this.markerEls.length > 250) {
+    if (this.markerEls.length > 250 || forceClusters) {
       this.markerCluster = new MarkerClusterer(map, this.markerEls, {
         maxZoom: 12,
         gridSize: 10,
@@ -194,17 +214,22 @@ export class GoogleMap extends Component {
       });
 
       line.setMap(map);
+
+      this.pathEls.push(line);
     });
 
     // Construct the polygons.
     this.props.polygons.forEach((polygon, idx) => {
+      let fillColor = (polygon.fillColor) ? polygon.fillColor : (extraMapStyles && extraMapStyles.useLineColour) ? polygon.lineColor : '#333333',
+          fillOpacity = (polygon.fillOpacity) ? polygon.fillOpacity : (extraMapStyles && extraMapStyles.ploygonFillOpacity) ? extraMapStyles.ploygonFillOpacity : 0.35,
+          strokeWeight = (polygon.strokeWeight) ? polygon.strokeWeight : (extraMapStyles && extraMapStyles.ploygonStrokeWeight) ? extraMapStyles.ploygonStrokeWeight : 2;
       var poly = new maps.Polygon({
         paths: polygon.coordinates,
         strokeColor: polygon.lineColor,
         strokeOpacity: 1,
-        fillColor: (extraMapStyles && extraMapStyles.useLineColour) ? polygon.lineColor : '#333333',
-        fillOpacity: (extraMapStyles && extraMapStyles.ploygonFillOpacity) ? extraMapStyles.ploygonFillOpacity : 0.35,
-        strokeWeight: (extraMapStyles && extraMapStyles.ploygonStrokeWight) ? extraMapStyles.ploygonStrokeWight : 2,
+        fillColor: fillColor,
+        fillOpacity: fillOpacity,
+        strokeWeight: strokeWeight,
         icons: [{ 
           icon: "hello",
           offset: '0',
@@ -239,6 +264,20 @@ export class GoogleMap extends Component {
         ));
       });
     }
+
+    if (hideWhenFar) {
+      /* Change markers on zoom */
+      let that = this;
+      maps.event.addListener(map, 'zoom_changed', function() {
+          // iterate over markers and call setVisible
+          var zoom = map.getZoom();
+          for (let i = 0; i < that.markerEls.length; i++) {
+            if (that.markerEls[i].hideWhenFar) {
+              that.markerEls[i].setVisible(zoom >= 14);
+            }
+          }
+      });
+    }
   }
 
   onGoogleApiLoaded = (map, maps) => {
@@ -246,7 +285,7 @@ export class GoogleMap extends Component {
     this.map = map;
     this.maps = maps;
     
-    this.loadMap(map, maps);
+    this.loadMap(map, maps, true);
   };
  
   onMapClicked = ({x, y, lat, lng, event}) => {
@@ -289,7 +328,7 @@ export class GoogleMap extends Component {
   render() {
     var styles = {};
     Object.assign(styles, mapStyles, this.props.extraMapStyles || {});
-    const { extraMapOptions, updating } = this.props;
+    const { extraMapOptions } = this.props;
     const isEmpty = this.props.markers.length === 0 &&
                     this.props.paths.length === 0  &&
                     this.props.polygons.length === 0 &&

@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Card, CardBody, CardFooter, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row, FormFeedback } from 'reactstrap';
+import { Button, Card, CardBody, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row, FormFeedback } from 'reactstrap';
 
 import { userActions } from '../../../actions';
 import { utils } from '../../../utils';
+import logo from '../../../assets/img/brand/newlogo-up.png'
+
+const LogoStyles = {
+  textAlign: 'center',
+  marginBottom: '16px'
+}
 
 class Register extends Component {
   constructor(props) {
@@ -73,6 +79,11 @@ class Register extends Component {
       <div className="app flex-row align-items-center">
         <Container>
           <Row className="justify-content-center">
+            <Col style={LogoStyles} md="8">
+              <img src={logo} height={100} alt="Logo"/>
+            </Col>
+          </Row>
+          <Row className="justify-content-center">
             <Col md="9" lg="7" xl="6">
               <Card className="mx-4">
                 <CardBody className="p-4">
@@ -139,8 +150,8 @@ class Register extends Component {
                       <Input type="text" placeholder="Last Name" autoComplete="last-name" name="lastName" value={user.lastName} onChange={this.handleChange}/>
                     </InputGroup>
                     <p className="help-block mb-4" style={{ fontSize: '80%' }}>* Optional</p>
-                    <Button color="success" onClick={this.handleSubmit} block>Create Account</Button>
-                    <Button color="secondary" onClick={this.onCancel} block>Cancel</Button>
+                    <Button color="primary" onClick={this.handleSubmit} block>Create Account</Button>
+                    <Button color="secondary" onClick={this.onCancel} block>Log In</Button>
                     {
                       registering && utils.loaders.StandardLoader()
                     }

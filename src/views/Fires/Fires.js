@@ -39,7 +39,7 @@ class Fires extends Component {
                 <FireMap scaleMarkers={[24, 24]} loaderHeight="300px" loaderMargin="150px" />
               </CardBody>
               <CardFooter>
-                <strong>Source of data: State of Victoria, Australia.</strong> To know more follow this link: <a href="https://www.emv.vic.gov.au/responsibilities/victorias-warning-system/emergency-data" target="_blank">Emergency Data</a>
+                <strong>Source of data: State of Victoria, Australia.</strong> To know more follow this link: <a href="https://www.emv.vic.gov.au/responsibilities/victorias-warning-system/emergency-data" target="_blank" rel="noopener noreferrer">Emergency Data</a>
               </CardFooter>
             </Card>
           </Col>

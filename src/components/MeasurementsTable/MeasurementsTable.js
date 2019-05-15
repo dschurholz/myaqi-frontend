@@ -75,9 +75,9 @@ function parseAqiScale (pollutant='aqi', aqiScale=null) {
 }
 
 const mapStateToProps = state => {
-  const { aqiForecasts, currentUser } = state,
+  const { currentUser } = state,
         { measurements, isFetchingMeasurements } = state.measurements,
-        { aqiScales, isFetchingAqiScales } = state.aqiScales,
+        { aqiScales } = state.aqiScales,
         user = currentUser.user || utils.auth.getUser(),
         aqiScale = utils.aqiScaleTools.getUserAqiScale(aqiScales, user),
         pollutant = measurements && measurements.Parameters ?

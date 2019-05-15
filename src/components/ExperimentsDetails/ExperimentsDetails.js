@@ -9,7 +9,6 @@ import {
   ListGroupItem,
   Row
 } from 'reactstrap';
-import Moment from 'react-moment';
 import { utils } from "../../utils";
 
 const STATUS_STYLE = {
@@ -31,12 +30,12 @@ class ExperimentsDetails extends Component {
     if (setDate && typeof setDate === 'function') setDate(selectedDate);
 
     if (aqiScale !== prevProps.aqiScale) {
-      this.badgeColours = utils.aqiScaleTools.parseAqiScaleAllPollutants(aqiScale);
+      this.badgeColours = utils.aqiScaleTools.parseAqiScaleAllPollutantsStyles(aqiScale);
     }
   } 
 
   render () {
-    const { extraData, timelineEntry, isFetchingData, selectedDate } = this.props;
+    const { extraData, timelineEntry, isFetchingData } = this.props;
     
     if(!timelineEntry  && isFetchingData) {
       return (
@@ -66,6 +65,7 @@ class ExperimentsDetails extends Component {
                         aqiValue = measurements.find((x) => Object.keys(x)[0] === 'AQI'),
                         aqiColor = aqiValue && this.badgeColours && Object.keys(this.badgeColours).includes('aqi') ? this.badgeColours['aqi'](aqiValue['AQI']) : null,
                         newStatusStyle = aqiColor ? Object.assign({}, STATUS_STYLE, { backgroundColor: aqiColor.bgColour, color: aqiColor.fgColour }) : STATUS_STYLE;
+                  let isPollutant = true;
                   return (
                     <ListGroupItem key={site.site_id} action tag="a" className="list-group-item-accent-primary list-group-item-divider">
                       {
@@ -78,17 +78,25 @@ class ExperimentsDetails extends Component {
                       <div>{site.name} <strong>{site.site_id}</strong> </div>
                       {
                         (measurements.length > 0) ?
-                          measurements.map((measurement, idx) => {
-                            const key = Object.keys(measurement)[0];
-                            const color = this.badgeColours && Object.keys(this.badgeColours).includes(key.toLowerCase()) ? this.badgeColours[key.toLowerCase()](measurement[key]) : null;
-                            return (
-                              <span key={key + idx} className="text-muted mr-3">
-                                <Badge color="primary" style={color ? {backgroundColor: color.bgColour, color: color.fgColour } : {}}>{key + ' ' + measurement[key]}</Badge>
-                                {/*{(idx !== 0 && idx % 4 === 0 && idx !== measurements.length-1) ?
-                                  <br/>: <></>
-                                }*/}
-                              </span>
-                            )
+                          utils.aqiScaleTools.sortMeasurementsArray(measurements).map((measurement, idx) => {
+                            const key = Object.keys(measurement)[0],
+                                  color = this.badgeColours && Object.keys(this.badgeColours).includes(key.toLowerCase()) ? this.badgeColours[key.toLowerCase()](measurement[key]) : null;
+
+                            if(isPollutant && utils.aqiScaleTools.WEATHER_VARIABLES.includes(key.toLowerCase())) {
+                              isPollutant = false;
+                              return (
+                                <span key={key + idx} className="text-muted mr-3">
+                                  <br/>
+                                  <Badge color="primary">{key + ' ' + measurement[key]}</Badge>
+                                </span>
+                              )
+                            } else {
+                              return (
+                                <span key={key + idx} className="text-muted mr-3">
+                                  <Badge color="primary" style={color ? {backgroundColor: color.bgColour, color: color.fgColour } : {}}>{key + ' ' + measurement[key]}</Badge>
+                                </span>
+                              )
+                            }
                           })
                         : <small className="text-muted">
                             No measurements for this date.
@@ -103,22 +111,21 @@ class ExperimentsDetails extends Component {
               <ListGroupItem className="list-group-item-accent-secondary bg-light text-center font-weight-bold text-muted text-uppercase small">Traffic Stations</ListGroupItem>
               {
                 extraData.traffic_stations.map((station) => {
-                  const trafficVolume = timelineEntry.traffic_flows[station.station_id.toString()];
+                  const trafficVolume = timelineEntry.traffic_flows[station.station_id.toString()],
+                        color = utils.trafficFlowTools.getPathColor(trafficVolume, station.quantiles),
+                        newStatusStyle = Object.assign({}, STATUS_STYLE, { backgroundColor: color, color: '#000000' });
                   return (
                     <ListGroupItem key={station.station_id} action tag="a" className="list-group-item-accent-dark list-group-item-divider">
-                      <div className="avatar float-right" style={STATUS_STYLE}>
+                      <div className="avatar float-right" style={newStatusStyle}>
                         {trafficVolume}
                       </div>
                       <div>{station.name} <strong>{station.station_id}</strong> </div>
-                      {
-                        (trafficVolume) ?
-                          <small className="text-muted">
-                            Traffic Volume:&nbsp; {trafficVolume}&nbsp; cars/h
-                          </small>
-                        : <small className="text-muted">
-                            No measurements for this date.
-                          </small>
-                      }
+                        <small className="text-muted">
+                          Max volume:&nbsp; {station.max_volume}&nbsp; cars &nbsp;|&nbsp;
+                        </small>
+                        <small className="text-muted">
+                          Average:&nbsp; {Math.round(station.avg_volume * 100) / 100}&nbsp; cars
+                        </small>
                     </ListGroupItem>    
                   );
                 })
