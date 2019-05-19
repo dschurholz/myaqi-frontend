@@ -61,8 +61,9 @@ class Profile extends Component {
         AQIScales: false
       },
       visualization: {
+        gauges: true,
         heatmap: false,
-        pinsText: true,
+        pinsText: false,
         pins: false,
         hotspots: false
       },
@@ -179,7 +180,7 @@ class Profile extends Component {
 
   handleSwitchChange = e => {
     const { name } = e.target;
-    const visualization = this.state.visualization;
+    const { visualization } = this.state;
     var newVis = {};
 
     for (var v in visualization) {
@@ -417,10 +418,14 @@ class Profile extends Component {
                 <span className="header-switch-label">Pins + text</span>
                 <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.pinsText} onChange={ this.handleSwitchChange } name="pinsText" value="pinsText"/>
               </div>
+              <div className="float-right header-switch mr-1">
+                <span className="header-switch-label">Gauges</span>
+                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.gauges} onChange={ this.handleSwitchChange } name="gauges" value="gauges"/>
+              </div>
             </CardHeader>
             <Collapse isOpen={collapse.mapsAndIcons}>
               <CardBody className="p-0">
-                <PreviewMap visualization={visualization} loaderHeight="300px" loaderMargin="150px" emptyText="AQI scale info couldn't be retrieved."/>
+                <PreviewMap scaleMarkers={visualization.gauges ? [60, 60] : null} visualization={visualization} loaderHeight="300px" loaderMargin="150px" emptyText="AQI scale info couldn't be retrieved."/>
               </CardBody>
             </Collapse>
             <CardFooter>

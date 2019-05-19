@@ -5,6 +5,7 @@ import { history } from './history';
 import * as auth from './auth';
 import aqiScaleTools from './aqiScaleTools';
 import trafficFlowTools from './trafficFlowTools';
+import fireTools from './fireTools';
 import tools from './tools';
 
 export const utils = {
@@ -17,5 +18,6 @@ export const utils = {
     },
     aqiScaleTools: aqiScaleTools,
     tools: tools,
-    trafficFlowTools: trafficFlowTools
+    trafficFlowTools: trafficFlowTools,
+    fireTools: fireTools
 };

@@ -8,18 +8,6 @@ import { SettingsService } from '../../services';
 
 var FIGURE_TYPES = ["Polygon", "MultiPolygon"];
 
-var getFireStyles = (fire) => {
-  if(fire.fire_svrty.startsWith("BURNT_5"))
-    return {color: "#333333", icon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--incident--Fire_Active")};
-  if(fire.fire_svrty.startsWith("BURNT_4"))
-    return {color: "red", icon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--warning--Emergency_Warning")};
-  if(fire.fire_svrty.startsWith("BURNT_3"))
-    return {color: "orange", icon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--incident--Fire")};
-  if(fire.fire_svrty.startsWith("BURNT_2"))
-    return {color: "yellow", icon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--incident--Fire")};
-  return {color: "blue", icon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--incident--Fire")};
-};
-
 var getTrafficStationStyles = (trafficStation) => {
   return {color: "purple", icon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getFireIcon("markers--incident--Accident_Collision")}
 }
@@ -94,23 +82,30 @@ function _format_paths_traffic_stations (trafficStations, timelineEntry) {
 }
 
 function _format_polygons_sites(sites) {
-  return sites.map((site) => {
-    const siteStyle = getSiteStyles(site),
-          polygon = JSON.parse(site.fire_area);
-    return {
-      objectId: site.site_id,
-      name: site.name,
-      lineColor: siteStyle.color,
-      fillOpacity: 0.01,
-      coordinates: polygon.coordinates[0].map(coordinates => {
-        return {
-          lng: coordinates[0],
-          lat: coordinates[1]
-        }
-      }),
-      obj: site
-    }
+  var polygons = [];
+  
+  sites.forEach((site) => {
+    const siteStyle = getSiteStyles(site);
+    site.fire_areas.forEach((polygon, idx) => {
+      const fireAreaColor = utils.fireTools.getFireAreaColor(idx);
+      polygons.push({
+        objectId: site.site_id,
+        name: site.name,
+        lineColor: fireAreaColor || siteStyle.color,
+        fillOpacity: 0.05,
+        strokeWeight: 2,
+        coordinates: polygon.coordinates[0].map(coordinates => {
+          return {
+            lng: coordinates[0],
+            lat: coordinates[1]
+          }
+        }),
+        obj: site
+      });
+    });
   });
+
+  return polygons;
 }
 
 function _format_polygons_fires (fires, timelineEntry) {
@@ -120,7 +115,7 @@ function _format_polygons_fires (fires, timelineEntry) {
     timelineEntry.fires.forEach(fire_id => {
       const fire = fires.find((e) => {return e.id === fire_id});
       let figures = [],
-          polygonColor = getFireStyles(fire).color;
+          polygonColor = utils.fireTools.getFireStyles(fire).color;
       if (fire.geom && Array.isArray(fire.geom)) {
         figures = fire.geom.filter(figure => FIGURE_TYPES.includes(figure.type));
       } else if (fire.geom) {

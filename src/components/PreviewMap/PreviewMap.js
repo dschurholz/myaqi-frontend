@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import GoogleMap from '../GoogleMap';
 
 import { utils } from '../../utils';
+import { SettingsService } from '../../services';
 
 
 const VICTORIA_CENTER = {
@@ -36,27 +37,40 @@ const VICTORIA_CENTER = {
   },
 ];
 
-function _randomMarkers(aqiScale, visualization={pinsText:true}, center=VICTORIA_CENTER) {
+var getGaugeStyle = (thresholds, thresh, val) => {
+  const { gaugeTheme } = SettingsService.getSettings();
+  const gaugeThresh = utils.aqiScaleTools.prepareThresholdsForGauge(thresholds);
+  console.log(gaugeThresh);
+  return 'data:image/svg+xml;utf-8,' + utils.svgIcons.getGaugeIcon(gaugeTheme, val, gaugeThresh.limits, gaugeThresh.colors);
+}
+
+
+function _randomMarkers(aqiScale, visualization={gauges:true}, center=VICTORIA_CENTER) {
   var markers = [];
 
   const extraCheck = utils.aqiScaleTools.extraChecks(aqiScale.abbreviation),
         extended = true,
-        aqiScaleThresholds = utils.charts.parseScale(aqiScale, 'aqi', extraCheck, extended);
+        aqiScaleThresholds = utils.charts.parseScale(aqiScale, 'aqi', extraCheck, extended),
+        aqiThresh = utils.aqiScaleTools.parseAqiScale('aqi', aqiScale);
 
-  for (let thresh = 0; thresh < aqiScaleThresholds.upperLimits.length; thresh++) {
+  const threshLen = aqiScaleThresholds.upperLimits.length;
+  for (let thresh = 0; thresh < threshLen; thresh++) {
+    const val = Math.round(
+      aqiScaleThresholds.lowerLimits[thresh] + (thresh + 1 === threshLen ? aqiScaleThresholds.lowerLimits[thresh] + 100 :
+      (aqiScaleThresholds.upperLimits[thresh] - aqiScaleThresholds.lowerLimits[thresh]) / 2));
     markers.push({
       latitude: EXAMPLE_POINTS[thresh].lat,
       longitude: EXAMPLE_POINTS[thresh].lng,
       infowindowText: `<h4>
-               Air quality is ${aqiScaleThresholds.descriptions[thresh]}
+               Air quality is ${aqiThresh ? aqiThresh(val).description : aqiScaleThresholds.descriptions[thresh]}
              </h4>
              <div class="pinpoint-location">
-              Level: ${Math.round((thresh+1 === aqiScaleThresholds.upperLimits.length) ? aqiScaleThresholds.upperLimits[thresh-1] + 100: aqiScaleThresholds.upperLimits[thresh] - 5)}
+              Level: ${val}
              </div>`,
       id: aqiScaleThresholds.abbreviations[thresh],
       iconUrl: visualization.pinsText ?
         `https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=${aqiScaleThresholds.abbreviations[thresh]}|${aqiScaleThresholds.backgroundColors[thresh].split('#')[1]}|${aqiScaleThresholds.foregroundColors[thresh].split('#')[1]}`
-          : null,
+          : visualization.gauges ? getGaugeStyle(aqiScaleThresholds, thresh, val) : null,
       icon: visualization.pins ?
         {
           path: 'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
@@ -119,7 +133,7 @@ const mapStateToProps = (state, ownProps) => {
         aqiScale = utils.aqiScaleTools.getUserAqiScale(aqiScales, user);
 
   return {
-    markers: (!!aqiScale && visualization && (visualization.pins || visualization.pinsText)) ? _randomMarkers(aqiScale, visualization) : [],
+    markers: (!!aqiScale && visualization && (visualization.gauges || visualization.pins || visualization.pinsText)) ? _randomMarkers(aqiScale, visualization) : [],
     paths: [],
     polygons: [],
     heatmapLayers: (!!aqiScale && visualization && (visualization.heatmap || visualization.hotspots)) ? _randomHeatmap(aqiScale, visualization) : [],

@@ -142,9 +142,10 @@ function sortMeasurementsArray (array) {
 
 function prepareThresholdsForGauge (aqiThresholds) {
   let thresholds = { colors: [], limits: []};
+  console.log(aqiThresholds);
   if (aqiThresholds && aqiThresholds.upperLimits && aqiThresholds.backgroundColors) {
-    thresholds.colors = aqiThresholds.backgroundColors;
-    thresholds.limits = aqiThresholds.upperLimits;
+    thresholds.colors = aqiThresholds.backgroundColors.slice(0);
+    thresholds.limits = aqiThresholds.upperLimits.slice(0);
     thresholds.limits.pop();
     if (thresholds.limits.length === 4) {
       thresholds.limits.push(thresholds.limits[thresholds.limits.length-1] * 2);

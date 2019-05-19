@@ -8,8 +8,9 @@ import { utils } from '../../utils';
 
 import { SettingsService } from '../../services';
 
-function getSiteExtraData(site, gaugeStyles) {
-  const { gaugeTheme } = SettingsService.getSettings();
+function getSiteExtraData(site, aqiScale, gaugeStyles) {
+  const { gaugeTheme } = SettingsService.getSettings(),
+        aqiThresh = utils.aqiScaleTools.parseAqiScale('aqi', aqiScale);
 
   if (!site.current_status || site.current_status.length === 0) {
     return {
@@ -18,46 +19,35 @@ function getSiteExtraData(site, gaugeStyles) {
     }
   }
 
+  function _getStyles(value, desc) {
+    const description = aqiThresh ? aqiThresh(value).description : desc;
+    if (gaugeStyles) {
+        icon = utils.svgIcons.getGaugeIcon(gaugeTheme, value, gaugeStyles.limits, gaugeStyles.colors);
+    } else {
+      icon = utils.svgIcons.getGaugeIcon(gaugeTheme, value);
+    }
+    return {
+      icon: 'data:image/svg+xml;utf-8,' + icon,
+      infowindowText: `
+       <h4>${site.name}</h4>
+       <div>
+          Air quality is ${description}
+       </div>
+       <div class="pinpoint-location">
+         Level: ${Math.round(value)}
+       </div>`
+    }
+  }
+
   let icon;
   for (let s in site.current_status) {
     let monitor = site.current_status[s];
     if (monitor.name === "AQI" || monitor.name === "Summary") {
-      if (gaugeStyles) {
-        icon = utils.svgIcons.getGaugeIcon(gaugeTheme, monitor.value, gaugeStyles.limits, gaugeStyles.colors);
-      } else {
-        icon = utils.svgIcons.getGaugeIcon(gaugeTheme, monitor.value);
-      }
-      return {
-        icon: 'data:image/svg+xml;utf-8,' + icon,
-        infowindowText: `
-         <h4>${site.name}</h4>
-         <div>
-            Air quality is ${monitor.description}
-         </div>
-         <div class="pinpoint-location">
-           Level: ${Math.round(monitor.value)}
-         </div>`
-        }
+      return _getStyles(monitor.value, monitor.description);
     }
   };
 
-  
-  if (gaugeStyles) {
-    icon = utils.svgIcons.getGaugeIcon(gaugeTheme, site.current_status[0].aqi_value, gaugeStyles.limits, gaugeStyles.colors);
-  } else {
-    icon = utils.svgIcons.getGaugeIcon(gaugeTheme, site.current_status[0].aqi_value);
-  }
-  return {
-    icon: 'data:image/svg+xml;utf-8,' + icon,
-    infowindowText: `
-     <h4>${site.name}</h4>
-     <div class="pinpoint-location">
-        Air quality is ${site.current_status[0].description}
-     </div>
-     <div class="pinpoint-location">
-      Level: ${Math.round(site.current_status[0].value)}
-     </div>`
-  }
+  return _getStyles(site.current_status[0].value, site.current_status[0].description);
 }
 
 const mapStateToProps = state => {
@@ -75,7 +65,7 @@ const mapStateToProps = state => {
 
   return {
     markers: sites.sites.map(site => {
-      let extraInfo = getSiteExtraData(site, gaugeStyles);
+      let extraInfo = getSiteExtraData(site, aqiScale, gaugeStyles);
       site.iconUrl = extraInfo.icon;
       site.infowindowText = extraInfo.infowindowText;
       return site;

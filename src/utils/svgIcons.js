@@ -713,8 +713,7 @@ export const svgIcons = {
             return '%23212121'
           }
           return c.replace('#', '%23');
-        }) :
-                 ['%23349d69', '%233787d7', '%23ffff05', '%23ff0a0a', '%23333', '%23212121'];
+        }) : ['%23349d69', '%233787d7', '%23ffff05', '%23ff0a0a', '%23333', '%23212121'];
         // console.log(colors)
 
         // Lowest angle -45 and highest is 225

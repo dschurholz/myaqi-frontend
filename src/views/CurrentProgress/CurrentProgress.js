@@ -56,7 +56,7 @@ class CurrentProgress extends Component {
           }, {
             title: 'Background & Literature Review',
             pages: 30,
-            progress: 98,
+            progress: 100,
             isOpen: false,
             subchapters: [
               {
@@ -103,19 +103,19 @@ class CurrentProgress extends Component {
                 subchapterNum: 3
               }, {
                 title: "Outdoor Air Quality Prediction",
-                progress: 95,
+                progress: 100,
                 subchapterNum: 3,
                 subsubchapterNum: 1
               }, {
                 title: "Context Aware Outdoor Air Quality Monitoring and Prediction",
-                progress: 95,
+                progress: 100,
                 subchapterNum: 3,
                 subsubchapterNum: 2
               }
             ]
           }, {
             title: 'Context Modelling',
-            pages: 10,
+            pages: 14,
             progress: 100,
             isOpen: false,
             subchapters: [
@@ -144,22 +144,22 @@ class CurrentProgress extends Component {
                 subsubchapterNum: 3
               }, {
                 title: "Situation Reasoning",
-                progress: 90,
+                progress: 100,
                 subchapterNum: 3
               }, {
                 title: "Prediction Model",
-                progress: 10,
+                progress: 100,
                 subchapterNum: 4
               }, {
                 title: "Summary",
-                progress: 90,
+                progress: 100,
                 subchapterNum: 5
               }
             ]
           }, {
             title: 'System Architecture & Implementation',
-            pages: 7,
-            progress: 97,
+            pages: 12,
+            progress: 100,
             isOpen: false,
             subchapters: [
               {
@@ -178,7 +178,7 @@ class CurrentProgress extends Component {
                 subsubchapterNum: 2
               }, {
                 title: "Implementation",
-                progress: 95,
+                progress: 100,
                 subchapterNum: 2
               }, {
                 title: "Equipment and Devices",
@@ -202,7 +202,7 @@ class CurrentProgress extends Component {
                 subsubchapterNum: 4
               }, {
                 title: "Development",
-                progress: 90,
+                progress: 100,
                 subchapterNum: 2,
                 subsubchapterNum: 5
               }, {
@@ -213,27 +213,27 @@ class CurrentProgress extends Component {
             ]
           }, {
             title: 'Experiments and Results',
-            pages: 1,
-            progress: 10,
+            pages: 10,
+            progress: 90,
             isOpen: false,
             subchapters: [
               {
                 title: "Experiments",
-                progress: 20,
+                progress: 100,
                 subchapterNum: 1
               }, {
                 title: "Datasets Descriptions",
-                progress: 40,
+                progress: 100,
                 subchapterNum: 1,
                 subsubchapterNum: 1
               }, {
                 title: "Experiment Setup",
-                progress: 0,
+                progress: 100,
                 subchapterNum: 1,
                 subsubchapterNum: 2
               }, {
                 title: "Results",
-                progress: 0,
+                progress: 70,
                 subchapterNum: 2
               }
             ]
@@ -245,37 +245,21 @@ class CurrentProgress extends Component {
             subchapters: []
           }
         ],
-        references: 65
+        references: 66
       },
       extraProgress: [
         {
-          task: "Finish outdoor air quality monitoring techniques table in literature review",
-          color: "secondary"
-        },
-        {
-          task: "Add system architecture to thesis",
-          color: "secondary"
-        },
-        {
-          task: "Add system implementation to thesis",
-          color: "secondary"
-        },
-        {
-          task: "Work on context and situation prediction algorithm with TensorFlow and Keras libraries",
-          color: "success"
-        },
-        {
-          task: "Get prediction results and compare to other methods.",
+          task: "Get prediction results and add to thesis.",
           color: "success"
         }
       ],
       futureTasks: [
         {
-          task: "Finish experiments and results chapter on thesis document.",
+          task: "Wirte abstract and conclusions.",
           color: "warning"
         },
         {
-          task: "Add prediction algorithm subsection to thesis",
+          task: "Start on journal paper content modification",
           color: "warning"
         },
         {
@@ -286,10 +270,6 @@ class CurrentProgress extends Component {
           task: "Fill paper for IoT Conference publication",
           color: "secondary"
         },
-        {
-          task: "Write abstract",
-          color: "secondary"
-        }
       ]
     };
     var c;
@@ -298,7 +278,7 @@ class CurrentProgress extends Component {
       this.state.thesisDocument.overallPages += chapter.pages;
       this.state.thesisDocument.overallProgress += chapter.progress;
     }
-    this.state.thesisDocument.overallProgress = Math.round(this.state.thesisDocument.overallProgress/c, 2);
+    this.state.thesisDocument.overallProgress = this.state.thesisDocument.overallProgress/c;
   }
 
   toggleChapter(chapter) {
