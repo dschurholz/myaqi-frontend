@@ -30,10 +30,11 @@ import { utils } from '../../utils';
 import { Questionnaire, PreviewMap, AQIScaleTable } from '../../components';
 import { getAQIScales } from '../../actions';
 
-const YES = 'Yes';
-const NO = 'No';
-const AU_EPA_AQI = 'AUEPA';
+const { visTools } = utils;
+const YES = 'Yes',
+      NO = 'No';
 
+const AU_EPA_AQI = 'AUEPA';
 
 class Profile extends Component {
   constructor(props) {
@@ -51,6 +52,7 @@ class Profile extends Component {
         colourBlindness: user.profile && !!user.profile.colour_blindness?YES:NO,
         age: (user.profile && user.profile.age) || 18,
         aqiScale: (user.profile && user.profile.aqi_scale) || AU_EPA_AQI,
+        visTool: (user.profile && user.profile.vis_tool) || visTools.GAUGES,
         questionnaireAnswers: []
       },
       submitted: false,
@@ -60,17 +62,11 @@ class Profile extends Component {
         mapsAndIcons: true,
         AQIScales: false
       },
-      visualization: {
-        gauges: true,
-        heatmap: false,
-        pinsText: false,
-        pins: false,
-        hotspots: false
-      },
       questionnaire: {
         numQuestions: 0
       }
     };
+    console.log(this.state)
 
     this.handleProfileChange = this.handleProfileChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -180,16 +176,11 @@ class Profile extends Component {
 
   handleSwitchChange = e => {
     const { name } = e.target;
-    const { visualization } = this.state;
-    var newVis = {};
-
-    for (var v in visualization) {
-      newVis[v] = false;
-    }
-    newVis[name] = true;
+    const { profile } = this.state;
+    profile.visTool = name;
 
     this.setState({
-      visualization: newVis
+      profile,
     });
   };
 
@@ -203,7 +194,7 @@ class Profile extends Component {
 
   render() {
     const { updating, aqiScales } = this.props;
-    const { user, profile, submitted, collapse, visualization, questionnaire } = this.state;
+    const { user, profile, submitted, collapse, questionnaire } = this.state;
     const modified = (this.props.user.profile && this.props.user.profile.modified) || 'new';
     const questionnaireAnswers = this.props.user.profile && this.props.user.profile.questionnaire_answers,
       sensitivityLevels = this.props.user.profile && this.props.user.profile.sensitivity_levels;
@@ -381,15 +372,21 @@ class Profile extends Component {
               <CardBody className="p-4">
                 {
                   sensitivityLevels && sensitivityLevels.length > 0 ?
-                  <ListGroup>
-                    {
-                      sensitivityLevels.map(level => {
-                        return (
-                          <ListGroupItem key={level.pollutant_id} className="justify-content-between">{this.formatPollutant(level.pollutant_id)} <span className="float-right"><Badge color={level.level === 0?'success':(level.level === 1?'info':(level.level === 2?'warning':(level.level === 3?'danger':'dark')))} pill>{level.level_display}</Badge></span></ListGroupItem>
-                        );
-                      })
-                    }
-                  </ListGroup>
+                  <>
+                    <ListGroup>
+                      {
+                        sensitivityLevels.map(level => {
+                          return (
+                            <ListGroupItem key={level.pollutant_id} className="justify-content-between">{this.formatPollutant(level.pollutant_id)} <span className="float-right"><Badge color={level.level === 0?'success':(level.level === 1?'info':(level.level === 2?'warning':(level.level === 3?'danger':'dark')))} pill>{level.level_display}</Badge></span></ListGroupItem>
+                          );
+                        })
+                      }
+                    </ListGroup>
+                    <hr/>
+                    <small className="text-center text-muted">
+                      Important: Accurate pollutant sensitivty aware views are currently only available with the Australian EPA AQI.
+                    </small>
+                  </>
                   : 
                   <div>Fill in the questionnaire to see your pollutant sensitivity levels.</div>
                 }
@@ -404,28 +401,28 @@ class Profile extends Component {
               <strong>Maps & Icons</strong>&nbsp;<i>Preview</i>
               <div className="float-right header-switch">
                 <span className="header-switch-label">Hotspots</span>
-                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.hotspots} onChange={ this.handleSwitchChange } name="hotspots" value="hotspots"/>
+                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={profile.visTool === visTools.HOTSPOTS} onChange={ this.handleSwitchChange } name={visTools.HOTSPOTS} value={profile.visTool}/>
               </div>
               <div className="float-right header-switch mr-1">
                 <span className="header-switch-label">Heatmap</span>
-                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.heatmap} onChange={ this.handleSwitchChange } name="heatmap" value="heatmap"/>
+                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={profile.visTool === visTools.HEATMAPS} onChange={ this.handleSwitchChange } name={visTools.HEATMAPS} value={profile.visTool}/>
               </div>
               <div className="float-right header-switch mr-1">
                 <span className="header-switch-label">Pins</span>
-                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.pins} onChange={ this.handleSwitchChange } name="pins" value="pins"/>
+                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={profile.visTool === visTools.PINS} onChange={ this.handleSwitchChange } name={visTools.PINS} value={profile.visTool}/>
               </div>
               <div className="float-right header-switch mr-1">
                 <span className="header-switch-label">Pins + text</span>
-                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.pinsText} onChange={ this.handleSwitchChange } name="pinsText" value="pinsText"/>
+                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={profile.visTool === visTools.PINS_TEXT} onChange={ this.handleSwitchChange } name={visTools.PINS_TEXT} value={profile.visTool}/>
               </div>
               <div className="float-right header-switch mr-1">
                 <span className="header-switch-label">Gauges</span>
-                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={visualization.gauges} onChange={ this.handleSwitchChange } name="gauges" value="gauges"/>
+                <AppSwitch size="sm" className={'header-switch mx-1'} color={'primary'} checked={profile.visTool === visTools.GAUGES} onChange={ this.handleSwitchChange } name={visTools.GAUGES} value={profile.visTool}/>
               </div>
             </CardHeader>
             <Collapse isOpen={collapse.mapsAndIcons}>
               <CardBody className="p-0">
-                <PreviewMap scaleMarkers={visualization.gauges ? [60, 60] : null} visualization={visualization} loaderHeight="300px" loaderMargin="150px" emptyText="AQI scale info couldn't be retrieved."/>
+                <PreviewMap scaleMarkers={profile.visTool === visTools.GAUGES ? [60, 60] : null} visualization={profile.visTool} loaderHeight="300px" loaderMargin="150px" emptyText="AQI scale info couldn't be retrieved."/>
               </CardBody>
             </Collapse>
             <CardFooter>

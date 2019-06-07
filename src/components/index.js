@@ -1,4 +1,5 @@
 import AQIScaleTable from './AQIScaleTable';
+import AQNotifications from './AQNotifications';
 import ExperimentsDetails from './ExperimentsDetails';
 import ExperimentsDateSelector from './ExperimentsDateSelector';
 import FireMap from './FireMap';
@@ -21,6 +22,7 @@ import TrafficMap from './TrafficMap';
 
 export {
     AQIScaleTable,
+    AQNotifications,
     ExperimentsDetails,
     ExperimentsDateSelector,
     FireMap,

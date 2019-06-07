@@ -16,7 +16,8 @@ export default {
     parseScaleAllPollutants: parseScaleAllPollutants,
     sortMeasurementsArray: sortMeasurementsArray,
     prepareThresholdsForGauge,
-    sortPollutantsArray
+    sortPollutantsArray,
+    sensitivityChecks
 };
 
 function normalizePollutantId(id) {
@@ -45,6 +46,57 @@ function extraChecks(aqiScaleId) {
         default:
             return null;
     }
+}
+
+function sensitivityChecks(aqiIndex, sensitivityLevel, aqiScaleId) {
+  switch (aqiScaleId) {
+    case 'EUEEA':
+    case 'USEPA':
+    case 'AUEPA':
+      if(aqiIndex<=33) {
+        return 0;
+      }
+      else if(aqiIndex>33 && aqiIndex <=66) {
+        if(sensitivityLevel === 0) {
+          return 0;
+        }
+        else {
+          return 1;
+        }
+      }
+      else if(aqiIndex>66 && aqiIndex<=99){
+        if(sensitivityLevel === 0 || sensitivityLevel === 1) {
+          return 1;
+        }
+        else if(sensitivityLevel === 2 || sensitivityLevel === 3){
+          return 2;
+        }
+        else {
+          return 3;
+        }
+      }
+      else if(aqiIndex>99 && aqiIndex<=149){
+        if(sensitivityLevel === 3) {
+          return 3;
+        }
+        else if(sensitivityLevel === 4) {
+          return 4;
+        }
+        else {
+          return 2;
+        }
+      }
+      else if(aqiIndex>149) {
+        if(sensitivityLevel === 3 || sensitivityLevel==4){
+          return 4;
+        }
+        else {
+          return 3;
+        }
+      }
+    default:
+      return 0;
+  }
 }
 
 function getUserAqiScale(aqiScales, user) {
@@ -142,7 +194,6 @@ function sortMeasurementsArray (array) {
 
 function prepareThresholdsForGauge (aqiThresholds) {
   let thresholds = { colors: [], limits: []};
-  console.log(aqiThresholds);
   if (aqiThresholds && aqiThresholds.upperLimits && aqiThresholds.backgroundColors) {
     thresholds.colors = aqiThresholds.backgroundColors.slice(0);
     thresholds.limits = aqiThresholds.upperLimits.slice(0);

@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import GoogleMap from '../GoogleMap';
 
 import { utils } from '../../utils';
-import { SettingsService } from '../../services';
+
+const { visTools } = utils;
 
 
 const VICTORIA_CENTER = {
@@ -37,15 +38,7 @@ const VICTORIA_CENTER = {
   },
 ];
 
-var getGaugeStyle = (thresholds, thresh, val) => {
-  const { gaugeTheme } = SettingsService.getSettings();
-  const gaugeThresh = utils.aqiScaleTools.prepareThresholdsForGauge(thresholds);
-  console.log(gaugeThresh);
-  return 'data:image/svg+xml;utf-8,' + utils.svgIcons.getGaugeIcon(gaugeTheme, val, gaugeThresh.limits, gaugeThresh.colors);
-}
-
-
-function _randomMarkers(aqiScale, visualization={gauges:true}, center=VICTORIA_CENTER) {
+function _randomMarkers(aqiScale, vis=visTools.GAUGES, center=VICTORIA_CENTER) {
   var markers = [];
 
   const extraCheck = utils.aqiScaleTools.extraChecks(aqiScale.abbreviation),
@@ -58,7 +51,7 @@ function _randomMarkers(aqiScale, visualization={gauges:true}, center=VICTORIA_C
     const val = Math.round(
       aqiScaleThresholds.lowerLimits[thresh] + (thresh + 1 === threshLen ? aqiScaleThresholds.lowerLimits[thresh] + 100 :
       (aqiScaleThresholds.upperLimits[thresh] - aqiScaleThresholds.lowerLimits[thresh]) / 2));
-    markers.push({
+    var newMarker = Object.assign({
       latitude: EXAMPLE_POINTS[thresh].lat,
       longitude: EXAMPLE_POINTS[thresh].lng,
       infowindowText: `<h4>
@@ -67,24 +60,22 @@ function _randomMarkers(aqiScale, visualization={gauges:true}, center=VICTORIA_C
              <div class="pinpoint-location">
               Level: ${val}
              </div>`,
-      id: aqiScaleThresholds.abbreviations[thresh],
-      iconUrl: visualization.pinsText ?
-        `https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=${aqiScaleThresholds.abbreviations[thresh]}|${aqiScaleThresholds.backgroundColors[thresh].split('#')[1]}|${aqiScaleThresholds.foregroundColors[thresh].split('#')[1]}`
-          : visualization.gauges ? getGaugeStyle(aqiScaleThresholds, thresh, val) : null,
-      icon: visualization.pins ?
-        {
-          path: 'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
-          fillColor: aqiScaleThresholds.backgroundColors[thresh],
-          fillOpacity: 0.8,
-          scale: 1,
-          strokeOpacity: 0.2
-        } : null
-    });
+      id: aqiScaleThresholds.abbreviations[thresh]
+    }, visTools.getMapIcon(
+        vis,
+        aqiScaleThresholds.abbreviations[thresh],
+        aqiScaleThresholds.backgroundColors[thresh],
+        aqiScaleThresholds.foregroundColors[thresh],
+        aqiScaleThresholds,
+        val
+    ));
+
+    markers.push(newMarker);
   }
   return markers;
 };
 
-function _randomHeatmap(aqiScale, visualization={heatmap:true}, center=VICTORIA_CENTER) {
+function _randomHeatmap(aqiScale, vis=visTools.HEATMAPS, center=VICTORIA_CENTER) {
   var heatmapLayers = [],
       heatmapLayerOptions = {
         radius: 25,
@@ -94,7 +85,7 @@ function _randomHeatmap(aqiScale, visualization={heatmap:true}, center=VICTORIA_
   const extraCheck = utils.aqiScaleTools.extraChecks(aqiScale.abbreviation),
         aqiScaleThresholds = utils.charts.parseScale(aqiScale, 'aqi', extraCheck);
 
-  if (visualization.hotspots) {
+  if (vis === visTools.HOTSPOTS) {
     for (let thresh = 0; thresh < aqiScaleThresholds.upperLimits.length; thresh++) {
       heatmapLayers.push({
         gradient: [utils.tools.hexToRgba(aqiScaleThresholds.backgroundColors[thresh], '0')].concat(aqiScaleThresholds.backgroundColors[thresh]),
@@ -133,10 +124,10 @@ const mapStateToProps = (state, ownProps) => {
         aqiScale = utils.aqiScaleTools.getUserAqiScale(aqiScales, user);
 
   return {
-    markers: (!!aqiScale && visualization && (visualization.gauges || visualization.pins || visualization.pinsText)) ? _randomMarkers(aqiScale, visualization) : [],
+    markers: (!!aqiScale && visualization && (visualization === visTools.GAUGES || visualization === visTools.PINS || visualization === visTools.PINS_TEXT)) ? _randomMarkers(aqiScale, visualization) : [],
     paths: [],
     polygons: [],
-    heatmapLayers: (!!aqiScale && visualization && (visualization.heatmap || visualization.hotspots)) ? _randomHeatmap(aqiScale, visualization) : [],
+    heatmapLayers: (!!aqiScale && visualization && (visualization === visTools.HEATMAPS || visualization === visTools.HOTSPOTS)) ? _randomHeatmap(aqiScale, visualization) : [],
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY, 
     keyField: 'id',
     extraMapStyles: {

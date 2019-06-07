@@ -12,7 +12,7 @@ import {
   TabContent,
   TabPane
 } from 'reactstrap';
-import { SiteMap, QuerySiteDetails, MeasurementsTable, MeasurementsCharts } from '../../components';
+import { SiteMap, QuerySiteDetails, MeasurementsTable, MeasurementsCharts, AQNotifications } from '../../components';
 import { store } from '../../stores';
 
 import { utils } from '../../utils';
@@ -21,6 +21,9 @@ import { SettingsService } from '../../services';
 
 const CHARTS = 'CHARTS';
 const TABLE = 'TABLE';
+const SITE_DETAILS = 'SITE_DETAILS';
+const GAUGE = 'GAUGE';
+const NOTIFICATIONS = 'NOTIFICATIONS';
 const STATUS_STYLE = {
   backgroundColor: '#0288D1',
   borderRadius: '25px',
@@ -39,7 +42,7 @@ class AQIMap extends Component {
 
     this.state = {
       activeTab: CHARTS,
-      activeGauge: false,
+      activeTabDetails: SITE_DETAILS,
       currentSiteName: '',
       currentSiteDesc: 'No value yet.',
       currentSiteAQI: 0,
@@ -47,11 +50,14 @@ class AQIMap extends Component {
       currentSiteAQIFgColor: '#FFF',
       headerStationIcon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getGaugeIcon("light"),
       stationIcon: 'data:image/svg+xml;utf-8,' + utils.svgIcons.getGaugeIcon("light"),
+      notificationsNum: 0,
+      notificationsColor: 'warning',
     };
     
     this.toggle = this.toggle.bind(this);
     this.toggleGauge = this.toggleGauge.bind(this);
     this.onSiteChange = this.onSiteChange.bind(this);
+    this.onNotifications = this.onNotifications.bind(this);
   }
   
   componentDidMount() {
@@ -59,16 +65,22 @@ class AQIMap extends Component {
     store.dispatch(getAQIScales());   
   }
 
-  toggleGauge() {
-    const { activeGauge } = this.state;
+  toggleGauge(tab) {
     this.setState({
-      activeGauge: !activeGauge
+      activeTabDetails: tab
     });
   }
 
   toggle(tab) {
     this.setState({
       activeTab: tab
+    });
+  }
+
+  onNotifications (notificationsNum, notificationsColor) {
+    this.setState({
+      notificationsNum: notificationsNum,
+      notificationsColor: notificationsColor
     });
   }
 
@@ -88,8 +100,9 @@ class AQIMap extends Component {
   }
 
   render() {
-    const { activeGauge, activeTab, currentSiteName, currentSiteAQI, currentSiteDesc,
-            stationIcon, headerStationIcon, currentSiteAQIBgColor, currentSiteAQIFgColor } = this.state,
+    const { activeTabDetails, activeTab, currentSiteName, currentSiteAQI, currentSiteDesc,
+            stationIcon, headerStationIcon, currentSiteAQIBgColor, currentSiteAQIFgColor,
+            notificationsNum, notificationsColor } = this.state,
           newStatusStyle = Object.assign(
             {}, STATUS_STYLE, { backgroundColor: currentSiteAQIBgColor, color: currentSiteAQIFgColor });
 
@@ -107,42 +120,60 @@ class AQIMap extends Component {
             </Card>
           </Col>
           <Col xs="12" sm="6" lg="6">
-            <Card className="text-black site-list-card">
-              <CardHeader>
-                <i className="fa fa-align-justify"></i> Sites Details
-                <div className="site-details-toggle float-right" onClick={() => { this.toggleGauge(); }} >
-                  { !activeGauge ? 'Current AQI' : 'Details' } &nbsp;&nbsp;
-                  { !activeGauge ?
-                    <img src={headerStationIcon} height="17" className="float-right" onClick={() => { this.toggleGauge(); }} alt={ currentSiteAQI } />
-                    : <i className="fa fa-align-justify"></i>
-                  }
-                </div>
-              </CardHeader>
-              <CardBody>
-                <TabContent style={{border: 'none'}} activeTab={activeGauge}>
-                <TabPane className="p-0" tabId={false}>
-                  <QuerySiteDetails onChange={this.onSiteChange} />
-                </TabPane>
-                <TabPane className="p-0" tabId={true}>
-                  <Row>
-                    <Col xs="12" sm="12" lg="12">
-                      <div className="avatar float-right" style={newStatusStyle}>
-                        { currentSiteAQI }
-                      </div>
-                      <h2>{currentSiteName}</h2>
-                      <p>Air Quality is currently <Badge size="lg" color="primary" style={currentSiteAQIBgColor ? {backgroundColor: currentSiteAQIBgColor, color: currentSiteAQIFgColor } : {}}>{ currentSiteDesc }</Badge></p>
-                      <img style={{height: '45vh'}}src={stationIcon} width="100%" alt={ "AQI Current Value " + currentSiteAQI }/> 
-                    </Col>
-                  </Row>
-                </TabPane>
-              </TabContent>
-              </CardBody>
-            </Card>
+            <Nav tabs style={{ backgroundColor: '#c8ced3' }}>
+              <NavItem>
+                <NavLink
+                  active={activeTabDetails === SITE_DETAILS}
+                  onClick={() => { this.toggleGauge(SITE_DETAILS); }}
+                  style={{ paddingTop: '10px', paddingBottom: '10px' }}
+                >
+                  <i className="fa fa-align-justify"></i>&nbsp;Sites Details
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  active={activeTabDetails === GAUGE}
+                  onClick={() => { this.toggleGauge(GAUGE); }}
+                  style={{ paddingTop: '10px', paddingBottom: '10px' }}
+                >
+                  <img src={headerStationIcon} height="17" className="float-left" onClick={() => { this.toggleGauge(); }} alt={ currentSiteAQI } style={{ marginTop: '2px' }} />&nbsp;Current AQI 
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  active={activeTabDetails === NOTIFICATIONS}
+                  onClick={() => { this.toggleGauge(NOTIFICATIONS); }}
+                  style={{ paddingTop: '10px', paddingBottom: '10px' }}
+                >
+                  <i className="fa fa-bell"></i>&nbsp;Notifications&nbsp;{notificationsNum > 0 ? <Badge color={ notificationsColor }>{ notificationsNum }</Badge> : ''}
+                </NavLink>
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={activeTabDetails} style={{ height: '610px', overflowY: 'scroll' }}>
+              <TabPane tabId={SITE_DETAILS}>
+                <QuerySiteDetails onChange={this.onSiteChange} />
+              </TabPane>
+              <TabPane tabId={GAUGE}>
+                <Row>
+                  <Col xs="12" sm="12" lg="12">
+                    <div className="avatar float-right" style={newStatusStyle}>
+                      { currentSiteAQI }
+                    </div>
+                    <h2>{currentSiteName}</h2>
+                    <p>Air Quality is currently <Badge size="lg" color="primary" style={currentSiteAQIBgColor ? {backgroundColor: currentSiteAQIBgColor, color: currentSiteAQIFgColor } : {}}>{ currentSiteDesc }</Badge></p>
+                    <img style={{height: '45vh'}}src={stationIcon} width="100%" alt={ "AQI Current Value " + currentSiteAQI }/> 
+                  </Col>
+                </Row>
+              </TabPane>
+              <TabPane tabId={NOTIFICATIONS}>
+                <AQNotifications onNotifications={this.onNotifications} />
+              </TabPane>
+            </TabContent>
           </Col>
          </Row>
          <Row>
           <Col xs="12" sm="12" lg="12">
-            <Nav tabs>
+            <Nav tabs style={{ backgroundColor: '#c8ced3' }}>
               <NavItem>
                 <NavLink
                   active={activeTab === CHARTS}

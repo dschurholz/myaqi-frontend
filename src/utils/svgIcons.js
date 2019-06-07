@@ -789,6 +789,16 @@ export const svgIcons = {
                   <text x="292" y="187" transform="translate(18, 20)" style="fill:${fgColor};font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[5]}</text>
                   <text x="255" y="275" transform="translate(16, 16)" style="fill:${fgColor};font-weight:700;font-size:16px;opacity:0.8;font-family: 'open sans', sans-serif;">${limits[6]}</text>
                 </svg>`;
+    },
+    getTransparentIcon: function() {
+        return `<svg id="markers--transparent" 
+                     width="100%"
+                     height="100%"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 32 32">
+                <rect x="0" y="0" width="100%" height="100%" style="fill:transparent;"/>
+                </svg>`;
     }
 };
 

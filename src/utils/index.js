@@ -3,6 +3,7 @@ import loaders from './loaders';
 import * as charts from './charts';
 import { history } from './history';
 import * as auth from './auth';
+import * as visTools from './visTools';
 import aqiScaleTools from './aqiScaleTools';
 import trafficFlowTools from './trafficFlowTools';
 import fireTools from './fireTools';
@@ -19,5 +20,6 @@ export const utils = {
     aqiScaleTools: aqiScaleTools,
     tools: tools,
     trafficFlowTools: trafficFlowTools,
-    fireTools: fireTools
+    fireTools: fireTools,
+    visTools: visTools
 };

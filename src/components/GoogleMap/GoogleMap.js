@@ -40,9 +40,9 @@ export class GoogleMap extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { markers, polygons, paths, updating, forceRefresh } = this.props;
+    const { heatmapLayers, markers, polygons, paths, updating, forceRefresh } = this.props;
     let refresh = false;
-    if (this.heatmapLayers.length > 0) {
+    if (forceRefresh || heatmapLayers.length !== prevProps.heatmapLayers.length || updating) {
       this.cleanLayers();
       refresh = true;
     }
@@ -133,15 +133,22 @@ export class GoogleMap extends Component {
         hideWhenFar: marker.hideWhenFar
       };
 
+      var scaledSize;
+      if (this.props.scaleMarkers && this.props.scaleMarkers.length === 2) {
+        scaledSize = new maps.Size(this.props.scaleMarkers[0], this.props.scaleMarkers[1])
+      }
       if (!!marker.iconUrl) {
         mar.icon = {
           url: marker.iconUrl,
         }
-        if (this.props.scaleMarkers && this.props.scaleMarkers.length === 2) {
-          mar.icon.scaledSize = new maps.Size(this.props.scaleMarkers[0], this.props.scaleMarkers[1])
-        }
       } else if (!!marker.icon) {
         mar.icon = marker.icon;
+        if(marker.icon.anchor && scaledSize) {
+          mar.icon.anchor = new maps.Point(this.props.scaleMarkers[0]/2, this.props.scaleMarkers[1]/2);
+        }
+      }
+      if (scaledSize) {
+        mar.icon.scaledSize = scaledSize;
       }
       mar = new maps.Marker(mar);
 

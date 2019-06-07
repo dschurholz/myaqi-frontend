@@ -15,7 +15,7 @@ export default {
       class: ''             // optional class names space delimited list for title item ex: "text-center"
     },
     {
-      name: 'Map',
+      name: 'AQ Stations',
       url: '/map',
       icon: 'fa fa-mixcloud',
     },
