@@ -20,6 +20,8 @@ const STATUS_STYLE = {
   color: 'white'
 }
 
+const CITY_SITES = [10001, 10227, 10239, 10006, 10213, 10003, 10007, 10042];
+
 class AQNotifications extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
@@ -76,7 +78,7 @@ class AQNotifications extends Component {
                         : <></>
                       }
                       <div><strong>{notif.site.name}</strong> </div>
-                      <div>A <Badge color="primary" style={aqiStyles ? {backgroundColor: aqiStyles.bgColour, color: aqiStyles.fgColour } : {}}>{aqiStyles ? aqiStyles.description : 'dangerous'}</Badge> air quality level was detected around this station, due to {notif.aqiCategory === 2 ? 'high' : (notif.aqiCategory === 3 ? 'very high' : 'extremely high' )} concentrations of <strong>{ notif.pollutant.toUpperCase() }</strong>!</div>
+                      <div>A <Badge color="primary" style={aqiStyles ? {backgroundColor: aqiStyles.bgColour, color: aqiStyles.fgColour } : {}}>{aqiStyles ? aqiStyles.description : 'dangerous'}</Badge> air quality level was detected around this station, due to {notif.aqiCategory === 2 ? 'high' : (notif.aqiCategory === 3 ? 'very high' : 'extremely high' )} concentrations of <strong>{ notif.pollutant.toUpperCase() }</strong>, due to high levels of <i>{CITY_SITES.includes(notif.site.site_id)? 'Traffic Volumes' : 'Smoke from a nearby Fire'}!</i></div>
                       <div className="text-danger">{notif.description}</div>
                     </ListGroupItem>    
                   );
@@ -116,9 +118,9 @@ function _prepareNotifications(sites, sensitivityLevels) {
           aqiCategory: category,
           level: level.level_display,
           pollutant: level.pollutant_id,
-          description: category === 2 ? `Current ${level.pollutant_id.toUpperCase()} levels can be dangerous for you,
+          description: category === 2 ? `Current and near-future ${level.pollutant_id.toUpperCase()} levels can be dangerous for you,
             if exposed for a long time. Levels may suddenly rise, stay alert for further notifications.` :
-            `Current ${level.pollutant_id.toUpperCase()} levels are very dangerous for you, avoid this area and move towards an environment with cleaner air, immediately.`,
+            `Current and near-future ${level.pollutant_id.toUpperCase()} levels are very dangerous for you, avoid this area and move towards an environment with cleaner air, immediately.`,
           currentAQIVal: currentVal,
           site: site
         });
