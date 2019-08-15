@@ -1,6 +1,17 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# MyAQI Web Application
 
-## Available Scripts
+This project implements the MyAQI web application tool. It is developed as a Master Thesis proof-of-concept in the context of the Erasmus Mundus Joint Masters Program in Pervasive Computing and COMmunication for sustainable development (PERCCOM). The tool provides a control panel or users to understand the Air Quality problems in the Melbourne Area in Australia and customise the interaction with the system to adapt to the user's context. It was developed with the ReactJS and CoreUI frameworks. The application runs in sync with the MyAQI backend tool [https://github.com/dschurholz/myaqi-backend](https://github.com/dschurholz/myaqi-backend).
+
+To install and run the application, execute the following steps:
+
+    $ npm install
+    $ yarn start
+
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+Be sure to have NodeJS and NPM installed. Follow this guide for Ubuntu (I recommend the NVM installation): [https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04) 
+
+## Other available Scripts
 
 In the project directory, you can run:
 
@@ -36,33 +47,3 @@ If you aren’t satisfied with the build tool and configuration choices, you can
 Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify

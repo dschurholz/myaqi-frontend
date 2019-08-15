@@ -142,7 +142,7 @@ const mapStateToProps = state => {
         { sites, isFetchingSites } = state.sites,
         user = currentUser.user || utils.auth.getUser(),
         profile = user.profile,
-        sensitivityLevels = (profile && profile.sensitivity_levels) ? profile.sensitivity_levels : null,
+        sensitivityLevels = (profile && profile.sensitivity_levels) ? profile.sensitivity_levels : [],
         aqiScale = aqiScales ? aqiScales[aqiScales.findIndex(x => {
           return x.abbreviation === 'AUEPA';
         })]: null;

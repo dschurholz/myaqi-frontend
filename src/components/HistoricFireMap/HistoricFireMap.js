@@ -100,6 +100,7 @@ const mapStateToProps = state => {
     markers: [],
     paths: [],
     polygons: polygons,
+    heatmapLayers: [],
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     keyField: 'objectId',
     extraMapStyles: {

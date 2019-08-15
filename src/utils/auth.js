@@ -15,7 +15,11 @@ export function authHeader() {
 }
 
 export function getUser() {
-    return JSON.parse(sessionStore.getItem('user'));
+    let user = JSON.parse(sessionStore.getItem('user'));
+    if (user && !user.profile) {
+        user.profile = {};
+    }
+    return user;
 }
 
 export function setUser(user) {
