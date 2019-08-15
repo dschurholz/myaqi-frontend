@@ -6,6 +6,8 @@ To install and run the application, execute the following steps:
 
     $ npm install
     $ yarn start
+    $ cd public/data
+    $ unzip data.zip
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
